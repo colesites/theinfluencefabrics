@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Modern Heritage Atelier - Collections</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@400;700;900&amp;family=Inter:wght@400;500;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-container": "#eeeeee",
+                    "surface-bright": "#f9f9f9",
+                    "on-tertiary-container": "#fffdff",
+                    "tertiary": "#a13c00",
+                    "surface-variant": "#e2e2e2",
+                    "on-secondary-fixed": "#1b1b1b",
+                    "inverse-primary": "#ffb597",
+                    "on-error": "#ffffff",
+                    "on-primary": "#ffffff",
+                    "tertiary-fixed": "#ffdbcd",
+                    "inverse-surface": "#2f3131",
+                    "surface": "#f9f9f9",
+                    "on-tertiary": "#ffffff",
+                    "on-secondary-fixed-variant": "#474747",
+                    "on-primary-fixed": "#360f00",
+                    "surface-container-high": "#e8e8e8",
+                    "on-secondary": "#ffffff",
+                    "secondary-fixed": "#e2e2e2",
+                    "background": "#f9f9f9",
+                    "inverse-on-surface": "#f1f1f1",
+                    "primary-fixed": "#ffdbcd",
+                    "primary": "#a13c00",
+                    "tertiary-container": "#c65011",
+                    "error-container": "#ffdad6",
+                    "secondary": "#5e5e5e",
+                    "outline-variant": "#dfc0b4",
+                    "secondary-fixed-dim": "#c6c6c6",
+                    "primary-container": "#c65011",
+                    "on-surface": "#1a1c1c",
+                    "on-primary-container": "#fffdff",
+                    "surface-container-low": "#f4f3f3",
+                    "on-error-container": "#93000a",
+                    "surface-container-highest": "#e2e2e2",
+                    "on-tertiary-fixed": "#360f00",
+                    "on-tertiary-fixed-variant": "#7d2d00",
+                    "secondary-container": "#e2e2e2",
+                    "surface-container-lowest": "#ffffff",
+                    "on-surface-variant": "#584239",
+                    "error": "#ba1a1a",
+                    "tertiary-fixed-dim": "#ffb597",
+                    "outline": "#8c7167",
+                    "on-secondary-container": "#646464",
+                    "primary-fixed-dim": "#ffb597",
+                    "on-primary-fixed-variant": "#7d2d00",
+                    "on-background": "#1a1c1c",
+                    "surface-tint": "#a43d00",
+                    "surface-dim": "#dadada"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0px",
+                    "lg": "0px",
+                    "xl": "0px",
+                    "full": "9999px"
+            },
+            "fontFamily": {
+                    "headline": ["Noto Serif"],
+                    "body": ["Inter"],
+                    "label": ["Inter"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            background-color: #e7e7e7;
+            color: #000000;
+        }
+    </style>
+</head>
+<body class="font-body selection:bg-primary selection:text-white">
+<!-- TopNavBar -->
+<nav class="fixed top-0 w-full z-50 bg-stone-100/80 backdrop-blur-xl flex justify-between items-center px-8 py-6 w-full max-w-full">
+<div class="text-3xl font-black text-black tracking-tight font-headline">Modern Heritage</div>
+<div class="hidden md:flex items-center space-x-12">
+<a class="font-serif tracking-tighter uppercase text-orange-700 border-b-2 border-orange-700 transition-colors duration-300" href="#">Collections</a>
+<a class="font-serif tracking-tighter uppercase text-black hover:text-orange-700 transition-colors duration-300" href="#">Lookbook</a>
+<a class="font-serif tracking-tighter uppercase text-black hover:text-orange-700 transition-colors duration-300" href="#">Our Story</a>
+</div>
+<div class="flex items-center space-x-6">
+<button class="transition-transform duration-150 active:scale-95">
+<span class="material-symbols-outlined text-black" data-icon="shopping_bag">shopping_bag</span>
+</button>
+<button class="transition-transform duration-150 active:scale-95">
+<span class="material-symbols-outlined text-black" data-icon="person">person</span>
+</button>
+</div>
+</nav>
+<main class="pt-32 pb-24 px-8 max-w-[1600px] mx-auto">
+<!-- Editorial Header -->
+<header class="mb-20">
+<h1 class="font-headline text-8xl font-black tracking-tighter leading-none mb-4">ANKARA ARCHIVE</h1>
+<div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-8">
+<p class="max-w-xl text-lg text-black/70 leading-relaxed">
+                    A curated selection of authentic wax prints, celebrating architectural geometry and heritage patterns. Each textile is a narrative of tradition reimagined for the modern silhouette.
+                </p>
+<div class="flex items-center gap-4">
+<span class="font-label text-xs uppercase tracking-widest text-black/40">Sort By</span>
+<button class="flex items-center gap-2 border-b-2 border-black pb-1 font-bold text-sm uppercase tracking-wider">
+                        New Arrivals
+                        <span class="material-symbols-outlined text-xs" data-icon="expand_more">expand_more</span>
+</button>
+</div>
+</div>
+</header>
+<div class="flex flex-col md:flex-row gap-16">
+<!-- SideNavBar / Filter Sidebar -->
+<aside class="w-full md:w-80 shrink-0">
+<div class="sticky top-40 space-y-12">
+<div>
+<h3 class="font-headline text-2xl font-bold mb-8">The Atelier</h3>
+<nav class="flex flex-col space-y-4">
+<a class="font-serif text-orange-700 font-bold border-l-4 border-orange-700 pl-4 transition-all ease-in-out duration-200" href="#">New Arrivals</a>
+<a class="font-serif text-black/60 pl-4 hover:bg-stone-300 transition-all ease-in-out duration-200" href="#">Textiles</a>
+<a class="font-serif text-black/60 pl-4 hover:bg-stone-300 transition-all ease-in-out duration-200" href="#">Tailoring</a>
+<a class="font-serif text-black/60 pl-4 hover:bg-stone-300 transition-all ease-in-out duration-200" href="#">Bespoke</a>
+<a class="font-serif text-black/60 pl-4 hover:bg-stone-300 transition-all ease-in-out duration-200" href="#">Archive</a>
+</nav>
+</div>
+<div class="pt-8 border-t border-black/10">
+<h4 class="font-label text-xs uppercase tracking-[0.2em] font-bold mb-6">Filter By Palette</h4>
+<div class="flex flex-wrap gap-3">
+<button class="w-8 h-8 bg-primary ring-2 ring-offset-2 ring-primary"></button>
+<button class="w-8 h-8 bg-black"></button>
+<button class="w-8 h-8 bg-stone-400"></button>
+<button class="w-8 h-8 bg-[#3d5a80]"></button>
+<button class="w-8 h-8 bg-[#98c1d9]"></button>
+</div>
+</div>
+<div>
+<h4 class="font-label text-xs uppercase tracking-[0.2em] font-bold mb-6">Fabric Weight</h4>
+<ul class="space-y-3">
+<li class="flex items-center gap-3">
+<div class="w-4 h-4 border-2 border-black"></div>
+<span class="text-sm uppercase tracking-wide">Lightweight Voile</span>
+</li>
+<li class="flex items-center gap-3">
+<div class="w-4 h-4 border-2 border-primary bg-primary"></div>
+<span class="text-sm uppercase tracking-wide font-bold">Heavy Cotton Wax</span>
+</li>
+<li class="flex items-center gap-3">
+<div class="w-4 h-4 border-2 border-black"></div>
+<span class="text-sm uppercase tracking-wide">Silk-Cotton Blend</span>
+</li>
+</ul>
+</div>
+</div>
+</aside>
+<!-- Product Grid -->
+<section class="flex-1">
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-x-12 gap-y-24">
+<!-- Product Card 1 -->
+<div class="group">
+<div class="aspect-[4/5] bg-surface-container-highest overflow-hidden relative">
+<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="vibrant blue and orange ankara fabric print with intricate geometric sunburst patterns on high-quality heavy cotton wax texture" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBSrA8eiBZZr92_2fu_gTkm6RjdsYUaSLloDpFS7yqvapFyFLBug0IKuEFsbljzRzTmWWTnu0TP3_vyGTAzTRqnuaGPvNeFa80ekIvl88gP2MqIPQsNGDZEOFvVWMLOmuAzi4_k0Q_pcyXJ7Lj486Cqy45bDWr8TeZss6iRpE0ctjSq0kuJ2rCKnurQCCAs7hjYdNteX9HWLPRJui5tPSIe0DoN190BorWj7qHQg6_nHgSrc57qzF5JiyoIHK65w97c_2z3Po38y4QP"/>
+<button class="absolute bottom-0 right-0 bg-black text-white px-8 py-4 font-label text-xs uppercase tracking-widest opacity-0 translate-y-4 transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0">
+                                Quick Add
+                            </button>
+</div>
+<div class="mt-8 flex justify-between items-start">
+<div>
+<h3 class="font-headline text-3xl font-bold tracking-tight">Solaris Wax Print</h3>
+<p class="text-black/50 text-sm uppercase tracking-widest mt-2">Premium 6-Yard Bundle</p>
+</div>
+<span class="font-headline text-2xl font-bold">$145</span>
+</div>
+</div>
+<!-- Product Card 2 -->
+<div class="group mt-12">
+<div class="aspect-[4/5] bg-surface-container-highest overflow-hidden relative">
+<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="macro detail of traditional african textile with deep indigo and burnt orange geometric motifs against a crisp stone background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAYYz8npAad6_eJGiGmWhePzFDGaqLpLD2wgfU1IXcG35RjNwG3e8sAAz6S4bulMZ-S96YUcIjsDKPRG3sR2bgd0u5-5x5LYQNTvArhokzKe_Uq4LfpbKuS6UXrOTywGiA70zAUiLogscptXNZfLfw_07YAr_ONWYevfAS91kKgU1Nxk9sxxQEYVSYKQ-SLomdYo_fZtUvmpk60iGZjnteh0TiUpSwYnij0jNH3WvMviuaW4d-GwMFnX-N7A1TSUmcOS-m09Ivsv-6a"/>
+<button class="absolute bottom-0 right-0 bg-black text-white px-8 py-4 font-label text-xs uppercase tracking-widest opacity-0 translate-y-4 transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0">
+                                Quick Add
+                            </button>
+</div>
+<div class="mt-8 flex justify-between items-start">
+<div>
+<h3 class="font-headline text-3xl font-bold tracking-tight">Kente Hybrid No. 4</h3>
+<p class="text-black/50 text-sm uppercase tracking-widest mt-2">Limited Edition Textile</p>
+</div>
+<span class="font-headline text-2xl font-bold">$180</span>
+</div>
+</div>
+<!-- Product Card 3 -->
+<div class="group">
+<div class="aspect-[4/5] bg-surface-container-highest overflow-hidden relative">
+<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="minimalist black and white wax print fabric with sharp triangular shapes and heritage linework, high fashion editorial feel" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCfOQ44J3CuXrba-SwOeUoj1zmw8yhhRrObR-BqggLqAZ9tXAdaACNo8ZZMDJbBvy4oIRYTyR5r9NG8TLafCYg5L2nndbXZxTcygILpEFmmR-yb3C8rkhWd3BLakZ00ZGRee1fj4L-2br3UmWAUIw3dt8kA3i1bB2oaZmlOonlXwYHZJaDmoS_zAlUkw2CUOBXrtcquYOgD1t3fyrTYCQrHm5dugP7h7fCZPj4MWP6wLxD1s4jMCSGvI68mgyOIkaRL_sgZ7A0Rvm0Y"/>
+<button class="absolute bottom-0 right-0 bg-black text-white px-8 py-4 font-label text-xs uppercase tracking-widest opacity-0 translate-y-4 transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0">
+                                Quick Add
+                            </button>
+</div>
+<div class="mt-8 flex justify-between items-start">
+<div>
+<h3 class="font-headline text-3xl font-bold tracking-tight">Brutalist Geometry</h3>
+<p class="text-black/50 text-sm uppercase tracking-widest mt-2">Monochrome Series</p>
+</div>
+<span class="font-headline text-2xl font-bold">$120</span>
+</div>
+</div>
+<!-- Product Card 4 -->
+<div class="group mt-12">
+<div class="aspect-[4/5] bg-surface-container-highest overflow-hidden relative">
+<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="luxurious silk-cotton fabric with vibrant earthy tones and large circular mandala patterns, draped elegantly" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC_Hi2oVWhxS61H80shBz5urNqEOzPQD2UYGfSDJmjP6YvmvpS0k2p-ltf1xoVX-AnKtgnP1xT3sdG3jfTQP67zeZVOyx5iDamgnqfbzQ-s69I-_qCPxzQGrIw07cpKoocJkRFKDrkWUkVrvXfAtxuUzRfAalSe1AadPo44UQbRn8EYAPJ4PszA3423DpJFBchPsEzB6A0do4ODIJte0UlVSeEbAeBgLutci2qGcoHR3vHIXOv3Go9s2tyJ20qugbqc3m9uNiiDtV6L"/>
+<button class="absolute bottom-0 right-0 bg-black text-white px-8 py-4 font-label text-xs uppercase tracking-widest opacity-0 translate-y-4 transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0">
+                                Quick Add
+                            </button>
+</div>
+<div class="mt-8 flex justify-between items-start">
+<div>
+<h3 class="font-headline text-3xl font-bold tracking-tight">Heritage Bloom</h3>
+<p class="text-black/50 text-sm uppercase tracking-widest mt-2">Silk-Cotton Wax</p>
+</div>
+<span class="font-headline text-2xl font-bold">$210</span>
+</div>
+</div>
+</div>
+<!-- Pagination -->
+<div class="mt-32 flex justify-center items-center gap-8">
+<button class="w-12 h-12 flex items-center justify-center border border-black/10 hover:border-black transition-colors">
+<span class="material-symbols-outlined" data-icon="chevron_left">chevron_left</span>
+</button>
+<div class="flex items-center gap-4 font-label text-sm font-bold">
+<span class="text-primary underline underline-offset-8 decoration-2">01</span>
+<span class="text-black/30 hover:text-black cursor-pointer transition-colors">02</span>
+<span class="text-black/30 hover:text-black cursor-pointer transition-colors">03</span>
+<span class="text-black/30">...</span>
+<span class="text-black/30 hover:text-black cursor-pointer transition-colors">12</span>
+</div>
+<button class="w-12 h-12 flex items-center justify-center border border-black/10 bg-primary text-white transition-colors">
+<span class="material-symbols-outlined" data-icon="chevron_right">chevron_right</span>
+</button>
+</div>
+</section>
+</div>
+</main>
+<!-- Footer -->
+<footer class="flex flex-col items-center py-16 px-8 w-full border-t border-stone-300 bg-stone-200">
+<div class="text-lg font-black text-black tracking-tight mb-8">Modern Heritage</div>
+<div class="flex flex-wrap justify-center gap-12 mb-12">
+<a class="font-sans text-xs uppercase tracking-widest text-black hover:underline" href="#">Sustainability</a>
+<a class="font-sans text-xs uppercase tracking-widest text-black hover:underline" href="#">Shipping</a>
+<a class="font-sans text-xs uppercase tracking-widest text-black hover:underline" href="#">Returns</a>
+<a class="font-sans text-xs uppercase tracking-widest text-black hover:underline" href="#">Contact</a>
+</div>
+<p class="font-sans text-[10px] uppercase tracking-widest text-black/50">© 2024 MODERN HERITAGE ATELIER. ALL RIGHTS RESERVED.</p>
+</footer>
+</body></html>

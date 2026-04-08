@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@400;700;900&amp;family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container": "#eeeeee",
+                        "surface-bright": "#f9f9f9",
+                        "on-tertiary-container": "#fffdff",
+                        "tertiary": "#a13c00",
+                        "surface-variant": "#e2e2e2",
+                        "on-secondary-fixed": "#1b1b1b",
+                        "inverse-primary": "#ffb597",
+                        "on-error": "#ffffff",
+                        "on-primary": "#ffffff",
+                        "tertiary-fixed": "#ffdbcd",
+                        "inverse-surface": "#2f3131",
+                        "surface": "#f9f9f9",
+                        "on-tertiary": "#ffffff",
+                        "on-secondary-fixed-variant": "#474747",
+                        "on-primary-fixed": "#360f00",
+                        "surface-container-high": "#e8e8e8",
+                        "on-secondary": "#ffffff",
+                        "secondary-fixed": "#e2e2e2",
+                        "background": "#f9f9f9",
+                        "inverse-on-surface": "#f1f1f1",
+                        "primary-fixed": "#ffdbcd",
+                        "primary": "#a13c00",
+                        "tertiary-container": "#c65011",
+                        "error-container": "#ffdad6",
+                        "secondary": "#5e5e5e",
+                        "outline-variant": "#dfc0b4",
+                        "secondary-fixed-dim": "#c6c6c6",
+                        "primary-container": "#c65011",
+                        "on-surface": "#1a1c1c",
+                        "on-primary-container": "#fffdff",
+                        "surface-container-low": "#f4f3f3",
+                        "on-error-container": "#93000a",
+                        "surface-container-highest": "#e2e2e2",
+                        "on-tertiary-fixed": "#360f00",
+                        "on-tertiary-fixed-variant": "#7d2d00",
+                        "secondary-container": "#e2e2e2",
+                        "surface-container-lowest": "#ffffff",
+                        "on-surface-variant": "#584239",
+                        "error": "#ba1a1a",
+                        "tertiary-fixed-dim": "#ffb597",
+                        "outline": "#8c7167",
+                        "on-secondary-container": "#646464",
+                        "primary-fixed-dim": "#ffb597",
+                        "on-primary-fixed-variant": "#7d2d00",
+                        "on-background": "#1a1c1c",
+                        "surface-tint": "#a43d00",
+                        "surface-dim": "#dadada"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0px",
+                        "lg": "0px",
+                        "xl": "0px",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Noto Serif"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            background-color: #e7e7e7;
+        }
+    </style>
+</head>
+<body class="font-body text-black antialiased">
+<!-- TopNavBar (Simplified for Checkout as per Shell Suppression Rule) -->
+<header class="fixed top-0 w-full z-50 bg-stone-100/80 backdrop-blur-xl border-none">
+<nav class="flex justify-between items-center px-8 py-6 w-full max-w-full">
+<div class="text-3xl font-black text-black tracking-tight font-headline uppercase">Modern Heritage</div>
+<div class="flex items-center gap-8">
+<div class="flex items-center gap-2 text-xs font-label uppercase tracking-widest text-black/40">
+<span class="material-symbols-outlined text-sm" data-icon="lock">lock</span>
+                    Secure Checkout
+                </div>
+<a class="text-black hover:opacity-70 transition-opacity" href="#">
+<span class="material-symbols-outlined" data-icon="close">close</span>
+</a>
+</div>
+</nav>
+</header>
+<main class="pt-32 pb-24 px-8 max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12">
+<!-- Left Column: Checkout Form -->
+<div class="lg:col-span-7 space-y-16">
+<!-- Delivery Section -->
+<section class="space-y-8">
+<div class="flex items-baseline justify-between border-b border-black pb-4">
+<h2 class="text-3xl font-headline font-black tracking-tight uppercase">01 Delivery</h2>
+<span class="text-xs font-label uppercase tracking-widest text-black/50">Required Information</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-10">
+<div class="flex flex-col space-y-2">
+<label class="text-xs font-label uppercase tracking-widest font-bold">First Name</label>
+<input class="bg-transparent border-t-0 border-x-0 border-b-2 border-black focus:ring-0 focus:border-tertiary px-0 py-2 outline-none transition-colors" placeholder="Amara" type="text"/>
+</div>
+<div class="flex flex-col space-y-2">
+<label class="text-xs font-label uppercase tracking-widest font-bold">Last Name</label>
+<input class="bg-transparent border-t-0 border-x-0 border-b-2 border-black focus:ring-0 focus:border-tertiary px-0 py-2 outline-none transition-colors" placeholder="Okonkwo" type="text"/>
+</div>
+<div class="md:col-span-2 flex flex-col space-y-2">
+<label class="text-xs font-label uppercase tracking-widest font-bold">Shipping Address</label>
+<input class="bg-transparent border-t-0 border-x-0 border-b-2 border-black focus:ring-0 focus:border-tertiary px-0 py-2 outline-none transition-colors" placeholder="128 Victoria Island, Lagos" type="text"/>
+</div>
+<div class="flex flex-col space-y-2">
+<label class="text-xs font-label uppercase tracking-widest font-bold">City</label>
+<input class="bg-transparent border-t-0 border-x-0 border-b-2 border-black focus:ring-0 focus:border-tertiary px-0 py-2 outline-none transition-colors" placeholder="Lagos" type="text"/>
+</div>
+<div class="flex flex-col space-y-2">
+<label class="text-xs font-label uppercase tracking-widest font-bold">Postal Code</label>
+<input class="bg-transparent border-t-0 border-x-0 border-b-2 border-black focus:ring-0 focus:border-tertiary px-0 py-2 outline-none transition-colors" placeholder="101241" type="text"/>
+</div>
+</div>
+</section>
+<!-- Payment Section -->
+<section class="space-y-8">
+<div class="flex items-baseline justify-between border-b border-black pb-4">
+<h2 class="text-3xl font-headline font-black tracking-tight uppercase">02 Payment</h2>
+<div class="flex gap-4">
+<span class="material-symbols-outlined opacity-40" data-icon="credit_card">credit_card</span>
+<span class="material-symbols-outlined opacity-40" data-icon="account_balance_wallet">account_balance_wallet</span>
+</div>
+</div>
+<div class="space-y-10">
+<div class="flex flex-col space-y-2">
+<label class="text-xs font-label uppercase tracking-widest font-bold">Card Number</label>
+<div class="relative">
+<input class="w-full bg-transparent border-t-0 border-x-0 border-b-2 border-black focus:ring-0 focus:border-tertiary px-0 py-2 outline-none transition-colors" placeholder="0000 0000 0000 0000" type="text"/>
+<span class="absolute right-0 bottom-2 material-symbols-outlined text-black/40" data-icon="shield">shield</span>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-8">
+<div class="flex flex-col space-y-2">
+<label class="text-xs font-label uppercase tracking-widest font-bold">Expiry Date</label>
+<input class="bg-transparent border-t-0 border-x-0 border-b-2 border-black focus:ring-0 focus:border-tertiary px-0 py-2 outline-none transition-colors" placeholder="MM / YY" type="text"/>
+</div>
+<div class="flex flex-col space-y-2">
+<label class="text-xs font-label uppercase tracking-widest font-bold">CVV</label>
+<input class="bg-transparent border-t-0 border-x-0 border-b-2 border-black focus:ring-0 focus:border-tertiary px-0 py-2 outline-none transition-colors" placeholder="***" type="password"/>
+</div>
+</div>
+</div>
+</section>
+<div class="pt-8">
+<button class="w-full bg-tertiary text-white py-6 px-12 text-sm font-label uppercase tracking-[0.2em] font-bold transition-all hover:bg-tertiary/90 active:scale-[0.98] flex items-center justify-center gap-4">
+                    Confirm and Complete Purchase
+                    <span class="material-symbols-outlined text-sm" data-icon="arrow_forward">arrow_forward</span>
+</button>
+<p class="mt-6 text-[10px] text-black/40 text-center uppercase tracking-widest leading-relaxed">
+                    By clicking complete purchase, you agree to our terms of service and atelier bespoke policy. All Ankara textiles are hand-selected for unique grain patterns.
+                </p>
+</div>
+</div>
+<!-- Right Column: Order Summary -->
+<aside class="lg:col-span-5">
+<div class="sticky top-32 bg-surface-container-low p-8 lg:p-12 space-y-10">
+<h3 class="text-xl font-headline font-black tracking-tight uppercase border-b border-black/10 pb-6">Your Atelier Selection</h3>
+<!-- Line Items -->
+<div class="space-y-8">
+<!-- Item 1 -->
+<div class="flex gap-6">
+<div class="w-24 h-32 bg-surface-container-highest flex-shrink-0">
+<img alt="Ankara Fabric" class="w-full h-full object-cover grayscale-[0.2] hover:grayscale-0 transition-all" data-alt="Close-up of vibrant blue and orange Ankara wax print fabric with geometric sunburst patterns and crisp texture" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD71hSJcqW-WLbhrEFsCZJoP5H9uRUwTDO1PMwxE3gd-JeVuf_U7pfi6erq3XTPU0Jd5qa85ZKY98glbiOOOiUSTvIJkWFxODYWSyW-emEwuGs0m6AA9TeGUR9s2m1tYbebmwEBz3haVjeKWqUqpvEfRZKZVbneqBNJLSrPvoLsKf28jglrTf--dlm159-aB2RF_VDBXyP28wQbF_x3XokwDlv-hXaTWFVXRWw9Sd54VJfElmsOplsLtspGonBDKAUkcZWExGUDj--f"/>
+</div>
+<div class="flex flex-col justify-between py-1">
+<div>
+<h4 class="font-headline font-bold text-lg leading-tight">Heritage Wax Print</h4>
+<p class="text-xs text-black/60 uppercase tracking-widest mt-1">Lapis Blue / Burnt Sienna</p>
+<p class="text-xs text-black/60 uppercase tracking-widest">Qty: 01</p>
+</div>
+<div class="text-sm font-bold tracking-widest">$285.00</div>
+</div>
+</div>
+<!-- Item 2 -->
+<div class="flex gap-6">
+<div class="w-24 h-32 bg-surface-container-highest flex-shrink-0">
+<img alt="Tailored Textile" class="w-full h-full object-cover grayscale-[0.2] hover:grayscale-0 transition-all" data-alt="High-fashion editorial shot of draped golden yellow Ankara fabric with intricate black organic floral motifs and sharp shadows" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD5RJnqzqwC9vCzF8pVDBZOXh95JbgDSYbeSjEGi3KzGSUM_NkJF89RES2EreraXHRLy5oJzSCqPlMnrWFv1qVsTIxeTT0-xVw8P77v4a-Mg7kO2Fz7lvf37WRCGINsOSJccchAjopf3FMB66BiNGgZiW6pOYv31R7u9Ca_plYNPS4W-KFO7Mzyy9c3ckHRsJL8pTYKDPHD6yMDeO90JMOp4YWBPYYBAQAkfo0UVrQmqDwzGZtwySnARX7fG9p3UOBOw3qYE5XiKii7"/>
+</div>
+<div class="flex flex-col justify-between py-1">
+<div>
+<h4 class="font-headline font-bold text-lg leading-tight">Tailored Canvas</h4>
+<p class="text-xs text-black/60 uppercase tracking-widest mt-1">Sun Gold / Noir</p>
+<p class="text-xs text-black/60 uppercase tracking-widest">Qty: 01</p>
+</div>
+<div class="text-sm font-bold tracking-widest">$420.00</div>
+</div>
+</div>
+</div>
+<!-- Totals -->
+<div class="space-y-4 pt-8 border-t border-black/10">
+<div class="flex justify-between text-xs font-label uppercase tracking-widest">
+<span class="text-black/50">Subtotal</span>
+<span>$705.00</span>
+</div>
+<div class="flex justify-between text-xs font-label uppercase tracking-widest">
+<span class="text-black/50">Shipping (Global Express)</span>
+<span>$45.00</span>
+</div>
+<div class="flex justify-between text-xs font-label uppercase tracking-widest">
+<span class="text-black/50">Taxes</span>
+<span>$56.40</span>
+</div>
+<div class="flex justify-between text-lg font-headline font-black uppercase tracking-tight pt-4 border-t border-black">
+<span>Total</span>
+<span>$806.40</span>
+</div>
+</div>
+<!-- Trust Badge -->
+<div class="bg-black/5 p-6 flex items-start gap-4">
+<span class="material-symbols-outlined text-tertiary" data-icon="verified_user">verified_user</span>
+<div>
+<p class="text-[10px] font-bold uppercase tracking-widest">Atelier Authenticity Guarantee</p>
+<p class="text-[10px] text-black/60 leading-relaxed mt-1 uppercase tracking-tighter">Every fabric is authenticated by our master tailors before dispatch to ensure heritage quality standards.</p>
+</div>
+</div>
+</div>
+</aside>
+</main>
+<!-- Footer (As defined in JSON) -->
+<footer class="flex flex-col items-center py-16 px-8 w-full border-t border-stone-300 bg-stone-200">
+<div class="text-lg font-black text-black tracking-tight uppercase mb-8">Modern Heritage</div>
+<div class="flex flex-wrap justify-center gap-10 mb-12">
+<a class="text-xs font-sans uppercase tracking-widest text-black hover:underline transition-all" href="#">Sustainability</a>
+<a class="text-xs font-sans uppercase tracking-widest text-black hover:underline transition-all" href="#">Shipping</a>
+<a class="text-xs font-sans uppercase tracking-widest text-black hover:underline transition-all" href="#">Returns</a>
+<a class="text-xs font-sans uppercase tracking-widest text-black hover:underline transition-all" href="#">Contact</a>
+</div>
+<div class="text-[10px] font-sans uppercase tracking-widest text-black/40 text-center">
+            © 2024 MODERN HERITAGE ATELIER. ALL RIGHTS RESERVED.
+        </div>
+</footer>
+</body></html>
