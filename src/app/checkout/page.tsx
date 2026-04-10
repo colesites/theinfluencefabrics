@@ -6,7 +6,9 @@ import { useRouter } from "next/navigation"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
-import { PaystackButton } from "react-paystack"
+import dynamic from "next/dynamic"
+
+const PaystackButton = dynamic(() => import("react-paystack").then((mod) => mod.PaystackButton), { ssr: false })
 import { ChevronLeft, Lock } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
@@ -36,6 +38,7 @@ export default function CheckoutPage() {
 
   const { register, formState: { errors, isValid } } = useForm<CheckoutFormValues>({
     resolver: zodResolver(checkoutSchema),
+    mode: "onChange",
     defaultValues: {
       email: session?.user?.email || "",
       name: session?.user?.name || "",
