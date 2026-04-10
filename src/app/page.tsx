@@ -1,65 +1,206 @@
 import Image from "next/image";
+import Link from "next/link";
+import { ArrowRight } from "lucide-react";
 
-export default function Home() {
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { getFeaturedProducts } from "@/lib/products";
+
+export const revalidate = 0;
+
+export default async function Home() {
+  const homeProducts = await getFeaturedProducts();
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
+    <>
+      <section className="relative flex h-[calc(100svh-7rem)] items-center overflow-hidden bg-surface-dim lg:h-[calc(100svh-5rem)]">
         <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
+          src="https://lh3.googleusercontent.com/aida-public/AB6AXuBzwmnxsn94ZIDvFIG5UNKjamTF94T4cUNy_KZwEuI3L34Z3sAchuWNLyIopB0m2AjCPHIEfyCZsYKF4nFAQ_GaBVLmPtNcMpjCagbUXJXNk_wp--q4oV2aCMcUXO3FcFxVpWMkfxH5UFd0cxwUjI0INj-qX0_5xr3ayJ0c9V-4habZZKiZhn1_CJewx8g0vrjMI9QZSWaFpUnPPeH3TT2TQ86jRjGItt_REUsONsArwtGV5DKf4bH1MjLYDWbxhVDPmYfcqUsIaez7"
+          alt="Ankara fabric texture"
+          fill
           priority
+          className="object-cover grayscale opacity-45 mix-blend-multiply"
+          sizes="100vw"
         />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
+
+        <div className="atelier-shell relative z-10 py-16">
+          <h1 className="mt-6 text-5xl leading-[0.9] font-black tracking-tight sm:text-7xl lg:text-9xl">
+            The Influence <br />
+            <span className="text-primary italic">Fabrics.</span>
           </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+
+          <div className="mt-10 flex flex-wrap gap-3">
+            <Button asChild size="lg">
+              <Link href="/account">Sign Up</Link>
+            </Button>
+            <Button asChild variant="secondary" size="lg">
+              <Link href="/collection">Shop Collection</Link>
+            </Button>
+          </div>
+
+          <p className="mt-16 max-w-sm text-right font-serif text-xl italic lg:ml-auto">
+            {`"Premium Ankara fabrics crafted for modern elegance and timeless African style."`}
           </p>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
+      </section>
+
+      <section className="atelier-shell py-20 sm:py-28">
+        <div className="grid gap-4 md:grid-cols-12 md:grid-rows-2">
+          <article className="relative overflow-hidden bg-surface-container md:col-span-8 md:row-span-2">
             <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuCrlpODtcy4wZ5AH9XgV8l5FlgzKGJuVHAwzqK7JyoDJmkgF_20qrNl3AXvl0wCXLDloWM6RSlG_SllVDcQio5Q6pKlhTVG4f3w_M3J07HnfbgQYXC1_PimILS0xen-mTyCwFqoFE8zhX1f8jgocJsoGQpeIDXRVDda1xSazGxQUQCpvmdpsJQ0t-0VQ5fesUGOgm-DVdTiCtA4lxg5QHL4x9ngUow5tbOO11Dm3ykhmSeIa6d9kYB0Fp5V5zPOqbQecffXPG0yeR9q"
+              alt="Ankara textiles"
+              fill
+              className="object-cover transition-transform duration-700 hover:scale-105"
+              sizes="(max-width: 1024px) 100vw, 66vw"
             />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+            <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/65 to-transparent p-10 text-white">
+              <h2 className="text-4xl font-black">Ankara Textiles</h2>
+              <p className="mt-2 text-xs uppercase tracking-[0.2em] text-white/80">
+                Shop Signature Prints
+              </p>
+            </div>
+          </article>
+
+          <article className="relative overflow-hidden bg-surface-container-high md:col-span-4">
+            <Image
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuDEIIqzPrOVbUuEyJiqFkk7C-1Is6A0V-IBywt31XQerVJVhNoQz45TJ8sJzVcW-LjknUc5U2fEdy0Xp_OYgdXJIYmRH2-DZ29x91Jg0M_RtAn9iD432mOjbRVwUePmJgqzvRfPNsPwJWU0YLphBVTBfQS3iGzRwtF-SF1SqgAAUjwkHL3fUjUoU6Gf_5DF1SCMWTPTXM2oOqnErnfTOyyBwZhz3LXsMGsCAujokiGo1h1tNzt18VrAOYe1SHAX_C_pRV3z2jypBiVN"
+              alt="Ankara weave details"
+              fill
+              className="object-cover"
+              sizes="(max-width: 1024px) 100vw, 33vw"
+            />
+            <div className="absolute inset-0 grid place-content-center bg-black/30">
+              <h3 className="text-3xl font-black text-white">Ankara Weaves</h3>
+            </div>
+          </article>
+
+          <article className="flex flex-col justify-end bg-primary p-8 text-primary-foreground md:col-span-4">
+            <p className="editorial-kicker text-white/80">Custom Cut</p>
+            <h3 className="mt-3 text-3xl font-black">Ankara By Yard</h3>
+            <p className="mt-3 max-w-xs text-sm text-white/85">
+              Order authentic Ankara fabrics in 6-yard, 12-yard, or custom-cut bundles.
+            </p>
+            <Button
+              asChild
+              variant="tertiary"
+              className="mt-8 w-fit text-white decoration-white hover:text-white hover:opacity-80"
+            >
+              <Link href="/contact">Request Bundle</Link>
+            </Button>
+          </article>
         </div>
-      </main>
-    </div>
+      </section>
+
+      <section className="bg-surface-container-low py-20 sm:py-28">
+        <div className="atelier-shell">
+          <div className="mb-14 flex flex-wrap items-end justify-between gap-8">
+            <div>
+              <h2 className="text-5xl font-black sm:text-6xl">Ankara Archive</h2>
+              <p className="mt-3 text-xs uppercase tracking-[0.2em] text-muted-foreground">
+                Curated prints / premium wax textiles
+              </p>
+            </div>
+            <Button asChild variant="tertiary" className="w-fit">
+              <Link href="/collection">See all pieces</Link>
+            </Button>
+          </div>
+
+          <div className="grid gap-8 md:grid-cols-2 xl:grid-cols-3">
+            {homeProducts.length === 0 ? (
+              <div className="md:col-span-2 xl:col-span-3 py-10 bg-transparent flex flex-col items-center justify-center">
+                <p className="text-muted-foreground">No featured products available in Sanity yet.</p>
+              </div>
+            ) : homeProducts.map((product) => (
+              <Card key={product._id} className="bg-transparent">
+                <Link
+                  href={`/product/${product._id}`}
+                  className="relative block aspect-[4/5] overflow-hidden bg-surface-container-highest"
+                >
+                  <Image
+                    src={product.image || "https://lh3.googleusercontent.com/aida-public/AB6AXuBzwmnxsn94ZIDvFIG5UNKjamTF94T4cUNy_KZwEuI3L34Z3sAchuWNLyIopB0m2AjCPHIEfyCZsYKF4nFAQ_GaBVLmPtNcMpjCagbUXJXNk_wp--q4oV2aCMcUXO3FcFxVpWMkfxH5UFd0cxwUjI0INj-qX0_5xr3ayJ0c9V-4habZZKiZhn1_CJewx8g0vrjMI9QZSWaFpUnPPeH3TT2TQ86jRjGItt_REUsONsArwtGV5DKf4bH1MjLYDWbxhVDPmYfcqUsIaez7"}
+                    alt={product.name}
+                    fill
+                    className="object-cover transition-transform duration-700 hover:scale-110"
+                    sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
+                  />
+                  {product.badge ? (
+                    <span className="absolute left-5 top-5 bg-black px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-white">
+                      {product.badge}
+                    </span>
+                  ) : null}
+                </Link>
+                <CardContent className="px-0 pb-0 pt-5">
+                  <h3 className="text-2xl font-black">
+                    <Link href={`/product/${product._id}`} className="hover:text-primary">
+                      {product.name}
+                    </Link>
+                  </h3>
+                  <p className="mt-1 text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
+                    {product.subtitle || 'Premium Ankara'}
+                  </p>
+                  <p className="mt-3 font-serif text-2xl font-black text-primary">₦{product.price.toLocaleString("en-NG")}</p>
+                  <Button asChild variant="outline" className="mt-6 w-full">
+                    <Link href={`/product/${product._id}`}>View Product</Link>
+                  </Button>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="atelier-shell py-20 text-center sm:py-28">
+        <p className="editorial-kicker text-primary">Our Promise</p>
+        <h2 className="mx-auto mt-5 max-w-3xl text-5xl leading-tight font-black sm:text-7xl">
+          Premium Ankara, <span className="italic">responsibly sourced.</span>
+        </h2>
+        <p className="mx-auto mt-8 max-w-3xl text-lg leading-relaxed text-muted-foreground">
+          Every batch is selected from trusted makers and checked for color depth, print precision,
+          and lasting quality before it enters the Influencefabrics archive.
+        </p>
+
+        <div className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+          {[
+            { value: "100%", label: "Authentic Wax Prints" },
+            { value: "48hr", label: "Lagos Dispatch Window" },
+            { value: "Zero", label: "Synthetic Blends" },
+            { value: "14", label: "Partner Weaving Hubs" },
+          ].map((item) => (
+            <div key={item.label}>
+              <p className="font-serif text-3xl font-black">{item.value}</p>
+              <p className="mt-2 text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
+                {item.label}
+              </p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section className="grid md:grid-cols-2">
+        <article className="bg-surface-dim p-8 sm:p-16 lg:p-20">
+          <h2 className="text-5xl leading-tight font-black sm:text-6xl">The Ankara Journal.</h2>
+          <p className="mt-7 max-w-lg text-lg leading-relaxed text-muted-foreground">
+            Learn fabric care, discover pattern histories, and see practical styling guides for
+            everyday and ceremonial Ankara looks.
+          </p>
+          <Button asChild variant="secondary" className="mt-10 w-fit gap-3">
+            <Link href="/our-story">
+              Read The Stories
+              <ArrowRight className="size-4" />
+            </Link>
+          </Button>
+        </article>
+
+        <article className="relative min-h-[380px] bg-black">
+          <Image
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuD1oVhVIcYX7QgUCfJxeBB4r1gbVQrc4KCHEKZ0npYBys2AqU1U5kSgaAy-Orot62ZVIor6Kb9l6Q1M21BZiX8iFRSItUWuFJCYhkQY84OYgAJIqAv2nITteh_ko0A7MoPST53FrvcOipOaXkx-1oA9qxhYPYWoggaRqTXgcsxClE_AAmn3LVL4B_-OfpxYzCOpJJJabEdigJ6DdEmbJNcmIeMaGeZxaS9nojDETvtOgjl6vtrchXj0sUChgh3mmIEcJwpZ5EhGroHr"
+            alt="Draped Ankara fabric"
+            fill
+            className="object-cover"
+            sizes="(max-width: 768px) 100vw, 50vw"
+          />
+        </article>
+      </section>
+    </>
   );
 }
