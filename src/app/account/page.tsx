@@ -1,5 +1,5 @@
 'use client';
-import { useState, use } from "react";
+import { useState, use, Suspense } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 
@@ -10,7 +10,7 @@ import { signIn, signUp, useSession, signOut } from "@/lib/auth-client";
 import { getUserOrders, type OrderRecord } from "@/lib/orders";
 import { Package, Clock, ExternalLink } from "lucide-react";
 
-export default function AccountPage() {
+function AccountPageContent() {
   const { data: session, isPending } = useSession();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -240,5 +240,13 @@ export default function AccountPage() {
         </Link>
       </div>
     </section>
+  );
+}
+
+export default function AccountPage() {
+  return (
+    <Suspense fallback={<div className="py-24 text-center">Loading Profile...</div>}>
+      <AccountPageContent />
+    </Suspense>
   );
 }
