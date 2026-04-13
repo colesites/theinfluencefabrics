@@ -23,9 +23,9 @@ export default async function Home() {
         />
 
         <div className="atelier-shell relative z-10 py-16">
-          <h1 className="mt-6 text-5xl leading-[0.9] text-white font-black tracking-tight sm:text-7xl lg:text-9xl">
+          <h1 className="mt-6 text-5xl leading-[0.9] text-primary font-poppins font-bold tracking-tight sm:text-7xl lg:text-9xl uppercase">
             Influence <br />
-            <span className="text-primary italic">Fabrics.</span>
+            Fabrics
           </h1>
 
           <div className="mt-10 flex flex-wrap gap-3">
@@ -167,7 +167,7 @@ export default async function Home() {
       <section className="atelier-shell py-20 text-center sm:py-28">
         <p className="editorial-kicker text-primary">Our Promise</p>
         <h2 className="mx-auto mt-5 max-w-3xl text-5xl leading-tight font-black sm:text-7xl">
-          Premium Ankara, <span className="italic">responsibly sourced.</span>
+          Premium Ankara, <span>responsibly sourced.</span>
         </h2>
         <p className="mx-auto mt-8 max-w-3xl text-lg leading-relaxed text-muted-foreground">
           Every batch is selected from trusted makers and checked for color

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Noto_Serif } from "next/font/google";
+import { Inter, Noto_Serif, Poppins } from "next/font/google";
 
 import { cn } from "@/lib/utils";
 import { Providers } from "@/components/Providers";
@@ -23,6 +23,13 @@ const notoSerif = Noto_Serif({
   display: "swap",
 });
 
+const poppins = Poppins({
+  subsets: ["latin"],
+  variable: "--font-poppins",
+  weight: ["400", "500", "600", "700", "800", "900"],
+  display: "swap",
+});
+
 export const metadata: Metadata = {
   title: "Influencefabrics | Modern Heritage Ankara",
   description:
@@ -38,7 +45,7 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={cn("h-full scroll-smooth antialiased", inter.variable, notoSerif.variable)}
+      className={cn("h-full scroll-smooth antialiased", inter.variable, notoSerif.variable, poppins.variable)}
     >
       <body className="min-h-full bg-background text-foreground">
         <Providers>

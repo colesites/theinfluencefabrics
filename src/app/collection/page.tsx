@@ -74,7 +74,7 @@ export default async function CollectionPage({ searchParams }: CollectionPagePro
   return (
     <section className="atelier-shell py-12 sm:py-16">
       <header className="mb-14 sm:mb-20">
-        <h1 className="text-5xl leading-none font-black tracking-tight sm:text-7xl lg:text-8xl italic">
+        <h1 className="text-5xl leading-none font-black tracking-tight sm:text-7xl lg:text-8xl">
           ANKARA ARCHIVE
         </h1>
         <div className="mt-8 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">

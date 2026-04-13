@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { MdOutlineShoppingBag } from "react-icons/md";
 import { FaRegUser } from "react-icons/fa6";
-import { Search, X } from "lucide-react";
+import { Search, X, ShoppingCart } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 import { cn } from "@/lib/utils";
@@ -20,7 +20,7 @@ const primaryLinks = [
 ];
 
 const utilityLinks = [
-  { name: "Cart", href: "/cart", icon: MdOutlineShoppingBag },
+  { name: "Cart", href: "/cart", icon: ShoppingCart },
   { name: "Account", href: "/account", icon: FaRegUser },
 ];
 

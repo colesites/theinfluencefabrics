@@ -48,6 +48,7 @@
   --font-serif: var(--font-serif);
   --font-mono: var(--font-geist-mono);
   --font-heading: var(--font-serif);
+  --font-poppins: var(--font-poppins);
   --radius-sm: calc(var(--radius) + 2px);
   --radius-md: calc(var(--radius) + 2px);
   --radius-lg: var(--radius);
@@ -64,8 +65,8 @@
   --card-foreground: #000000;
   --popover: #f9f9f9;
   --popover-foreground: #000000;
-  --primary: #f97316;
-  --primary-strong: #ea580c;
+  --primary: #e46623;
+  --primary-strong: #e46623;
   --primary-foreground: #fffdff;
   --secondary: #000000;
   --secondary-foreground: #ffffff;
@@ -76,8 +77,8 @@
   --destructive: #ba1a1a;
   --border: rgb(223 192 180 / 18%);
   --input: #000000;
-  --ring: #f97316;
-  --chart-1: #f97316;
+  --ring: #e46623;
+  --chart-1: #e46623;
   --chart-2: #7d2d00;
   --chart-3: #5e5e5e;
   --chart-4: #dadada;
@@ -85,12 +86,12 @@
   --radius: 0rem;
   --sidebar: #f4f3f3;
   --sidebar-foreground: #000000;
-  --sidebar-primary: #f97316;
+  --sidebar-primary: #e46623;
   --sidebar-primary-foreground: #fffdff;
   --sidebar-accent: #e7e7e7;
   --sidebar-accent-foreground: #000000;
   --sidebar-border: rgb(223 192 180 / 18%);
-  --sidebar-ring: #f97316;
+  --sidebar-ring: #e46623;
   --surface-bright: #f9f9f9;
   --surface-dim: #dadada;
   --surface-container: #eeeeee;

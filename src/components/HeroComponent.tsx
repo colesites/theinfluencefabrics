@@ -14,9 +14,9 @@ const HeroComponent = () => {
       {/* <div className="absolute inset-0 bg-black/30"></div> */}
 
       <div className="relative z-10 flex flex-col gap-10 max-w-4xl">
-        <h1 className="uppercase font-serif font-black text-2xl md:text-4xl lg:text-8xl text-black">
-          Influence <br />
-          <span className="text-primary italic">Fabrics.</span>
+        <h1 className="uppercase font-poppins font-bold text-3xl md:text-5xl lg:text-8xl text-primary leading-tight">
+          INFLUENCE <br />
+          FABRICS
         </h1>
 
         <div className="flex flex-row gap-4">
