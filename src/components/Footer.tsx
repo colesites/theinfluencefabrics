@@ -14,8 +14,8 @@ const Footer = () => {
               Influence fabrics
             </p>
             <p className="mt-4 max-w-sm text-xs leading-relaxed uppercase tracking-[0.14em] text-black/65">
-              Defining the geometry of tradition through modern artisanal Ankara
-              craftsmanship.
+              Bringing to your doorstep a blend of african culture and modern
+              beauty in exquisite ankara prints.
             </p>
           </div>
 

@@ -170,9 +170,12 @@ export default async function Home() {
           Premium Ankara, <span>responsibly sourced.</span>
         </h2>
         <p className="mx-auto mt-8 max-w-3xl text-lg leading-relaxed text-muted-foreground">
-          Every batch is selected from trusted makers and checked for color
-          depth, print precision, and lasting quality before it enters the
-          Influence fabrics archive.
+          We owe all our clients the responsibility of authenticity. Each print
+          is carefully selected from trusted manufacturers and meticulously
+          inspected for precision, colour consistency, depth, and long-lasting
+          quality. Our commitment ensures that every fabric you receive meets
+          the highest standards of excellence and truly reflects the beauty of
+          Ankara craftsmanship.
         </p>
 
         <div className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
@@ -198,8 +201,8 @@ export default async function Home() {
             The Ankara Journal.
           </h2>
           <p className="mt-7 max-w-lg text-lg leading-relaxed text-muted-foreground">
-            Learn fabric care, discover pattern histories, and see practical
-            styling guides for everyday and ceremonial Ankara looks.
+            Learn fabric care, and see practical styling guides for everyday and
+            ceremonial Ankara looks.
           </p>
           <Button asChild variant="secondary" className="mt-10 w-fit gap-3">
             <Link href="/our-story">
