@@ -205,7 +205,7 @@ export default async function Home() {
             ceremonial Ankara looks.
           </p>
           <Button asChild variant="secondary" className="mt-10 w-fit gap-3">
-            <Link href="/our-story">
+            <Link href="/explore">
               EXPLORE
               <ArrowRight className="size-4" />
             </Link>
