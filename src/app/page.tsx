@@ -172,7 +172,7 @@ export default async function Home() {
         <p className="mx-auto mt-8 max-w-3xl text-lg leading-relaxed text-muted-foreground">
           Every batch is selected from trusted makers and checked for color
           depth, print precision, and lasting quality before it enters the
-          Influencefabrics archive.
+          Influence fabrics archive.
         </p>
 
         <div className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">

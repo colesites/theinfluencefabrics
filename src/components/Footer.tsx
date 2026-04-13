@@ -10,9 +10,12 @@ const Footer = () => {
       <div className="atelier-shell">
         <div className="grid gap-12 border-b border-black/10 pb-12 md:grid-cols-3">
           <div>
-            <p className="font-serif text-lg font-black uppercase tracking-tight">Influencefabrics</p>
+            <p className="font-serif text-lg font-black uppercase tracking-tight">
+              Influence fabrics
+            </p>
             <p className="mt-4 max-w-sm text-xs leading-relaxed uppercase tracking-[0.14em] text-black/65">
-              Defining the geometry of tradition through modern artisanal Ankara craftsmanship.
+              Defining the geometry of tradition through modern artisanal Ankara
+              craftsmanship.
             </p>
           </div>
 
@@ -46,7 +49,11 @@ const Footer = () => {
                 placeholder="Enter email"
                 className="text-xs"
               />
-              <Button size="icon-sm" className="shrink-0" aria-label="Submit email">
+              <Button
+                size="icon-sm"
+                className="shrink-0"
+                aria-label="Submit email"
+              >
                 <ArrowRight className="size-4" />
               </Button>
             </div>
@@ -55,7 +62,7 @@ const Footer = () => {
 
         <div className="mt-8 flex flex-col items-center justify-between gap-4 md:flex-row">
           <p className="text-[10px] uppercase tracking-[0.16em] text-black/45">
-            © 2026 influencefabrics atelier. All rights reserved.
+            © 2026 influence fabrics atelier. All rights reserved.
           </p>
           <div className="flex items-center gap-5 text-black/70">
             <Globe className="size-4" />

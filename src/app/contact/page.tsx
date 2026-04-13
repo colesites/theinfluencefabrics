@@ -10,10 +10,12 @@ export default function ContactPage() {
     <section className="atelier-shell py-14 sm:py-20">
       <div className="mb-12 max-w-3xl">
         <p className="editorial-kicker text-primary">Contact Us</p>
-        <h1 className="mt-4 text-5xl leading-tight font-black sm:text-7xl">Start an Ankara conversation.</h1>
+        <h1 className="mt-4 text-5xl leading-tight font-black sm:text-7xl">
+          Start an Ankara conversation.
+        </h1>
         <p className="mt-6 text-lg leading-relaxed text-muted-foreground">
-          Reach our team for custom sourcing, wholesale Ankara requests, or collaboration on
-          premium wax-print collections.
+          Reach our team for custom sourcing, ankara dropshipping, bulk order,
+          aso ebi sourcing, sewing of ankara fabrics, or collaboration.
         </p>
       </div>
 
@@ -22,13 +24,19 @@ export default function ContactPage() {
           <CardContent className="space-y-8 p-8 sm:p-12">
             <div className="grid gap-8 sm:grid-cols-2">
               <div>
-                <label htmlFor="first-name" className="editorial-kicker block text-black/70">
+                <label
+                  htmlFor="first-name"
+                  className="editorial-kicker block text-black/70"
+                >
                   First Name
                 </label>
                 <Input id="first-name" placeholder="Amara" className="mt-2" />
               </div>
               <div>
-                <label htmlFor="last-name" className="editorial-kicker block text-black/70">
+                <label
+                  htmlFor="last-name"
+                  className="editorial-kicker block text-black/70"
+                >
                   Last Name
                 </label>
                 <Input id="last-name" placeholder="Okonkwo" className="mt-2" />
@@ -36,21 +44,39 @@ export default function ContactPage() {
             </div>
 
             <div>
-              <label htmlFor="email" className="editorial-kicker block text-black/70">
+              <label
+                htmlFor="email"
+                className="editorial-kicker block text-black/70"
+              >
                 Email
               </label>
-              <Input id="email" type="email" placeholder="hello@influencefabrics.com" className="mt-2" />
+              <Input
+                id="email"
+                type="email"
+                placeholder="hello@influencefabrics.com"
+                className="mt-2"
+              />
             </div>
 
             <div>
-              <label htmlFor="subject" className="editorial-kicker block text-black/70">
+              <label
+                htmlFor="subject"
+                className="editorial-kicker block text-black/70"
+              >
                 Subject
               </label>
-              <Input id="subject" placeholder="Ankara bundle request" className="mt-2" />
+              <Input
+                id="subject"
+                placeholder="Ankara bundle request"
+                className="mt-2"
+              />
             </div>
 
             <div>
-              <label htmlFor="message" className="editorial-kicker block text-black/70">
+              <label
+                htmlFor="message"
+                className="editorial-kicker block text-black/70"
+              >
                 Message
               </label>
               <textarea
@@ -76,9 +102,10 @@ export default function ContactPage() {
             sizes="(max-width: 1024px) 100vw, 30vw"
           />
           <div className="absolute inset-x-0 bottom-0 bg-black/65 p-8 text-white">
-            <p className="editorial-kicker text-white/75">Lagos Studio</p>
+            <p className="editorial-kicker text-white/75">Ado-Ekiti studio</p>
             <p className="mt-3 max-w-xs text-sm uppercase tracking-[0.14em]">
-              Open Monday to Saturday, 9am to 6pm. Virtual consultations available globally.
+              Physical store open Monday to Saturday, 9am to 6pm. Virtual
+              consultations available globally.
             </p>
           </div>
         </article>
@@ -88,10 +115,12 @@ export default function ContactPage() {
         <CardContent className="flex flex-col items-start justify-between gap-6 p-8 sm:flex-row sm:items-center sm:p-10">
           <div>
             <p className="editorial-kicker text-primary">Community</p>
-            <h2 className="mt-3 text-3xl font-black">Join My WhatsApp Community</h2>
+            <h2 className="mt-3 text-3xl font-black">
+              Join My WhatsApp Community
+            </h2>
             <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted-foreground">
-              Get first access to new Ankara arrivals, restock alerts, and styling drops from
-              Influencefabrics.
+              Get first access to new Ankara arrivals, restock alerts, and
+              styling drops from Influencefabrics.
             </p>
           </div>
 
@@ -102,7 +131,7 @@ export default function ContactPage() {
             className="w-full gap-3 sm:w-auto"
           >
             <a
-              href="https://wa.me/2340000000000?text=Hi%20Influencefabrics!%20I%20want%20to%20join%20the%20WhatsApp%20community."
+              href="https://chat.whatsapp.com/KMIW3D9veow29Ltt28isJS?mode=gi_t"
               target="_blank"
               rel="noopener noreferrer"
             >

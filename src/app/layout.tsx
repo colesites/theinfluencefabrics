@@ -31,9 +31,9 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-  title: "Influencefabrics | Modern Heritage Ankara",
+  title: "Influence fabrics | Modern Heritage Ankara",
   description:
-    "Influencefabrics brings modern heritage Ankara textiles and tailored essentials with an editorial luxury aesthetic.",
+    "Influence fabrics brings modern heritage Ankara textiles and tailored essentials with an editorial luxury aesthetic.",
 };
 
 export default function RootLayout({

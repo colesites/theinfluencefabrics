@@ -62,14 +62,16 @@ const Header = () => {
     <header
       className={cn(
         "fixed inset-x-0 top-0 z-50 transition-colors duration-300",
-        isScrolled ? "bg-[#e7e7e7]/95 backdrop-blur-xl" : "bg-[#e7e7e7]/80 backdrop-blur-xl"
+        isScrolled
+          ? "bg-[#e7e7e7]/95 backdrop-blur-xl"
+          : "bg-[#e7e7e7]/80 backdrop-blur-xl",
       )}
     >
       <nav className="atelier-shell flex h-20 items-center justify-between gap-4">
-        <Link href="/" className="shrink-0" aria-label="Influencefabrics home">
+        <Link href="/" className="shrink-0" aria-label="Influence fabrics home">
           <Image
             src="/influencefabrics-orange.png"
-            alt="Influencefabrics"
+            alt="Influence fabrics"
             width={214}
             height={75}
             priority
@@ -86,7 +88,7 @@ const Header = () => {
                   "pb-1 transition-colors hover:text-primary",
                   isActiveRoute(link.href)
                     ? "text-primary underline decoration-2 underline-offset-8"
-                    : "text-foreground"
+                    : "text-foreground",
                 )}
               >
                 {link.name}
@@ -98,7 +100,10 @@ const Header = () => {
         <div className="flex items-center gap-1">
           <div className="relative flex items-center">
             {isSearchOpen && (
-              <form onSubmit={handleSearch} className="absolute right-full mr-4 flex animate-in fade-in slide-in-from-right-4 duration-300">
+              <form
+                onSubmit={handleSearch}
+                className="absolute right-full mr-4 flex animate-in fade-in slide-in-from-right-4 duration-300"
+              >
                 <input
                   type="text"
                   autoFocus
@@ -115,7 +120,11 @@ const Header = () => {
               onClick={() => setIsSearchOpen(!isSearchOpen)}
               className={cn("border-none", isSearchOpen && "text-primary")}
             >
-              {isSearchOpen ? <X className="size-5" /> : <Search className="size-5" />}
+              {isSearchOpen ? (
+                <X className="size-5" />
+              ) : (
+                <Search className="size-5" />
+              )}
             </Button>
           </div>
 
@@ -128,7 +137,10 @@ const Header = () => {
                 asChild
                 variant="ghost"
                 size="icon-sm"
-                className={cn("border-none", isActiveRoute(link.href) && "text-primary")}
+                className={cn(
+                  "border-none",
+                  isActiveRoute(link.href) && "text-primary",
+                )}
               >
                 <Link href={link.href} aria-label={link.name}>
                   <Icon className="size-5" />
@@ -149,7 +161,7 @@ const Header = () => {
                   "transition-colors hover:text-primary",
                   isActiveRoute(link.href)
                     ? "text-primary underline decoration-2 underline-offset-6"
-                    : "text-foreground"
+                    : "text-foreground",
                 )}
               >
                 {link.name}
