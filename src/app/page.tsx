@@ -23,7 +23,7 @@ export default async function Home() {
         />
 
         <div className="atelier-shell relative z-10 py-16">
-          <h1 className="mt-6 text-5xl leading-[0.9] text-primary font-poppins font-bold tracking-tight sm:text-7xl lg:text-9xl uppercase">
+          <h1 className="mt-6 text-5xl leading-[0.9] text-white font-poppins font-bold tracking-tight sm:text-7xl lg:text-9xl uppercase">
             Influence <br />
             Fabrics
           </h1>
@@ -181,7 +181,7 @@ export default async function Home() {
         <div className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
           {[
             { value: "100%", label: "Authentic Wax Prints" },
-            { value: "48hr", label: "Lagos Dispatch Window" },
+            { value: "48hr", label: "Ado-Ekiti Dispatch Window" },
             { value: "Zero", label: "Synthetic Blends" },
             { value: "14", label: "Partner Weaving Hubs" },
           ].map((item) => (
@@ -206,7 +206,7 @@ export default async function Home() {
           </p>
           <Button asChild variant="secondary" className="mt-10 w-fit gap-3">
             <Link href="/our-story">
-              Read The Stories
+              EXPLORE
               <ArrowRight className="size-4" />
             </Link>
           </Button>
