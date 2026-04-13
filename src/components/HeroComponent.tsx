@@ -5,17 +5,17 @@ const HeroComponent = () => {
   return (
     <div
       className="relative h-screen flex items-center px-20"
-    //   style={{
-    //     backgroundImage: "url('/hero.png')",
-    //     backgroundSize: "cover",
-    //     backgroundPosition: "center",
-    //   }}
+      //   style={{
+      //     backgroundImage: "url('/hero.png')",
+      //     backgroundSize: "cover",
+      //     backgroundPosition: "center",
+      //   }}
     >
       {/* <div className="absolute inset-0 bg-black/30"></div> */}
 
       <div className="relative z-10 flex flex-col gap-10 max-w-4xl">
         <h1 className="uppercase font-serif font-black text-2xl md:text-4xl lg:text-8xl text-black">
-          The Influence <br />
+          Influence <br />
           <span className="text-primary italic">Fabrics.</span>
         </h1>
 

@@ -23,8 +23,8 @@ export default async function Home() {
         />
 
         <div className="atelier-shell relative z-10 py-16">
-          <h1 className="mt-6 text-5xl leading-[0.9] font-black tracking-tight sm:text-7xl lg:text-9xl">
-            The Influence <br />
+          <h1 className="mt-6 text-5xl leading-[0.9] text-white font-black tracking-tight sm:text-7xl lg:text-9xl">
+            Influence <br />
             <span className="text-primary italic">Fabrics.</span>
           </h1>
 
@@ -78,7 +78,8 @@ export default async function Home() {
             <p className="editorial-kicker text-white/80">Custom Cut</p>
             <h3 className="mt-3 text-3xl font-black">Ankara By Yard</h3>
             <p className="mt-3 max-w-xs text-sm text-white/85">
-              Order authentic Ankara fabrics in 6-yard, 12-yard, or custom-cut bundles.
+              Order authentic Ankara fabrics in 6-yard, 12-yard, or custom-cut
+              bundles.
             </p>
             <Button
               asChild
@@ -95,7 +96,9 @@ export default async function Home() {
         <div className="atelier-shell">
           <div className="mb-14 flex flex-wrap items-end justify-between gap-8">
             <div>
-              <h2 className="text-5xl font-black sm:text-6xl">Ankara Archive</h2>
+              <h2 className="text-5xl font-black sm:text-6xl">
+                Ankara Archive
+              </h2>
               <p className="mt-3 text-xs uppercase tracking-[0.2em] text-muted-foreground">
                 Curated prints / premium wax textiles
               </p>
@@ -108,43 +111,55 @@ export default async function Home() {
           <div className="grid gap-8 md:grid-cols-2 xl:grid-cols-3">
             {homeProducts.length === 0 ? (
               <div className="md:col-span-2 xl:col-span-3 py-10 bg-transparent flex flex-col items-center justify-center">
-                <p className="text-muted-foreground">No featured products available in Sanity yet.</p>
+                <p className="text-muted-foreground">
+                  No featured products available in Sanity yet.
+                </p>
               </div>
-            ) : homeProducts.map((product) => (
-              <Card key={product._id} className="bg-transparent">
-                <Link
-                  href={`/product/${product._id}`}
-                  className="relative block aspect-[4/5] overflow-hidden bg-surface-container-highest"
-                >
-                  <Image
-                    src={product.image || "https://lh3.googleusercontent.com/aida-public/AB6AXuBzwmnxsn94ZIDvFIG5UNKjamTF94T4cUNy_KZwEuI3L34Z3sAchuWNLyIopB0m2AjCPHIEfyCZsYKF4nFAQ_GaBVLmPtNcMpjCagbUXJXNk_wp--q4oV2aCMcUXO3FcFxVpWMkfxH5UFd0cxwUjI0INj-qX0_5xr3ayJ0c9V-4habZZKiZhn1_CJewx8g0vrjMI9QZSWaFpUnPPeH3TT2TQ86jRjGItt_REUsONsArwtGV5DKf4bH1MjLYDWbxhVDPmYfcqUsIaez7"}
-                    alt={product.name}
-                    fill
-                    className="object-cover transition-transform duration-700 hover:scale-110"
-                    sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
-                  />
-                  {product.badge ? (
-                    <span className="absolute left-5 top-5 bg-black px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-white">
-                      {product.badge}
-                    </span>
-                  ) : null}
-                </Link>
-                <CardContent className="px-0 pb-0 pt-5">
-                  <h3 className="text-2xl font-black">
-                    <Link href={`/product/${product._id}`} className="hover:text-primary">
-                      {product.name}
-                    </Link>
-                  </h3>
-                  <p className="mt-1 text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
-                    {product.subtitle || 'Premium Ankara'}
-                  </p>
-                  <p className="mt-3 font-serif text-2xl font-black text-primary">₦{product.price.toLocaleString("en-NG")}</p>
-                  <Button asChild variant="outline" className="mt-6 w-full">
-                    <Link href={`/product/${product._id}`}>View Product</Link>
-                  </Button>
-                </CardContent>
-              </Card>
-            ))}
+            ) : (
+              homeProducts.map((product) => (
+                <Card key={product._id} className="bg-transparent">
+                  <Link
+                    href={`/product/${product._id}`}
+                    className="relative block aspect-[4/5] overflow-hidden bg-surface-container-highest"
+                  >
+                    <Image
+                      src={
+                        product.image ||
+                        "https://lh3.googleusercontent.com/aida-public/AB6AXuBzwmnxsn94ZIDvFIG5UNKjamTF94T4cUNy_KZwEuI3L34Z3sAchuWNLyIopB0m2AjCPHIEfyCZsYKF4nFAQ_GaBVLmPtNcMpjCagbUXJXNk_wp--q4oV2aCMcUXO3FcFxVpWMkfxH5UFd0cxwUjI0INj-qX0_5xr3ayJ0c9V-4habZZKiZhn1_CJewx8g0vrjMI9QZSWaFpUnPPeH3TT2TQ86jRjGItt_REUsONsArwtGV5DKf4bH1MjLYDWbxhVDPmYfcqUsIaez7"
+                      }
+                      alt={product.name}
+                      fill
+                      className="object-cover transition-transform duration-700 hover:scale-110"
+                      sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
+                    />
+                    {product.badge ? (
+                      <span className="absolute left-5 top-5 bg-black px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-white">
+                        {product.badge}
+                      </span>
+                    ) : null}
+                  </Link>
+                  <CardContent className="px-0 pb-0 pt-5">
+                    <h3 className="text-2xl font-black">
+                      <Link
+                        href={`/product/${product._id}`}
+                        className="hover:text-primary"
+                      >
+                        {product.name}
+                      </Link>
+                    </h3>
+                    <p className="mt-1 text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
+                      {product.subtitle || "Premium Ankara"}
+                    </p>
+                    <p className="mt-3 font-serif text-2xl font-black text-primary">
+                      ₦{product.price.toLocaleString("en-NG")}
+                    </p>
+                    <Button asChild variant="outline" className="mt-6 w-full">
+                      <Link href={`/product/${product._id}`}>View Product</Link>
+                    </Button>
+                  </CardContent>
+                </Card>
+              ))
+            )}
           </div>
         </div>
       </section>
@@ -155,8 +170,9 @@ export default async function Home() {
           Premium Ankara, <span className="italic">responsibly sourced.</span>
         </h2>
         <p className="mx-auto mt-8 max-w-3xl text-lg leading-relaxed text-muted-foreground">
-          Every batch is selected from trusted makers and checked for color depth, print precision,
-          and lasting quality before it enters the Influencefabrics archive.
+          Every batch is selected from trusted makers and checked for color
+          depth, print precision, and lasting quality before it enters the
+          Influencefabrics archive.
         </p>
 
         <div className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
@@ -178,10 +194,12 @@ export default async function Home() {
 
       <section className="grid md:grid-cols-2">
         <article className="bg-surface-dim p-8 sm:p-16 lg:p-20">
-          <h2 className="text-5xl leading-tight font-black sm:text-6xl">The Ankara Journal.</h2>
+          <h2 className="text-5xl leading-tight font-black sm:text-6xl">
+            The Ankara Journal.
+          </h2>
           <p className="mt-7 max-w-lg text-lg leading-relaxed text-muted-foreground">
-            Learn fabric care, discover pattern histories, and see practical styling guides for
-            everyday and ceremonial Ankara looks.
+            Learn fabric care, discover pattern histories, and see practical
+            styling guides for everyday and ceremonial Ankara looks.
           </p>
           <Button asChild variant="secondary" className="mt-10 w-fit gap-3">
             <Link href="/our-story">

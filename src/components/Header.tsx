@@ -140,7 +140,7 @@ const Header = () => {
       </nav>
 
       <div className="atelier-shell border-t border-black/10 pb-3 lg:hidden">
-        <ul className="flex items-center gap-5 overflow-x-auto pt-3 font-serif text-[10px] uppercase tracking-[0.18em] whitespace-nowrap">
+        <ul className="flex w-full items-center justify-between pt-3 font-serif text-[9px] min-[375px]:text-[10px] uppercase tracking-widest min-[375px]:tracking-[0.18em]">
           {primaryLinks.map((link) => (
             <li key={link.name}>
               <Link
