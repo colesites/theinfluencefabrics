@@ -34,6 +34,7 @@ export async function POST(request: Request) {
       _type: string;
       size?: string;
       color?: string;
+      colorValue?: string;
       yards?: string;
       quantity: number;
       image?: SanityImageReference;
@@ -42,8 +43,8 @@ export async function POST(request: Request) {
     interface SanityProductInput {
       _type: string;
       name: string;
-      price: number;
-      originalPrice?: number;
+      price: number | undefined;
+      originalPrice: number;
       collection: string;
       description?: string;
       variants: SanityVariantInput[];
@@ -52,7 +53,7 @@ export async function POST(request: Request) {
     }
 
     // Parse variants if provided as JSON, else use fallback
-    let variants: any[] = []
+    let variants: SanityVariantInput[] = []
     const variantsData = formData.get('variants')
     if (variantsData) {
       try {
