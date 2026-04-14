@@ -47,6 +47,7 @@ export default function DashboardClient({
     quantity: '',
     collection: '',
     description: '',
+    originalPrice: '',
   })
   const [mainImage, setMainImage] = useState<File | null>(null)
   const [galleryImages, setGalleryImages] = useState<FileList | null>(null)
@@ -142,6 +143,7 @@ export default function DashboardClient({
       data.append('quantity', formData.quantity)
       data.append('collection', formData.collection)
       data.append('description', formData.description)
+      data.append('originalPrice', formData.originalPrice)
       
       if (mainImage) {
         data.append('image', mainImage)
@@ -177,7 +179,7 @@ export default function DashboardClient({
       if (!res.ok) throw new Error(resData.error || 'Failed to apply mutation')
       
       setStatus('Success! Product added to Sanity.')
-      setFormData({ name: '', price: '', quantity: '', collection: '', description: '' })
+      setFormData({ name: '', price: '', quantity: '', collection: '', description: '', originalPrice: '' })
       setMainImage(null)
       setMainImagePreview(null)
       setGalleryImages(null)
@@ -330,29 +332,30 @@ export default function DashboardClient({
                 <div className="grid grid-cols-2 gap-6">
                   <div>
                     <label className="block text-sm font-semibold mb-2">Price (₦)</label>
+                    <label className="block text-sm font-semibold mb-2">Original Price (₦)</label>
+                    <input
+                      name="originalPrice"
+                      type="number"
+                      min="0"
+                      step="0.01"
+                      required
+                      value={formData.originalPrice}
+                      onChange={handleChange}
+                      className="w-full px-4 py-3 bg-transparent border border-border focus:outline-none focus:ring-2 focus:ring-ring"
+                      placeholder="Mandatory (e.g. 10000)"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-semibold mb-2">Discount Price (₦)</label>
                     <input
                       name="price"
                       type="number"
                       min="0"
                       step="0.01"
-                      required
                       value={formData.price}
                       onChange={handleChange}
                       className="w-full px-4 py-3 bg-transparent border border-border focus:outline-none focus:ring-2 focus:ring-ring"
-                      placeholder="49.99"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-semibold mb-2">Quantity</label>
-                    <input
-                      name="quantity"
-                      type="number"
-                      min="0"
-                      required
-                      value={formData.quantity}
-                      onChange={handleChange}
-                      className="w-full px-4 py-3 bg-transparent border border-border focus:outline-none focus:ring-2 focus:ring-ring"
-                      placeholder="100"
+                      placeholder="Optional (e.g. 8000)"
                     />
                   </div>
                 </div>
@@ -367,6 +370,20 @@ export default function DashboardClient({
                     className="w-full px-4 py-3 bg-transparent border border-border focus:outline-none focus:ring-2 focus:ring-ring"
                     placeholder="Summer 2024 (Optional)"
                   />
+                </div>
+
+                <div>
+                   <label className="block text-sm font-semibold mb-2">Default Base Quantity</label>
+                   <input
+                     name="quantity"
+                     type="number"
+                     min="0"
+                     required
+                     value={formData.quantity}
+                     onChange={handleChange}
+                     className="w-full px-4 py-3 bg-transparent border border-border focus:outline-none focus:ring-2 focus:ring-ring"
+                     placeholder="Total stock (if no variants)"
+                   />
                 </div>
 
                 <div className="space-y-4">
@@ -560,7 +577,14 @@ export default function DashboardClient({
                               <span className="font-semibold truncate max-w-[120px]">{p.name}</span>
                             </div>
                           </td>
-                          <td className="px-4 py-4">₦{Number(p.price).toLocaleString("en-NG")}</td>
+                          <td className="px-4 py-4">
+                            <div className="flex flex-col">
+                                <span className="font-bold">₦{Number(p.price).toLocaleString("en-NG")}</span>
+                                {p.salePrice && (
+                                  <span className="text-[10px] text-muted-foreground line-through">₦{Number(p.originalPrice).toLocaleString("en-NG")}</span>
+                                )}
+                            </div>
+                          </td>
                           <td className="px-4 py-4 text-right">
                             <Button 
                               variant="destructive" 

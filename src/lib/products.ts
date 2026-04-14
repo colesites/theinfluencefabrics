@@ -21,6 +21,8 @@ export type ProductRecord = {
   description?: string;
   variants?: ProductVariant[];
   badge?: string; 
+  originalPrice: number;
+  salePrice?: number;
 };
 
 export async function getProducts(): Promise<ProductRecord[]> {
@@ -28,7 +30,9 @@ export async function getProducts(): Promise<ProductRecord[]> {
     _id,
     name,
     subtitle,
-    price,
+    "price": coalesce(price, originalPrice),
+    "salePrice": price,
+    originalPrice,
     collection,
     "image": image.asset->url,
     "gallery": gallery[].asset->url,
@@ -58,7 +62,9 @@ export async function getPaginatedProducts(options: {
     _id,
     name,
     subtitle,
-    price,
+    "price": coalesce(price, originalPrice),
+    "salePrice": price,
+    originalPrice,
     collection,
     "image": image.asset->url,
     "gallery": gallery[].asset->url,
@@ -90,7 +96,9 @@ export async function getFeaturedProducts(): Promise<ProductRecord[]> {
     _id,
     name,
     subtitle,
-    price,
+    "price": coalesce(price, originalPrice),
+    "salePrice": price,
+    originalPrice,
     collection,
     "image": image.asset->url,
     "gallery": gallery[].asset->url,
@@ -105,7 +113,9 @@ export async function getProductById(id: string): Promise<ProductRecord | null> 
     _id,
     name,
     subtitle,
-    price,
+    "price": coalesce(price, originalPrice),
+    "salePrice": price,
+    originalPrice,
     collection,
     "image": image.asset->url,
     "gallery": gallery[].asset->url,

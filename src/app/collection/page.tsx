@@ -265,9 +265,16 @@ export default async function CollectionPage({
                         {product.collection}
                       </p>
                     </div>
-                    <span className="font-serif text-3xl font-black">
-                      ₦{product.price.toLocaleString("en-NG")}
-                    </span>
+                    <div className="flex flex-col items-end">
+                      <span className="font-serif text-3xl font-black">
+                        ₦{product.price.toLocaleString("en-NG")}
+                      </span>
+                      {product.salePrice && (
+                        <span className="text-[11px] text-muted-foreground line-through decoration-primary/30">
+                          ₦{product.originalPrice.toLocaleString("en-NG")}
+                        </span>
+                      )}
+                    </div>
                   </div>
                 </CardContent>
               </Card>

@@ -8,7 +8,8 @@ export const productType = {
     { name: 'name', title: 'Name', type: 'string', validation: (Rule: Rule) => Rule.required() },
     { name: 'subtitle', title: 'Subtitle', type: 'string', description: 'E.g., Premium 6-yard bundle' },
     { name: 'description', title: 'Description', type: 'text' },
-    { name: 'price', title: 'Price', type: 'number', validation: (Rule: Rule) => Rule.required() },
+    { name: 'originalPrice', title: 'Original Price', type: 'number', validation: (Rule: Rule) => Rule.required() },
+    { name: 'price', title: 'Discount Price (Optional)', type: 'number', description: 'If set, this will be shown as the current selling price with the Original Price struck through.' },
     { name: 'collection', title: 'Collection', type: 'string', validation: (Rule: Rule) => Rule.required() },
     { name: 'image', title: 'Main Image', type: 'image', options: { hotspot: true } },
     { 

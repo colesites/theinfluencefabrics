@@ -150,11 +150,18 @@ export default async function Home() {
                     <p className="mt-1 text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
                       {product.subtitle || "Premium Ankara"}
                     </p>
-                    <p className="mt-3 font-serif text-2xl font-black text-primary">
-                      ₦{product.price.toLocaleString("en-NG")}
+                    <p className="mt-3 flex flex-wrap items-baseline gap-3">
+                      <span className="font-serif text-2xl font-black text-primary">
+                        ₦{product.price.toLocaleString("en-NG")}
+                      </span>
+                      {product.salePrice && (
+                        <span className="text-[13px] text-muted-foreground line-through decoration-primary/40 decoration-1">
+                          ₦{product.originalPrice.toLocaleString("en-NG")}
+                        </span>
+                      )}
                     </p>
                     <Button asChild variant="outline" className="mt-6 w-full">
-                      <Link href={`/product/${product._id}`}>View Product</Link>
+                      <Link href={`/product/${product._id}`}>View Details</Link>
                     </Button>
                   </CardContent>
                 </Card>

@@ -16,8 +16,9 @@ export async function POST(request: Request) {
     const quantity = formData.get('quantity') as string
     const collection = formData.get('collection') as string
     const description = formData.get('description') as string
+    const originalPrice = formData.get('originalPrice') as string
 
-    if (!name || !price || !quantity) {
+    if (!name || !originalPrice || !quantity) {
       return NextResponse.json({ success: false, error: 'Missing required fields' }, { status: 400 })
     }
 
@@ -42,6 +43,7 @@ export async function POST(request: Request) {
       _type: string;
       name: string;
       price: number;
+      originalPrice?: number;
       collection: string;
       description?: string;
       variants: SanityVariantInput[];
@@ -63,7 +65,8 @@ export async function POST(request: Request) {
     const newProduct: SanityProductInput = {
       _type: 'product',
       name,
-      price: Number(price),
+      price: price ? Number(price) : undefined,
+      originalPrice: Number(originalPrice),
       collection: collection || 'General',
       description,
       variants: variants.length > 0 ? variants.map(v => ({

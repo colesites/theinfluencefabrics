@@ -31,13 +31,13 @@ const checkoutSchema = z.object({
 type CheckoutFormValues = z.infer<typeof checkoutSchema>
 
 export default function CheckoutPage() {
-  const { items, cartTotal, clearCart } = useCart()
+  const { items, cartTotal, totalSavings, clearCart } = useCart()
   const { data: session, isPending } = useSession()
   const router = useRouter()
   const [isClient, setIsClient] = useState(false)
   const [loading, setLoading] = useState(false)
   const [shippingRates, setShippingRates] = useState<StoreSettings | null>(null)
-  const [paymentMethod, setPaymentMethod] = useState<'paystack' | 'transfer'>('paystack')
+  const [paymentMethod, setPaymentMethod] = useState<'paystack' | 'transfer'>('transfer')
   const [receiptFile, setReceiptFile] = useState<File | null>(null)
 
   const { register, watch, formState: { errors, isValid } } = useForm<CheckoutFormValues>({
@@ -297,6 +297,12 @@ export default function CheckoutPage() {
                     <span>Shipping</span>
                     <span>{shippingFee > 0 ? `₦${shippingFee.toLocaleString()}` : "Pending Region"}</span>
                   </div>
+                  {totalSavings > 0 && (
+                    <div className="flex justify-between text-white font-bold italic">
+                      <span>Promo Discount</span>
+                      <span>- ₦{totalSavings.toLocaleString()}</span>
+                    </div>
+                  )}
                   <div className="flex justify-between text-2xl font-black pt-4">
                     <span>Grand Total</span>
                     <span className="font-serif italic font-black">₦{total.toLocaleString()}</span>
@@ -307,9 +313,9 @@ export default function CheckoutPage() {
                   <div className="flex gap-4 p-1 bg-white/10 rounded">
                      <button
                         type="button" 
-                        onClick={() => setPaymentMethod('paystack')}
-                        className={`flex-1 py-3 text-xs tracking-widest uppercase font-black transition-colors ${paymentMethod === 'paystack' ? 'bg-white text-primary rounded' : 'text-white/60 hover:text-white'}`}
-                     >Paystack</button>
+                        disabled
+                        className="flex-1 py-3 text-xs tracking-widest uppercase font-black transition-colors text-white/20 cursor-not-allowed"
+                     >Paystack (Coming Soon)</button>
                      <button
                         type="button"
                         onClick={() => setPaymentMethod('transfer')}

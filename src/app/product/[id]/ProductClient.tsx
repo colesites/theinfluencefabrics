@@ -27,6 +27,7 @@ export default function ProductClient({ product }: { product: ProductRecord }) {
       productId: product._id,
       name: product.name,
       price: product.price,
+      originalPrice: product.originalPrice,
       image: selectedVariant?.image || product.image,
       size: selectedVariant?.size,
       color: selectedVariant?.color,

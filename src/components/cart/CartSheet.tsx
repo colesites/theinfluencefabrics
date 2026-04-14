@@ -2,12 +2,13 @@
 
 import React from 'react'
 import Image from 'next/image'
+import Link from 'next/link'
 import { X, Minus, Plus, ShoppingBag } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useCart } from './CartContext'
 
 export function CartSheet() {
-  const { items, isCartOpen, setIsCartOpen, updateQuantity, cartTotal } = useCart()
+  const { items, isCartOpen, setIsCartOpen, updateQuantity, cartTotal, totalSavings } = useCart()
 
   if (!isCartOpen) return null
 
@@ -80,11 +81,21 @@ export function CartSheet() {
 
         {items.length > 0 && (
           <div className="p-6 border-t border-border bg-surface-dim space-y-6">
-            <div className="flex justify-between items-center text-lg">
-              <span className="font-semibold">Subtotal</span>
-              <span className="font-serif font-black">₦{cartTotal.toLocaleString("en-NG")}</span>
+            <div className="space-y-2">
+              <div className="flex justify-between items-center text-lg">
+                <span className="font-semibold">Subtotal</span>
+                <span className="font-serif font-black">₦{cartTotal.toLocaleString("en-NG")}</span>
+              </div>
+              {totalSavings > 0 && (
+                <div className="flex justify-between items-center text-xs text-primary font-bold uppercase tracking-widest">
+                  <span>Your Savings</span>
+                  <span>- ₦{totalSavings.toLocaleString("en-NG")}</span>
+                </div>
+              )}
             </div>
-            <Button size="lg" className="w-full">Proceed to Checkout</Button>
+            <Button asChild size="lg" className="w-full" onClick={() => setIsCartOpen(false)}>
+               <Link href="/checkout">Proceed to Checkout</Link>
+            </Button>
           </div>
         )}
       </div>
