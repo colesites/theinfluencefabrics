@@ -13,8 +13,7 @@ import { useCart } from "@/components/cart/CartContext";
 export default function CartPage() {
   const { items, updateQuantity, removeFromCart, cartTotal } = useCart()
 
-  const shippingFee = 3000 // Placeholder ₦3,000 flat rate
-  const grandTotal = cartTotal + shippingFee
+  const shippingFee = 0 // Evaluated at checkout
 
   if (items.length === 0) {
     return (
@@ -104,11 +103,11 @@ export default function CartPage() {
               </div>
               <div className="flex justify-between border-b border-black/10 pb-6">
                 <span className="text-muted-foreground">Shipping</span>
-                <span className="font-black">₦{shippingFee.toLocaleString("en-NG")}</span>
+                <span>Calculated at checkout</span>
               </div>
               <div className="flex justify-between pt-2 text-xl font-black tracking-tight text-primary">
                 <span>Total</span>
-                <span>₦{grandTotal.toLocaleString("en-NG")}</span>
+                <span>₦{cartTotal.toLocaleString("en-NG")}</span>
               </div>
             </div>
 

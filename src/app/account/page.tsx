@@ -19,11 +19,13 @@ function AccountPageContent() {
   const [emailIn, setEmailIn] = useState('');
   const [passwordIn, setPasswordIn] = useState('');
   const [loadingIn, setLoadingIn] = useState(false);
+  const [errorIn, setErrorIn] = useState('');
   
   const [nameUp, setNameUp] = useState('');
   const [emailUp, setEmailUp] = useState('');
   const [passwordUp, setPasswordUp] = useState('');
   const [loadingUp, setLoadingUp] = useState(false);
+  const [errorUp, setErrorUp] = useState('');
 
   const handleAuthSuccess = () => {
     if (redirectTo) {
@@ -33,16 +35,26 @@ function AccountPageContent() {
 
   const handleSignIn = async () => {
     setLoadingIn(true);
+    setErrorIn('');
     const { error } = await signIn.email({ email: emailIn, password: passwordIn });
     setLoadingIn(false);
-    if (!error) handleAuthSuccess();
+    if (error) {
+      setErrorIn(error.message || 'Failed to sign in. Please check your credentials.');
+    } else {
+      handleAuthSuccess();
+    }
   }
 
   const handleSignUp = async () => {
     setLoadingUp(true);
+    setErrorUp('');
     const { error } = await signUp.email({ email: emailUp, password: passwordUp, name: nameUp });
     setLoadingUp(false);
-    if (!error) handleAuthSuccess();
+    if (error) {
+      setErrorUp(error.message || 'Failed to create account. Please try again.');
+    } else {
+      handleAuthSuccess();
+    }
   }
 
   const [orders, setOrders] = useState<OrderRecord[]>([]);
@@ -186,6 +198,12 @@ function AccountPageContent() {
               />
             </div>
 
+            {errorIn && (
+              <div className="p-4 bg-destructive/10 border border-destructive/20 text-destructive text-[11px] uppercase tracking-widest font-black leading-relaxed">
+                {errorIn}
+              </div>
+            )}
+
             <Button className="w-full" onClick={handleSignIn} disabled={loadingIn}>
               {loadingIn ? 'Signing In...' : 'Sign In'}
             </Button>
@@ -219,6 +237,12 @@ function AccountPageContent() {
               </label>
               <Input id="signup-password" type="password" value={passwordUp} onChange={e => setPasswordUp(e.target.value)} placeholder="Create password" className="mt-2" />
             </div>
+
+            {errorUp && (
+              <div className="p-4 bg-destructive/10 border border-destructive/20 text-destructive text-[11px] uppercase tracking-widest font-black leading-relaxed">
+                {errorUp}
+              </div>
+            )}
 
             <Button variant="secondary" className="w-full" onClick={handleSignUp} disabled={loadingUp}>
               {loadingUp ? 'Creating Profile...' : 'Create Ankara Profile'}

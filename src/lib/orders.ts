@@ -21,6 +21,9 @@ export type OrderRecord = {
   };
   totalPrice: number;
   status: string;
+  paymentMethod?: string;
+  paymentReference?: string;
+  receiptImage?: string;
   _createdAt: string;
   items: OrderItem[];
 }
@@ -32,6 +35,9 @@ export async function getOrders(): Promise<OrderRecord[]> {
     customer,
     totalPrice,
     status,
+    paymentMethod,
+    paymentReference,
+    "receiptImage": receiptImage.asset->url,
     _createdAt,
     items
   }`
@@ -46,6 +52,9 @@ export async function getUserOrders(email: string): Promise<OrderRecord[]> {
     customer,
     totalPrice,
     status,
+    paymentMethod,
+    paymentReference,
+    "receiptImage": receiptImage.asset->url,
     _createdAt,
     items
   }`

@@ -16,12 +16,16 @@ import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { useCart } from "@/components/cart/CartContext"
 import { useSession } from "@/lib/auth-client"
+import { StoreSettings } from "@/lib/settings"
 
 const checkoutSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
   name: z.string().min(2, "Name is too short"),
   phone: z.string().min(10, "Please enter a valid phone number"),
   address: z.string().min(5, "Please enter a full shipping address"),
+  region: z.enum(["ado_ekiti", "ekiti_state", "outside_ekiti"], {
+    errorMap: () => ({ message: "Please select a delivery region" })
+  }),
 })
 
 type CheckoutFormValues = z.infer<typeof checkoutSchema>
@@ -32,11 +36,11 @@ export default function CheckoutPage() {
   const router = useRouter()
   const [isClient, setIsClient] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [shippingRates, setShippingRates] = useState<StoreSettings | null>(null)
+  const [paymentMethod, setPaymentMethod] = useState<'paystack' | 'transfer'>('paystack')
+  const [receiptFile, setReceiptFile] = useState<File | null>(null)
 
-  const shippingFee = 3000
-  const total = cartTotal + shippingFee
-
-  const { register, formState: { errors, isValid } } = useForm<CheckoutFormValues>({
+  const { register, watch, formState: { errors, isValid } } = useForm<CheckoutFormValues>({
     resolver: zodResolver(checkoutSchema),
     mode: "onChange",
     defaultValues: {
@@ -47,8 +51,24 @@ export default function CheckoutPage() {
     }
   })
 
+  const selectedRegion = watch("region")
+
+  let shippingFee = 0;
+  if (shippingRates) {
+    if (selectedRegion === 'ado_ekiti') shippingFee = shippingRates.shippingAdoEkiti;
+    else if (selectedRegion === 'ekiti_state') shippingFee = shippingRates.shippingEkitiState;
+    else if (selectedRegion === 'outside_ekiti') shippingFee = shippingRates.shippingOutsideEkiti;
+  }
+
+  const total = cartTotal + shippingFee
+
   useEffect(() => {
     setIsClient(true)
+    fetch('/api/settings').then(r => r.json()).then(data => {
+      if(data.success && data.settings) {
+        setShippingRates(data.settings)
+      }
+    })
   }, [])
 
   // Checkout Gate: Ensure user is signed in
@@ -109,6 +129,45 @@ export default function CheckoutPage() {
     } catch (err) {
       const msg = err instanceof Error ? err.message : "Unknown error"
       alert(`Error verifying payment: ${msg}`)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleTransferSubmit = async () => {
+    if (!receiptFile) return alert("Please upload your transfer receipt.")
+    
+    setLoading(true)
+    try {
+      const formData = new FormData()
+      formData.append('receipt', receiptFile)
+      
+      const formValues = watch()
+      const orderData = {
+        customer: {
+           name: formValues.name,
+           email: formValues.email,
+           phone: formValues.phone,
+           address: formValues.address,
+        },
+        items,
+        totalPrice: total
+      }
+      formData.append('orderData', JSON.stringify(orderData))
+
+      const res = await fetch("/api/orders/transfer", {
+        method: "POST",
+        body: formData
+      })
+      
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error || "Transfer submission failed")
+
+      clearCart()
+      router.push(`/checkout/success/${data.order.orderNumber}`)
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : "Unknown error"
+      alert(`Error submitting transfer: ${msg}`)
     } finally {
       setLoading(false)
     }
@@ -180,14 +239,34 @@ export default function CheckoutPage() {
                   {errors.phone && <p className="text-[10px] text-destructive font-bold uppercase tracking-widest">{errors.phone.message}</p>}
                 </div>
 
-                <div className="space-y-3">
-                  <label className="text-[11px] font-black uppercase tracking-widest">Shipping Archive Address</label>
-                  <Input 
-                    {...register("address")}
-                    placeholder="Provide full logistics coordinates in Nigeria"
-                    className="h-12 bg-surface-container-low border-transparent focus:bg-background transition-all"
-                  />
-                  {errors.address && <p className="text-[10px] text-destructive font-bold uppercase tracking-widest">{errors.address.message}</p>}
+                <div className="grid sm:grid-cols-2 gap-8">
+                  <div className="space-y-3">
+                    <label className="text-[11px] font-black uppercase tracking-widest">Shipping Archive Address</label>
+                    <Input 
+                      {...register("address")}
+                      placeholder="Provide full logistics coordinates"
+                      className="h-12 bg-surface-container-low border-transparent focus:bg-background transition-all"
+                    />
+                    {errors.address && <p className="text-[10px] text-destructive font-bold uppercase tracking-widest">{errors.address.message}</p>}
+                  </div>
+
+                  <div className="space-y-3">
+                    <label className="text-[11px] font-black uppercase tracking-widest">Delivery Region</label>
+                    <select 
+                      {...register("region")}
+                      className="w-full h-12 px-3 text-sm bg-surface-container-low border-transparent focus:bg-background transition-all outline-none"
+                    >
+                      <option value="">Select your region...</option>
+                      {shippingRates && (
+                        <>
+                          <option value="ado_ekiti">Within Ado-Ekiti (₦{shippingRates.shippingAdoEkiti.toLocaleString()})</option>
+                          <option value="ekiti_state">Within Ekiti State (₦{shippingRates.shippingEkitiState.toLocaleString()})</option>
+                          <option value="outside_ekiti">Outside Ekiti (₦{shippingRates.shippingOutsideEkiti.toLocaleString()})</option>
+                        </>
+                      )}
+                    </select>
+                    {errors.region && <p className="text-[10px] text-destructive font-bold uppercase tracking-widest">{errors.region.message}</p>}
+                  </div>
                 </div>
               </form>
             </Card>
@@ -216,7 +295,7 @@ export default function CheckoutPage() {
                 <div className="pt-6 border-t border-white/20 space-y-4 text-sm uppercase tracking-widest text-white">
                   <div className="flex justify-between opacity-70">
                     <span>Shipping</span>
-                    <span>₦{shippingFee.toLocaleString()}</span>
+                    <span>{shippingFee > 0 ? `₦${shippingFee.toLocaleString()}` : "Pending Region"}</span>
                   </div>
                   <div className="flex justify-between text-2xl font-black pt-4">
                     <span>Grand Total</span>
@@ -224,19 +303,63 @@ export default function CheckoutPage() {
                   </div>
                 </div>
 
-                <div className="pt-10">
+                <div className="pt-6 space-y-4">
+                  <div className="flex gap-4 p-1 bg-white/10 rounded">
+                     <button
+                        type="button" 
+                        onClick={() => setPaymentMethod('paystack')}
+                        className={`flex-1 py-3 text-xs tracking-widest uppercase font-black transition-colors ${paymentMethod === 'paystack' ? 'bg-white text-primary rounded' : 'text-white/60 hover:text-white'}`}
+                     >Paystack</button>
+                     <button
+                        type="button"
+                        onClick={() => setPaymentMethod('transfer')}
+                        className={`flex-1 py-3 text-xs tracking-widest uppercase font-black transition-colors ${paymentMethod === 'transfer' ? 'bg-white text-primary rounded' : 'text-white/60 hover:text-white'}`}
+                     >Transfer</button>
+                  </div>
+
+                  {paymentMethod === 'transfer' && shippingRates && (
+                    <div className="p-5 bg-white/5 border border-white/10 text-white/90 text-sm space-y-3">
+                      <p className="text-[10px] uppercase font-black tracking-widest text-white/50 mb-4">Transfer Details</p>
+                      <p><strong>Bank:</strong> {shippingRates.bankName || 'N/A'}</p>
+                      <p><strong>Account Name:</strong> {shippingRates.accountName || 'N/A'}</p>
+                      <p><strong>Account No:</strong> {shippingRates.accountNumber || 'N/A'}</p>
+                      
+                      <div className="pt-4 border-t border-white/10 mt-4">
+                        <label className="block text-[10px] uppercase font-black tracking-widest text-white/50 mb-3">Upload Payment Receipt</label>
+                        <input 
+                          type="file" 
+                          accept="image/*"
+                          onChange={(e) => setReceiptFile(e.target.files?.[0] || null)}
+                          className="w-full text-xs file:bg-white/10 file:border-none file:text-white file:px-4 file:py-2 file:mr-4 file:text-xs file:uppercase file:tracking-widest file:font-black hover:file:bg-white/20 transition-colors"
+                        />
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                <div className="pt-6">
                   {isValid ? (
-                    <PaystackButton
-                      {...paystackProps}
-                      className="w-full h-16 bg-white text-primary font-black uppercase tracking-[0.2em] text-sm hover:bg-white/90 transition-all shadow-xl disabled:opacity-50"
-                    />
+                    paymentMethod === 'paystack' ? (
+                      <PaystackButton
+                        {...paystackProps}
+                        className="w-full h-16 bg-white text-primary font-black uppercase tracking-[0.2em] text-sm hover:bg-white/90 transition-all shadow-xl disabled:opacity-50 rounded-sm"
+                      />
+                    ) : (
+                      <Button 
+                        onClick={handleTransferSubmit}
+                        disabled={loading || !receiptFile} 
+                        className="w-full h-16 bg-white text-primary font-black uppercase tracking-[0.2em] text-sm hover:bg-white/90 transition-all shadow-xl disabled:opacity-50 border-none rounded-sm"
+                      >
+                        {loading ? 'Submitting...' : 'Submit Transfer'}
+                      </Button>
+                     )
                   ) : (
-                    <Button disabled className="w-full h-16 bg-white/20 text-white/50 font-black uppercase tracking-[0.2em] text-sm cursor-not-allowed border-none">
+                    <Button disabled className="w-full h-16 bg-white/20 text-white/50 font-black uppercase tracking-[0.2em] text-sm cursor-not-allowed border-none rounded-sm">
                       Complete Information
                     </Button>
                   )}
                   <p className="text-[9px] text-center mt-6 uppercase tracking-[0.25em] text-white/60">
-                    Encrypted Transaction / Secured by Paystack
+                    {paymentMethod === 'paystack' ? 'Encrypted Transaction / Secured by Paystack' : 'Manual verification required for transfers'}
                   </p>
                 </div>
               </CardContent>

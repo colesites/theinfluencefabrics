@@ -178,14 +178,16 @@ export default async function Home() {
           Ankara craftsmanship.
         </p>
 
-        <div className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
           {[
-            { value: "100%", label: "Authentic Wax Prints" },
-            { value: "48hr", label: "Ado-Ekiti Dispatch Window" },
-            { value: "Zero", label: "Synthetic Blends" },
-            { value: "14", label: "Partner Weaving Hubs" },
-          ].map((item) => (
-            <div key={item.label}>
+            { value: "100%", label: "authentic cotton ankara print" },
+            { value: "50%", label: "authentic cotton ankara print" },
+            { value: "30%", label: "authentic cotton ankara print" },
+            { value: "3 hours", label: "max delivery within Ado-Ekiti" },
+            { value: "24 hours", label: "delivery within Ekiti state" },
+            { value: "48-72 hours", label: "delivery outside ekiti state." },
+          ].map((item, index) => (
+            <div key={index}>
               <p className="font-serif text-3xl font-black">{item.value}</p>
               <p className="mt-2 text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
                 {item.label}

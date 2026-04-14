@@ -3,6 +3,7 @@ import { getOwnerSession } from '@/lib/session'
 import DashboardClient from './DashboardClient'
 import { getProducts } from '@/lib/products'
 import { getExploreItems } from '@/lib/explore'
+import { getStoreSettings } from '@/lib/settings'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
 
@@ -13,9 +14,10 @@ export default async function DashboardPage() {
     redirect('/dashboard/login')
   }
 
-  const [products, exploreItems] = await Promise.all([
+  const [products, exploreItems, settings] = await Promise.all([
     getProducts(),
-    getExploreItems()
+    getExploreItems(),
+    getStoreSettings()
   ])
 
   return (
@@ -35,6 +37,7 @@ export default async function DashboardPage() {
       <DashboardClient 
         initialProducts={products} 
         initialExploreItems={exploreItems} 
+        initialSettings={settings}
       />
     </div>
   )

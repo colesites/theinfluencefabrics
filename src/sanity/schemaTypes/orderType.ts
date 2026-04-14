@@ -65,5 +65,23 @@ export const orderType = {
       title: 'Payment Reference',
       type: 'string',
     },
+    {
+      name: 'paymentMethod',
+      title: 'Payment Method',
+      type: 'string',
+      options: {
+        list: [
+          { title: 'Paystack Secure', value: 'paystack' },
+          { title: 'Bank Transfer', value: 'transfer' },
+        ],
+      },
+      initialValue: 'paystack',
+    },
+    {
+      name: 'receiptImage',
+      title: 'Transfer Receipt Image',
+      type: 'image',
+      options: { hotspot: true },
+    },
   ],
 }

@@ -4,7 +4,8 @@ import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { ProductRecord } from '@/lib/products'
 import { ExploreItem } from '@/lib/explore'
-import { Trash2, Image as ImageIcon, Plus, X, LayoutGrid, Compass } from 'lucide-react'
+import { StoreSettings } from '@/lib/settings'
+import { Trash2, Image as ImageIcon, Plus, X, LayoutGrid, Compass, Settings } from 'lucide-react'
 import Image from 'next/image'
 import {
   AlertDialog,
@@ -29,12 +30,14 @@ interface VariantForm {
 
 export default function DashboardClient({ 
   initialProducts, 
-  initialExploreItems 
+  initialExploreItems,
+  initialSettings
 }: { 
   initialProducts: ProductRecord[],
-  initialExploreItems: ExploreItem[]
+  initialExploreItems: ExploreItem[],
+  initialSettings: StoreSettings
 }) {
-  const [activeTab, setActiveTab] = useState<'products' | 'explore'>('products')
+  const [activeTab, setActiveTab] = useState<'products' | 'explore' | 'settings'>('products')
   
   // Product State
   const [products, setProducts] = useState(initialProducts)
@@ -58,6 +61,39 @@ export default function DashboardClient({
   })
   const [exploreImage, setExploreImage] = useState<File | null>(null)
   const [exploreImagePreview, setExploreImagePreview] = useState<string | null>(null)
+
+  // Settings State
+  const [settingsForm, setSettingsForm] = useState(initialSettings)
+  const [isSavingSettings, setIsSavingSettings] = useState(false)
+
+  const handleSettingsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value, type } = e.target
+    setSettingsForm(prev => ({ ...prev, [name]: type === 'number' ? Number(value) : value }))
+  }
+
+  const handleSettingsSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setIsSavingSettings(true)
+    setStatus('')
+
+    try {
+      const res = await fetch('/api/settings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(settingsForm),
+      })
+      
+      const resData = await res.json()
+      if (!res.ok) throw new Error(resData.error || 'Failed to update settings')
+      
+      setStatus('Success! Store settings updated.')
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Unknown error'
+      setStatus(`Error: ${message}`)
+    } finally {
+      setIsSavingSettings(false)
+    }
+  }
 
   // Shared State
   const [status, setStatus] = useState('')
@@ -262,6 +298,13 @@ export default function DashboardClient({
         >
           <Compass className="size-4" />
           Explore
+        </button>
+        <button
+          onClick={() => { setActiveTab('settings'); setStatus(''); }}
+          className={`flex items-center gap-2 px-8 py-4 text-sm font-black uppercase tracking-widest transition-colors ${activeTab === 'settings' ? 'border-b-2 border-primary text-primary' : 'text-muted-foreground hover:text-black'}`}
+        >
+          <Settings className="size-4" />
+          Settings
         </button>
       </div>
 
@@ -536,7 +579,7 @@ export default function DashboardClient({
               </div>
             </div>
           </>
-        ) : (
+        ) : activeTab === 'explore' ? (
           <>
             <div className="bg-card p-8 border border-border shadow-sm h-fit">
               <h2 className="text-2xl font-black mb-6">Share a New Moment</h2>
@@ -664,7 +707,98 @@ export default function DashboardClient({
               </div>
             </div>
           </>
-        )}
+        ) : activeTab === 'settings' ? (
+          <div className="lg:col-span-2">
+            <div className="bg-card p-8 border border-border shadow-sm max-w-2xl mx-auto">
+              <h2 className="text-2xl font-black mb-6">Location-Based Shipping Fees</h2>
+              <form onSubmit={handleSettingsSubmit} className="space-y-6">
+                <div>
+                  <label className="block text-sm font-semibold mb-2">Ado-Ekiti Region (₦)</label>
+                  <input
+                    name="shippingAdoEkiti"
+                    type="number"
+                    min="0"
+                    required
+                    value={settingsForm.shippingAdoEkiti}
+                    onChange={handleSettingsChange}
+                    className="w-full px-4 py-3 bg-transparent border border-border focus:outline-none focus:ring-2 focus:ring-ring"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold mb-2">Rest of Ekiti State (₦)</label>
+                  <input
+                    name="shippingEkitiState"
+                    type="number"
+                    min="0"
+                    required
+                    value={settingsForm.shippingEkitiState}
+                    onChange={handleSettingsChange}
+                    className="w-full px-4 py-3 bg-transparent border border-border focus:outline-none focus:ring-2 focus:ring-ring"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold mb-2">Outside Ekiti State (₦)</label>
+                  <input
+                    name="shippingOutsideEkiti"
+                    type="number"
+                    min="0"
+                    required
+                    value={settingsForm.shippingOutsideEkiti}
+                    onChange={handleSettingsChange}
+                    className="w-full px-4 py-3 bg-transparent border border-border focus:outline-none focus:ring-2 focus:ring-ring"
+                  />
+                </div>
+
+                <h2 className="text-2xl font-black mb-6 mt-10">Bank Transfer Details</h2>
+                <div className="grid sm:grid-cols-2 gap-6">
+                  <div className="sm:col-span-2">
+                    <label className="block text-sm font-semibold mb-2">Bank Name</label>
+                    <input
+                      name="bankName"
+                      type="text"
+                      value={settingsForm.bankName || ''}
+                      onChange={handleSettingsChange}
+                      placeholder="e.g. GTBank"
+                      className="w-full px-4 py-3 bg-transparent border border-border focus:outline-none focus:ring-2 focus:ring-ring"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-semibold mb-2">Account Name</label>
+                    <input
+                      name="accountName"
+                      type="text"
+                      value={settingsForm.accountName || ''}
+                      onChange={handleSettingsChange}
+                      placeholder="e.g. Influence Fabrics"
+                      className="w-full px-4 py-3 bg-transparent border border-border focus:outline-none focus:ring-2 focus:ring-ring"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-semibold mb-2">Account Number</label>
+                    <input
+                      name="accountNumber"
+                      type="text"
+                      value={settingsForm.accountNumber || ''}
+                      onChange={handleSettingsChange}
+                      placeholder="e.g. 0123456789"
+                      className="w-full px-4 py-3 bg-transparent border border-border focus:outline-none focus:ring-2 focus:ring-ring"
+                    />
+                  </div>
+                </div>
+
+                {status && (
+                  <div className={`p-4 text-sm font-medium ${status.includes('Error') ? 'bg-destructive text-white' : 'bg-surface-container border border-primary text-primary-strong'}`}>
+                    {status}
+                  </div>
+                )}
+
+                <Button type="submit" size="lg" className="w-full" disabled={isSavingSettings}>
+                  {isSavingSettings ? 'Saving...' : 'Save Settings'}
+                </Button>
+              </form>
+            </div>
+          </div>
+        ) : null}
       </div>
 
       <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
