@@ -24,7 +24,7 @@ const checkoutSchema = z.object({
   phone: z.string().min(10, "Please enter a valid phone number"),
   address: z.string().min(5, "Please enter a full shipping address"),
   region: z.enum(["ado_ekiti", "ekiti_state", "outside_ekiti"], {
-    errorMap: () => ({ message: "Please select a delivery region" })
+    message: "Please select a delivery region"
   }),
 })
 
