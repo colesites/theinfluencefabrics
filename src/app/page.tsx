@@ -13,14 +13,15 @@ export default async function Home() {
   return (
     <>
       <section className="relative flex h-[calc(100svh-7rem)] items-center overflow-hidden bg-surface-dim lg:h-[calc(100svh-5rem)]">
-        <Image
-          src="https://lh3.googleusercontent.com/aida-public/AB6AXuBzwmnxsn94ZIDvFIG5UNKjamTF94T4cUNy_KZwEuI3L34Z3sAchuWNLyIopB0m2AjCPHIEfyCZsYKF4nFAQ_GaBVLmPtNcMpjCagbUXJXNk_wp--q4oV2aCMcUXO3FcFxVpWMkfxH5UFd0cxwUjI0INj-qX0_5xr3ayJ0c9V-4habZZKiZhn1_CJewx8g0vrjMI9QZSWaFpUnPPeH3TT2TQ86jRjGItt_REUsONsArwtGV5DKf4bH1MjLYDWbxhVDPmYfcqUsIaez7"
-          alt="Ankara fabric texture"
-          fill
-          priority
-          className="object-cover grayscale opacity-45 mix-blend-multiply"
-          sizes="100vw"
-        />
+        <video
+          autoPlay
+          muted
+          loop
+          playsInline
+          className="absolute inset-0 h-full w-full object-cover grayscale opacity-45 mix-blend-multiply"
+        >
+          <source src="/hero.mp4" type="video/mp4" />
+        </video>
 
         <div className="atelier-shell relative z-10 py-16">
           <h1 className="mt-6 text-5xl leading-[0.9] text-white font-poppins font-bold tracking-tight sm:text-7xl lg:text-9xl uppercase">
