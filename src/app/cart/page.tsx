@@ -84,7 +84,7 @@ export default function CartPage() {
                         <Plus className="size-3" />
                       </button>
                     </div>
-                    <p className="font-serif text-2xl font-black text-primary">₦{(item.price * item.quantity).toLocaleString("en-NG")}</p>
+                    <p className="font-serif text-2xl font-black text-primary">₦{(Number(item.price) || 0).toLocaleString("en-NG")}</p>
                   </div>
                 </div>
               </div>
@@ -99,7 +99,7 @@ export default function CartPage() {
             <div className="mt-10 space-y-5 text-sm uppercase tracking-[0.18em]">
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Subtotal</span>
-                <span className="font-black">₦{cartTotal.toLocaleString("en-NG")}</span>
+                <span className="font-black">₦{(cartTotal || 0).toLocaleString("en-NG")}</span>
               </div>
               <div className="flex justify-between border-b border-black/10 pb-6">
                 <span className="text-muted-foreground">Shipping</span>
@@ -107,7 +107,7 @@ export default function CartPage() {
               </div>
               <div className="flex justify-between pt-2 text-xl font-black tracking-tight text-primary">
                 <span>Total</span>
-                <span>₦{cartTotal.toLocaleString("en-NG")}</span>
+                <span>₦{(cartTotal || 0).toLocaleString("en-NG")}</span>
               </div>
             </div>
 

@@ -579,9 +579,9 @@ export default function DashboardClient({
                           </td>
                           <td className="px-4 py-4">
                             <div className="flex flex-col">
-                                <span className="font-bold">₦{Number(p.price).toLocaleString("en-NG")}</span>
-                                {p.salePrice && (
-                                  <span className="text-[10px] text-muted-foreground line-through">₦{Number(p.originalPrice).toLocaleString("en-NG")}</span>
+                                <span className="font-bold">₦{(Number(p.price) || 0).toLocaleString("en-NG")}</span>
+                                {p.salePrice && p.originalPrice && (
+                                  <span className="text-[10px] text-muted-foreground line-through">₦{(Number(p.originalPrice) || 0).toLocaleString("en-NG")}</span>
                                 )}
                             </div>
                           </td>

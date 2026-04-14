@@ -151,12 +151,12 @@ export default async function Home() {
                       {product.subtitle || "Premium Ankara"}
                     </p>
                     <p className="mt-3 flex flex-wrap items-baseline gap-3">
-                      <span className="font-serif text-2xl font-black text-primary">
-                        ₦{product.price.toLocaleString("en-NG")}
+                      <span className="font-serif text-3xl font-black">
+                        ₦{(product.price || 0).toLocaleString("en-NG")}
                       </span>
-                      {product.salePrice && (
-                        <span className="text-[13px] text-muted-foreground line-through decoration-primary/40 decoration-1">
-                          ₦{product.originalPrice.toLocaleString("en-NG")}
+                      {product.salePrice && product.originalPrice && (
+                        <span className="text-[11px] text-muted-foreground line-through decoration-primary/30">
+                          ₦{(product.originalPrice || 0).toLocaleString("en-NG")}
                         </span>
                       )}
                     </p>

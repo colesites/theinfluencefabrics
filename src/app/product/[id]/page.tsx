@@ -76,10 +76,10 @@ export default async function ProductPage({ params }: ProductPageProps) {
               {product.name}
             </h1>
             <div className="mt-5 flex flex-wrap items-baseline gap-4">
-              <p className="font-serif text-4xl font-black text-primary">₦{product.price.toLocaleString("en-NG")}</p>
-              {product.salePrice && (
-                <p className="text-lg text-muted-foreground line-through decoration-primary/30">
-                  ₦{product.originalPrice.toLocaleString("en-NG")}
+              <p className="font-serif text-4xl font-black text-primary">₦{(product.price || 0).toLocaleString("en-NG")}</p>
+              {product.salePrice && product.originalPrice && (
+                <p className="text-sm text-muted-foreground line-through decoration-primary/30">
+                  ₦{(product.originalPrice || 0).toLocaleString("en-NG")}
                 </p>
               )}
             </div>
@@ -183,9 +183,9 @@ export default async function ProductPage({ params }: ProductPageProps) {
                     </p>
                     <h3 className="mt-2 text-2xl font-black">{item.name}</h3>
                     <div className="mt-2 flex flex-wrap items-baseline gap-2">
-                       <p className="font-serif text-lg font-black italic">₦{item.price.toLocaleString("en-NG")}</p>
-                       {item.salePrice && (
-                         <p className="text-[10px] text-white/50 line-through decoration-white/30">₦{item.originalPrice.toLocaleString("en-NG")}</p>
+                       <p className="font-serif text-lg font-black italic">₦{(item.price || 0).toLocaleString("en-NG")}</p>
+                       {item.salePrice && item.originalPrice && (
+                         <p className="text-[10px] text-white/50 line-through decoration-white/30">₦{(item.originalPrice || 0).toLocaleString("en-NG")}</p>
                        )}
                     </div>
                   </div>

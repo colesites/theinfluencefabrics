@@ -287,7 +287,7 @@ export default function CheckoutPage() {
                   {items.map(item => (
                     <div key={item.productId} className="flex justify-between text-xs tracking-widest uppercase text-white/80">
                       <span>{item.name} x {item.quantity}</span>
-                      <span className="font-black">₦{(item.price * item.quantity).toLocaleString()}</span>
+                      <span className="font-black">₦{((item.price || 0) * item.quantity).toLocaleString("en-NG")}</span>
                     </div>
                   ))}
                 </div>
@@ -300,12 +300,12 @@ export default function CheckoutPage() {
                   {totalSavings > 0 && (
                     <div className="flex justify-between text-white font-bold italic">
                       <span>Promo Discount</span>
-                      <span>- ₦{totalSavings.toLocaleString()}</span>
+                      <span>- ₦{(totalSavings || 0).toLocaleString("en-NG")}</span>
                     </div>
                   )}
                   <div className="flex justify-between text-2xl font-black pt-4">
                     <span>Grand Total</span>
-                    <span className="font-serif italic font-black">₦{total.toLocaleString()}</span>
+                    <span className="font-serif italic font-black">₦{(total || 0).toLocaleString()}</span>
                   </div>
                 </div>
 

@@ -267,11 +267,11 @@ export default async function CollectionPage({
                     </div>
                     <div className="flex flex-col items-end">
                       <span className="font-serif text-3xl font-black">
-                        ₦{product.price.toLocaleString("en-NG")}
+                        ₦{(product.price || 0).toLocaleString("en-NG")}
                       </span>
-                      {product.salePrice && (
+                      {product.salePrice && product.originalPrice && (
                         <span className="text-[11px] text-muted-foreground line-through decoration-primary/30">
-                          ₦{product.originalPrice.toLocaleString("en-NG")}
+                          ₦{(product.originalPrice || 0).toLocaleString("en-NG")}
                         </span>
                       )}
                     </div>
