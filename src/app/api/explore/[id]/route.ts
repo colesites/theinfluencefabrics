@@ -4,7 +4,7 @@ import { getOwnerSession } from '@/lib/session'
 
 export async function DELETE(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await getOwnerSession()
@@ -13,7 +13,7 @@ export async function DELETE(
       return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 })
     }
 
-    const { id } = params
+    const { id } = await params
 
     if (!id) {
        return NextResponse.json({ success: false, error: 'Missing ID' }, { status: 400 })
