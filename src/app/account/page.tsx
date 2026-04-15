@@ -39,7 +39,7 @@ function SignedInState({ email, name }: { email: string; name?: string | null })
           Welcome back, {(name || "there").split(" ")[0]}.
         </h1>
         <div className="mt-8 flex flex-wrap items-center gap-6">
-          <div className="text-xs uppercase tracking-widest text-muted-foreground">
+          <div className="text-xs normal-case tracking-widest text-muted-foreground">
             {email}
           </div>
           <button
