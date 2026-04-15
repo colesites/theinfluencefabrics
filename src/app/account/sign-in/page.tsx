@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Eye, EyeOff } from "lucide-react";
@@ -12,7 +12,7 @@ import { Input } from "@/components/ui/input";
 import { signIn } from "@/lib/auth-client";
 import { getFriendlyAuthError } from "@/lib/auth-feedback";
 
-export default function SignInPage() {
+function SignInForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirectTo = searchParams.get("redirectTo") || "/account";
@@ -157,5 +157,13 @@ export default function SignInPage() {
         </CardContent>
       </Card>
     </section>
+  );
+}
+
+export default function SignInPage() {
+  return (
+    <Suspense fallback={<div className="py-24 text-center">Loading sign in...</div>}>
+      <SignInForm />
+    </Suspense>
   );
 }
