@@ -123,7 +123,13 @@ export default async function Home() {
                 </p>
               </div>
             ) : (
-              homeProducts.map((product) => (
+              homeProducts.map((product) => {
+                const hasDiscount = product.originalPrice > product.price
+                const discountPercent = hasDiscount
+                  ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
+                  : 0
+
+                return (
                 <Card key={product._id} className="bg-transparent">
                   <Link
                     href={`/product/${product._id}`}
@@ -144,6 +150,11 @@ export default async function Home() {
                         {product.badge}
                       </span>
                     ) : null}
+                    {hasDiscount ? (
+                      <span className="absolute right-5 top-5 bg-primary px-3 py-1 text-[10px] font-black uppercase tracking-[0.2em] text-white">
+                        -{discountPercent}%
+                      </span>
+                    ) : null}
                   </Link>
                   <CardContent className="px-0 pb-0 pt-5">
                     <h3 className="text-2xl font-black">
@@ -162,7 +173,7 @@ export default async function Home() {
                         ₦{(product.price || 0).toLocaleString("en-NG")}
                       </span>
                       {product.salePrice && product.originalPrice && (
-                        <span className="text-[11px] text-muted-foreground line-through decoration-primary/30">
+                        <span className="text-sm text-muted-foreground line-through decoration-current">
                           ₦{(product.originalPrice || 0).toLocaleString("en-NG")}
                         </span>
                       )}
@@ -172,7 +183,8 @@ export default async function Home() {
                     </Button>
                   </CardContent>
                 </Card>
-              ))
+                )
+              })
             )}
           </div>
         </div>

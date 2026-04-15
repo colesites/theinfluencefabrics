@@ -71,18 +71,11 @@ export default function CheckoutPage() {
     })
   }, [])
 
-  // Checkout Gate: Ensure user is signed in
-  useEffect(() => {
-    if (isClient && !isPending && !session?.user) {
-      router.replace('/account/sign-in?redirectTo=/checkout')
-    }
-  }, [isClient, isPending, session, router])
-
-  if (!isClient || isPending || !session?.user) {
+  if (!isClient || isPending) {
     return <div className="min-h-screen bg-surface-dim grid place-content-center">
       <div className="text-center space-y-4">
         <div className="size-10 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto" />
-        <p className="editorial-kicker text-[10px] animate-pulse">Authenticating...</p>
+        <p className="editorial-kicker text-[10px] animate-pulse">Loading checkout...</p>
       </div>
     </div>
   }
@@ -174,7 +167,7 @@ export default function CheckoutPage() {
   }
 
   const paystackProps = {
-    email: session?.user?.email || "customer@example.com",
+    email: watch("email") || session?.user?.email || "customer@example.com",
     amount: total * 100, // kobo
     publicKey,
     text: "Complete Payment",

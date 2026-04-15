@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { writeClient } from '@/sanity/lib/client'
+import { getAuthSession } from '@/lib/auth-session'
 
 export const dynamic = 'force-dynamic'
 
@@ -14,6 +15,7 @@ interface TransferCartItem {
 
 export async function POST(request: Request) {
   try {
+    const session = await getAuthSession()
     const formData = await request.formData()
     
     const orderDataString = formData.get('orderData') as string
@@ -55,6 +57,7 @@ export async function POST(request: Request) {
         phone: customer.phone,
         address: customer.address, 
       },
+      customerUserId: session?.user?.id,
       items: items.map((item: TransferCartItem) => ({
         _key: crypto.randomUUID(),
         productId: item.productId,

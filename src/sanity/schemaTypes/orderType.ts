@@ -23,6 +23,12 @@ export const orderType = {
       ],
     },
     {
+      name: 'customerUserId',
+      title: 'Authenticated Customer User ID',
+      type: 'string',
+      description: 'Present only when the checkout was done by a signed-in user.',
+    },
+    {
       name: 'items',
       title: 'Order Items',
       type: 'array',

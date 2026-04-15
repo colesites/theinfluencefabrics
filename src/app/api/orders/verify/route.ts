@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { writeClient } from '@/sanity/lib/client'
+import { getAuthSession } from '@/lib/auth-session'
 
 export const dynamic = 'force-dynamic'
 
@@ -19,6 +20,7 @@ interface CartItemMetadata {
 
 export async function POST(request: Request) {
   try {
+    const session = await getAuthSession()
     const { reference } = await request.json()
 
     if (!reference) {
@@ -51,6 +53,7 @@ export async function POST(request: Request) {
         phone: data.customer.phone || '',
         address: 'Pending manual update (from Paystack customer data)', 
       },
+      customerUserId: session?.user?.id,
       items: cartItems.map((item) => ({
         _key: crypto.randomUUID(),
         productId: item.id,

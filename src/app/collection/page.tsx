@@ -219,7 +219,13 @@ export default async function CollectionPage({
                 </Link>
               </div>
             )}
-            {products.map((product, index) => (
+            {products.map((product, index) => {
+              const hasDiscount = product.originalPrice > product.price
+              const discountPercent = hasDiscount
+                ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
+                : 0
+
+              return (
               <Card
                 key={product._id}
                 className={
@@ -249,6 +255,11 @@ export default async function CollectionPage({
                   >
                     Details
                   </Button>
+                  {hasDiscount ? (
+                    <span className="absolute right-4 top-4 bg-primary px-3 py-1 text-[10px] font-black uppercase tracking-[0.2em] text-white">
+                      -{discountPercent}%
+                    </span>
+                  ) : null}
                 </Link>
                 <CardContent className="px-0 pb-0 pt-7">
                   <div className="flex items-start justify-between gap-4">
@@ -270,7 +281,7 @@ export default async function CollectionPage({
                         ₦{(product.price || 0).toLocaleString("en-NG")}
                       </span>
                       {product.salePrice && product.originalPrice && (
-                        <span className="text-[11px] text-muted-foreground line-through decoration-primary/30">
+                        <span className="text-sm text-muted-foreground line-through decoration-current">
                           ₦{(product.originalPrice || 0).toLocaleString("en-NG")}
                         </span>
                       )}
@@ -278,7 +289,8 @@ export default async function CollectionPage({
                   </div>
                 </CardContent>
               </Card>
-            ))}
+              )
+            })}
           </div>
 
           {totalPages > 1 && (

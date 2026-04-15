@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button'
 import { ProductRecord } from '@/lib/products'
 import { ExploreItem } from '@/lib/explore'
 import { StoreSettings } from '@/lib/settings'
-import { Trash2, Image as ImageIcon, Plus, X, LayoutGrid, Compass, Settings } from 'lucide-react'
+import { Trash2, Image as ImageIcon, Plus, X, LayoutGrid, Compass, Settings, Pencil } from 'lucide-react'
 import Image from 'next/image'
 import {
   AlertDialog,
@@ -53,6 +53,7 @@ export default function DashboardClient({
   const [galleryImages, setGalleryImages] = useState<FileList | null>(null)
   const [mainImagePreview, setMainImagePreview] = useState<string | null>(null)
   const [variants, setVariants] = useState<VariantForm[]>([])
+  const [editingProductId, setEditingProductId] = useState<string | null>(null)
 
   // Explore State
   const [exploreItems, setExploreItems] = useState(initialExploreItems)
@@ -62,6 +63,7 @@ export default function DashboardClient({
   })
   const [exploreImage, setExploreImage] = useState<File | null>(null)
   const [exploreImagePreview, setExploreImagePreview] = useState<string | null>(null)
+  const [editingExploreId, setEditingExploreId] = useState<string | null>(null)
 
   // Settings State
   const [settingsForm, setSettingsForm] = useState(initialSettings)
@@ -131,6 +133,44 @@ export default function DashboardClient({
     setVariants(newVariants)
   }
 
+  const resetProductForm = () => {
+    setFormData({ name: '', price: '', quantity: '', collection: '', description: '', originalPrice: '' })
+    setMainImage(null)
+    setMainImagePreview(null)
+    setGalleryImages(null)
+    setVariants([])
+    setEditingProductId(null)
+  }
+
+  const handleEditProduct = (product: ProductRecord) => {
+    setActiveTab('products')
+    setStatus('')
+    setEditingProductId(product._id)
+    setFormData({
+      name: product.name || '',
+      price: product.salePrice ? String(product.salePrice) : '',
+      quantity: String(product.variants?.[0]?.quantity ?? 0),
+      collection: product.collection || '',
+      description: product.description || '',
+      originalPrice: String(product.originalPrice || product.price || 0),
+    })
+    setMainImage(null)
+    setGalleryImages(null)
+    setMainImagePreview(product.image || null)
+    setVariants(
+      (product.variants || []).map((variant) => ({
+        size: variant.size || '',
+        color: variant.color || '',
+        colorValue: variant.colorValue || '#000000',
+        yards: variant.yards || '',
+        quantity: String(variant.quantity || 0),
+        image: null,
+        preview: variant.image || null,
+      })),
+    )
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
@@ -169,8 +209,10 @@ export default function DashboardClient({
         }
       })
 
-      const res = await fetch('/api/products', {
-        method: 'POST',
+      const endpoint = editingProductId ? `/api/products/${editingProductId}` : '/api/products'
+      const method = editingProductId ? 'PUT' : 'POST'
+      const res = await fetch(endpoint, {
+        method,
         body: data,
       })
       
@@ -178,17 +220,60 @@ export default function DashboardClient({
       
       if (!res.ok) throw new Error(resData.error || 'Failed to apply mutation')
       
-      setStatus('Success! Product added to Sanity.')
-      setFormData({ name: '', price: '', quantity: '', collection: '', description: '', originalPrice: '' })
-      setMainImage(null)
-      setMainImagePreview(null)
-      setGalleryImages(null)
-      setVariants([])
+      setStatus(editingProductId ? 'Success! Product updated.' : 'Success! Product added to Sanity.')
+      resetProductForm()
       
       const formNode = e.target as HTMLFormElement
       formNode.reset()
       
-      setProducts([{...resData.product, _id: resData.product._id, price: Number(resData.product.price)}, ...products])
+      if (editingProductId) {
+        setProducts((prev) =>
+          prev.map((p) =>
+            p._id === editingProductId
+              ? {
+                  ...p,
+                  name: formData.name,
+                  price: Number(formData.price || formData.originalPrice || p.price || 0),
+                  originalPrice: Number(formData.originalPrice || p.originalPrice || 0),
+                  salePrice: formData.price ? Number(formData.price) : undefined,
+                  collection: formData.collection || p.collection,
+                  description: formData.description || '',
+                  variants: variants.map((v) => ({
+                    size: v.size,
+                    color: v.color,
+                    colorValue: v.colorValue,
+                    yards: v.yards,
+                    quantity: Number(v.quantity || 0),
+                    image: v.preview || undefined,
+                  })),
+                  image: mainImagePreview || p.image,
+                }
+              : p,
+          ),
+        )
+      } else {
+        setProducts((prev) => [
+          {
+            _id: resData.product._id,
+            name: formData.name,
+            price: Number(formData.price || formData.originalPrice || 0),
+            originalPrice: Number(formData.originalPrice || 0),
+            salePrice: formData.price ? Number(formData.price) : undefined,
+            collection: formData.collection || 'General',
+            description: formData.description || '',
+            image: mainImagePreview || '',
+            variants: variants.map((v) => ({
+              size: v.size,
+              color: v.color,
+              colorValue: v.colorValue,
+              yards: v.yards,
+              quantity: Number(v.quantity || 0),
+              image: v.preview || undefined,
+            })),
+          },
+          ...prev,
+        ])
+      }
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Unknown error'
       setStatus(`Error: ${message}`)
@@ -200,6 +285,26 @@ export default function DashboardClient({
   // Explore Handlers
   const handleExploreChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setExploreFormData(prev => ({ ...prev, [e.target.name]: e.target.value }))
+  }
+
+  const resetExploreForm = () => {
+    setExploreFormData({ title: '', content: '' })
+    setExploreImage(null)
+    setExploreImagePreview(null)
+    setEditingExploreId(null)
+  }
+
+  const handleEditExplore = (item: ExploreItem) => {
+    setActiveTab('explore')
+    setStatus('')
+    setEditingExploreId(item._id)
+    setExploreFormData({
+      title: item.title || '',
+      content: item.content || '',
+    })
+    setExploreImage(null)
+    setExploreImagePreview(item.image || null)
+    window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
   const handleExploreSubmit = async (e: React.FormEvent) => {
@@ -214,12 +319,14 @@ export default function DashboardClient({
       
       if (exploreImage) {
         data.append('image', exploreImage)
-      } else {
+      } else if (!editingExploreId) {
         throw new Error('Image is required for Explore items')
       }
 
-      const res = await fetch('/api/explore', {
-        method: 'POST',
+      const endpoint = editingExploreId ? `/api/explore/${editingExploreId}` : '/api/explore'
+      const method = editingExploreId ? 'PUT' : 'POST'
+      const res = await fetch(endpoint, {
+        method,
         body: data,
       })
       
@@ -227,15 +334,12 @@ export default function DashboardClient({
       
       if (!res.ok) throw new Error(resData.error || 'Failed to upload explore item')
       
-      setStatus('Success! Explore item added.')
-      setExploreFormData({ title: '', content: '' })
-      setExploreImage(null)
-      setExploreImagePreview(null)
+      setStatus(editingExploreId ? 'Success! Explore item updated.' : 'Success! Explore item added.')
+      resetExploreForm()
       
       const formNode = e.target as HTMLFormElement
       formNode.reset()
       
-      // Add to list
       const newItem = {
         _id: resData.item._id,
         title: resData.item.title,
@@ -243,7 +347,11 @@ export default function DashboardClient({
         image: resData.item.image?.asset?.url || exploreImagePreview || '',
         _createdAt: resData.item._createdAt || new Date().toISOString()
       }
-      setExploreItems([newItem, ...exploreItems])
+      if (editingExploreId) {
+        setExploreItems((prev) => prev.map((item) => (item._id === editingExploreId ? { ...item, ...newItem } : item)))
+      } else {
+        setExploreItems((prev) => [newItem, ...prev])
+      }
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Unknown error'
       setStatus(`Error: ${message}`)
@@ -314,7 +422,7 @@ export default function DashboardClient({
         {activeTab === 'products' ? (
           <>
             <div className="bg-card p-8 border border-border shadow-sm h-fit">
-              <h2 className="text-2xl font-black mb-6">Add New Product</h2>
+              <h2 className="text-2xl font-black mb-6">{editingProductId ? 'Edit Product' : 'Add New Product'}</h2>
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div>
                   <label className="block text-sm font-semibold mb-2">Product Name</label>
@@ -528,8 +636,13 @@ export default function DashboardClient({
                 )}
 
                 <Button type="submit" size="lg" className="w-full" disabled={loading}>
-                  {loading ? 'Uploading...' : 'Upload Product'}
+                  {loading ? (editingProductId ? 'Saving...' : 'Uploading...') : (editingProductId ? 'Save Product Changes' : 'Upload Product')}
                 </Button>
+                {editingProductId && (
+                  <Button type="button" variant="outline" size="lg" className="w-full" onClick={resetProductForm}>
+                    Cancel Edit
+                  </Button>
+                )}
               </form>
             </div>
 
@@ -586,14 +699,23 @@ export default function DashboardClient({
                             </div>
                           </td>
                           <td className="px-4 py-4 text-right">
-                            <Button 
-                              variant="destructive" 
-                              size="sm" 
-                              onClick={() => confirmDelete(p._id, 'product')}
-                              disabled={isDeleting === p._id}
-                            >
-                              {isDeleting === p._id ? '...' : <Trash2 className="size-4" />}
-                            </Button>
+                            <div className="flex items-center justify-end gap-2">
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => handleEditProduct(p)}
+                              >
+                                <Pencil className="size-4" />
+                              </Button>
+                              <Button 
+                                variant="destructive" 
+                                size="sm" 
+                                onClick={() => confirmDelete(p._id, 'product')}
+                                disabled={isDeleting === p._id}
+                              >
+                                {isDeleting === p._id ? '...' : <Trash2 className="size-4" />}
+                              </Button>
+                            </div>
                           </td>
                         </tr>
                       ))}
@@ -606,7 +728,7 @@ export default function DashboardClient({
         ) : activeTab === 'explore' ? (
           <>
             <div className="bg-card p-8 border border-border shadow-sm h-fit">
-              <h2 className="text-2xl font-black mb-6">Share a New Moment</h2>
+              <h2 className="text-2xl font-black mb-6">{editingExploreId ? 'Edit Explore Moment' : 'Share a New Moment'}</h2>
               <form onSubmit={handleExploreSubmit} className="space-y-6">
                 <div>
                   <label className="block text-sm font-semibold mb-2">Headline / Title</label>
@@ -644,7 +766,7 @@ export default function DashboardClient({
                   <input
                     type="file"
                     accept="image/*"
-                    required
+                    required={!editingExploreId}
                     onChange={(e) => {
                       const file = e.target.files?.[0] || null
                       setExploreImage(file)
@@ -665,8 +787,13 @@ export default function DashboardClient({
                 )}
 
                 <Button type="submit" size="lg" className="w-full" disabled={loading}>
-                  {loading ? 'Publishing...' : 'Publish to Explore'}
+                  {loading ? (editingExploreId ? 'Saving...' : 'Publishing...') : (editingExploreId ? 'Save Explore Changes' : 'Publish to Explore')}
                 </Button>
+                {editingExploreId && (
+                  <Button type="button" variant="outline" size="lg" className="w-full" onClick={resetExploreForm}>
+                    Cancel Edit
+                  </Button>
+                )}
               </form>
             </div>
 
@@ -714,14 +841,23 @@ export default function DashboardClient({
                             </div>
                           </td>
                           <td className="px-4 py-4 text-right">
-                            <Button 
-                              variant="destructive" 
-                              size="sm" 
-                              onClick={() => confirmDelete(item._id, 'explore')}
-                              disabled={isDeleting === item._id}
-                            >
-                              {isDeleting === item._id ? '...' : <Trash2 className="size-4" />}
-                            </Button>
+                            <div className="flex items-center justify-end gap-2">
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => handleEditExplore(item)}
+                              >
+                                <Pencil className="size-4" />
+                              </Button>
+                              <Button 
+                                variant="destructive" 
+                                size="sm" 
+                                onClick={() => confirmDelete(item._id, 'explore')}
+                                disabled={isDeleting === item._id}
+                              >
+                                {isDeleting === item._id ? '...' : <Trash2 className="size-4" />}
+                              </Button>
+                            </div>
                           </td>
                         </tr>
                       ))}
