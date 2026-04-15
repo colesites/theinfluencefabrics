@@ -18,27 +18,33 @@ export default async function Home() {
           muted
           loop
           playsInline
-          className="absolute inset-0 h-full w-full object-cover grayscale opacity-45 mix-blend-multiply"
+          className="absolute inset-0 h-full w-full object-cover"
         >
           <source src="/hero.mp4" type="video/mp4" />
         </video>
 
         <div className="atelier-shell relative z-10 py-16">
-          <h1 className="mt-6 text-5xl leading-[0.9] text-white font-poppins font-bold tracking-tight sm:text-7xl lg:text-9xl uppercase">
+          <h1
+            className="mt-6 text-5xl leading-[0.9] text-white font-poppins font-bold tracking-tight sm:text-7xl lg:text-9xl uppercase"
+            style={{ textShadow: "0 8px 28px rgba(0,0,0,0.45)" }}
+          >
             Influence <br />
             Fabrics
           </h1>
 
           <div className="mt-10 flex flex-wrap gap-3">
             <Button asChild size="lg">
-              <Link href="/account">Sign Up</Link>
+              <Link href="/account/sign-up">Sign Up</Link>
             </Button>
             <Button asChild variant="secondary" size="lg">
               <Link href="/collection">Shop Collection</Link>
             </Button>
           </div>
 
-          <p className="mt-16 max-w-sm text-right font-serif text-xl italic lg:ml-auto">
+          <p
+            className="mt-16 max-w-sm text-right font-serif text-xl italic lg:ml-auto text-white"
+            style={{ textShadow: "0 4px 20px rgba(0,0,0,0.5)" }}
+          >
             {`"Premium Ankara fabrics crafted for modern elegance and timeless African style."`}
           </p>
         </div>

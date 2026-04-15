@@ -1,11 +1,13 @@
 'use client'
 
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { ProductRecord, ProductVariant } from '@/lib/products'
 import { useCart } from '@/components/cart/CartContext'
 
 export default function ProductClient({ product }: { product: ProductRecord }) {
+  const router = useRouter()
   const { addToCart } = useCart()
   const [selectedVariant, setSelectedVariant] = useState<ProductVariant | null>(
     product.variants?.[0] || { quantity: 100 }
@@ -35,6 +37,24 @@ export default function ProductClient({ product }: { product: ProductRecord }) {
       maxStock: selectedVariant?.quantity || 100,
       quantity: 1
     })
+  }
+
+  const handleBuyNow = () => {
+    if (isOutOfStock) return
+
+    addToCart({
+      productId: product._id,
+      name: product.name,
+      price: product.price,
+      originalPrice: product.originalPrice,
+      image: selectedVariant?.image || product.image,
+      size: selectedVariant?.size,
+      color: selectedVariant?.color,
+      yards: selectedVariant?.yards,
+      maxStock: selectedVariant?.quantity || 100,
+      quantity: 1
+    }, { openCart: false })
+    router.push('/checkout')
   }
 
   return (
@@ -83,8 +103,14 @@ export default function ProductClient({ product }: { product: ProductRecord }) {
         >
           {isOutOfStock ? 'Out of Stock' : 'Add To Cart'}
         </Button>
-        <Button size="lg" variant="secondary" className="w-full">
-          Pre-Order Bespoke Fit
+        <Button
+          size="lg"
+          variant="secondary"
+          className="w-full"
+          onClick={handleBuyNow}
+          disabled={isOutOfStock}
+        >
+          Buy Now
         </Button>
       </div>
     </div>

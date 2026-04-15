@@ -82,7 +82,7 @@ export default function ContactPage() {
               <textarea
                 id="message"
                 rows={6}
-                className="mt-2 w-full border-x-0 border-t-0 border-b-2 border-black bg-transparent px-0 py-2 text-sm leading-relaxed uppercase tracking-[0.12em] outline-none focus:border-primary"
+                className="mt-2 w-full border-x-0 border-t-0 border-b-2 border-black bg-transparent px-0 py-2 text-sm leading-relaxed outline-none focus:border-primary"
                 placeholder="Tell us what you need..."
               />
             </div>

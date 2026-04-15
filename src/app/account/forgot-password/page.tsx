@@ -36,7 +36,7 @@ export default function ForgotPasswordPage() {
       } else {
         setSuccess(true);
       }
-    } catch (err) {
+    } catch {
       setError("An unexpected error occurred.");
     } finally {
       setLoading(false);
@@ -45,7 +45,7 @@ export default function ForgotPasswordPage() {
 
   return (
     <section className="atelier-shell py-14 sm:py-24 max-w-xl mx-auto">
-      <Link href="/account" className="flex items-center gap-2 text-[10px] uppercase tracking-widest text-muted-foreground hover:text-primary transition-colors mb-12">
+      <Link href="/account/sign-in" className="flex items-center gap-2 text-[10px] uppercase tracking-widest text-muted-foreground hover:text-primary transition-colors mb-12">
         <ChevronLeft className="size-3" />
         Back to Sign In
       </Link>
@@ -70,7 +70,7 @@ export default function ForgotPasswordPage() {
               you will receive a reset link shortly. Please check your system logs (or console) for the development link.
             </p>
             <Button asChild variant="outline" className="w-full">
-              <Link href="/account">Return to Profile</Link>
+              <Link href="/account/sign-in">Return to sign in</Link>
             </Button>
           </CardContent>
         </Card>
@@ -89,7 +89,7 @@ export default function ForgotPasswordPage() {
                   value={email}
                   onChange={e => setEmail(e.target.value)}
                   placeholder="name@email.com" 
-                  className="mt-2 h-12" 
+                  className="mt-2 h-12 normal-case tracking-normal" 
                 />
               </div>
 

@@ -4,7 +4,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { MdOutlineShoppingBag } from "react-icons/md";
 import { FaRegUser } from "react-icons/fa6";
 import { Search, X, ShoppingCart } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -21,7 +20,7 @@ const primaryLinks = [
 
 const utilityLinks = [
   { name: "Cart", href: "/cart", icon: ShoppingCart },
-  { name: "Account", href: "/account", icon: FaRegUser },
+  { name: "Account", href: "/account/sign-in", icon: FaRegUser },
 ];
 
 const Header = () => {
@@ -110,7 +109,7 @@ const Header = () => {
                   placeholder="Search archive..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-48 bg-transparent border-b border-black/20 pb-1 text-xs uppercase tracking-widest focus:border-primary focus:outline-none placeholder:text-black/30 placeholder:italic"
+                  className="w-48 bg-transparent border-b border-black/20 pb-1 text-xs focus:border-primary focus:outline-none placeholder:text-black/30 placeholder:italic"
                 />
               </form>
             )}

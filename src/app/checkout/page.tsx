@@ -31,7 +31,7 @@ const checkoutSchema = z.object({
 type CheckoutFormValues = z.infer<typeof checkoutSchema>
 
 export default function CheckoutPage() {
-  const { items, cartTotal, totalSavings, clearCart } = useCart()
+  const { items, cartTotal, totalSavings, removePurchasedItems } = useCart()
   const { data: session, isPending } = useSession()
   const router = useRouter()
   const [isClient, setIsClient] = useState(false)
@@ -74,7 +74,7 @@ export default function CheckoutPage() {
   // Checkout Gate: Ensure user is signed in
   useEffect(() => {
     if (isClient && !isPending && !session?.user) {
-      router.replace('/account?redirectTo=/checkout')
+      router.replace('/account/sign-in?redirectTo=/checkout')
     }
   }, [isClient, isPending, session, router])
 
@@ -123,8 +123,8 @@ export default function CheckoutPage() {
       const verifyData = await verifyRes.json()
       if (!verifyRes.ok) throw new Error(verifyData.error || "Verification failed")
 
-      // 2. Clear cart and redirect
-      clearCart()
+      // 2. Remove purchased items from cart and redirect
+      removePurchasedItems(items)
       router.push(`/checkout/success/${reference.reference}`)
     } catch (err) {
       const msg = err instanceof Error ? err.message : "Unknown error"
@@ -163,7 +163,7 @@ export default function CheckoutPage() {
       const data = await res.json()
       if (!res.ok) throw new Error(data.error || "Transfer submission failed")
 
-      clearCart()
+      removePurchasedItems(items)
       router.push(`/checkout/success/${data.order.orderNumber}`)
     } catch (err) {
       const msg = err instanceof Error ? err.message : "Unknown error"
@@ -336,7 +336,7 @@ export default function CheckoutPage() {
                           type="file" 
                           accept="image/*"
                           onChange={(e) => setReceiptFile(e.target.files?.[0] || null)}
-                          className="w-full text-xs file:bg-white/10 file:border-none file:text-white file:px-4 file:py-2 file:mr-4 file:text-xs file:uppercase file:tracking-widest file:font-black hover:file:bg-white/20 transition-colors"
+                          className="w-full text-xs file:bg-white/10 file:border-none file:text-white file:px-4 file:py-2 file:mr-4 file:text-xs file:font-black hover:file:bg-white/20 transition-colors"
                         />
                       </div>
                     </div>

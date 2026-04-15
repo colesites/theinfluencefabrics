@@ -1,7 +1,8 @@
 'use client';
 import { useState, Suspense } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
-import { Lock, CheckCircle2 } from "lucide-react";
+import Link from "next/link";
+import { useSearchParams } from "next/navigation";
+import { CheckCircle2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -9,7 +10,6 @@ import { Input } from "@/components/ui/input";
 import { authClient } from "@/lib/auth-client";
 
 function ResetPasswordForm() {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const token = searchParams.get('token');
   
@@ -52,7 +52,7 @@ function ResetPasswordForm() {
       } else {
         setSuccess(true);
       }
-    } catch (err) {
+    } catch {
       setError("An unexpected error occurred.");
     } finally {
       setLoading(false);
@@ -68,7 +68,7 @@ function ResetPasswordForm() {
         <h2 className="text-2xl font-black">Archive Restored.</h2>
         <p className="text-sm text-muted-foreground">Your password has been successfully updated. You can now sign in with your new credentials.</p>
         <Button asChild className="w-full h-12">
-          <Link href="/account">Sign In</Link>
+          <Link href="/account/sign-in">Sign in</Link>
         </Button>
       </Card>
     );
@@ -106,7 +106,7 @@ function ResetPasswordForm() {
           </div>
 
           {error && (
-            <p className="text-[10px] font-bold text-destructive uppercase tracking-widest">{error}</p>
+          <p className="text-sm font-semibold text-destructive">{error}</p>
           )}
 
           <Button type="submit" className="w-full h-12" disabled={loading}>
@@ -117,8 +117,6 @@ function ResetPasswordForm() {
     </Card>
   );
 }
-
-import Link from "next/link";
 
 export default function ResetPasswordPage() {
   return (

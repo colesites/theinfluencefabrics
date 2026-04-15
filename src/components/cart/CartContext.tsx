@@ -17,7 +17,11 @@ export type CartItem = {
 
 interface CartContextType {
   items: CartItem[];
-  addToCart: (item: Omit<CartItem, 'quantity'> & { quantity?: number }) => void;
+  addToCart: (
+    item: Omit<CartItem, 'quantity'> & { quantity?: number },
+    options?: { openCart?: boolean }
+  ) => void;
+  removePurchasedItems: (purchasedItems: CartItem[]) => void;
   removeFromCart: (productId: string, size?: string, color?: string, yards?: string) => void;
   updateQuantity: (productId: string, qty: number, size?: string, color?: string, yards?: string) => void;
   clearCart: () => void;
@@ -62,7 +66,10 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     }
   }, [items, isMounted])
 
-  const addToCart = (newItem: Omit<CartItem, 'quantity'> & { quantity?: number }) => {
+  const addToCart = (
+    newItem: Omit<CartItem, 'quantity'> & { quantity?: number },
+    options?: { openCart?: boolean }
+  ) => {
     setItems((prev) => {
       const existingKey = prev.findIndex(
         (i) => i.productId === newItem.productId && i.size === newItem.size && i.color === newItem.color && i.yards === newItem.yards
@@ -74,11 +81,42 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       }
       return [...prev, { ...newItem, quantity: newItem.quantity || 1 }]
     })
-    setIsCartOpen(true)
+    if (options?.openCart ?? true) {
+      setIsCartOpen(true)
+    }
   }
 
   const removeFromCart = (productId: string, size?: string, color?: string, yards?: string) => {
     setItems((prev) => prev.filter(i => !(i.productId === productId && i.size === size && i.color === color && i.yards === yards)))
+  }
+
+  const removePurchasedItems = (purchasedItems: CartItem[]) => {
+    if (purchasedItems.length === 0) return
+
+    setItems((prev) => {
+      const next = [...prev]
+
+      for (const purchased of purchasedItems) {
+        const index = next.findIndex(
+          (i) =>
+            i.productId === purchased.productId &&
+            i.size === purchased.size &&
+            i.color === purchased.color &&
+            i.yards === purchased.yards
+        )
+
+        if (index === -1) continue
+
+        const remaining = next[index].quantity - purchased.quantity
+        if (remaining <= 0) {
+          next.splice(index, 1)
+        } else {
+          next[index] = { ...next[index], quantity: remaining }
+        }
+      }
+
+      return next
+    })
   }
 
   const updateQuantity = (productId: string, qty: number, size?: string, color?: string, yards?: string) => {
@@ -100,7 +138,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
   return (
     <CartContext.Provider value={{
-      items, addToCart, removeFromCart, updateQuantity, clearCart, isCartOpen, setIsCartOpen, cartTotal, totalSavings
+      items, addToCart, removePurchasedItems, removeFromCart, updateQuantity, clearCart, isCartOpen, setIsCartOpen, cartTotal, totalSavings
     }}>
       {children}
     </CartContext.Provider>
