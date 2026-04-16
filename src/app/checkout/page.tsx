@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useEffect } from "react"
+import React, { Suspense, useEffect, useState } from "react"
 import Link from "next/link"
 import { useRouter, useSearchParams } from "next/navigation"
 import { useForm } from "react-hook-form"
@@ -30,7 +30,26 @@ const checkoutSchema = z.object({
 
 type CheckoutFormValues = z.infer<typeof checkoutSchema>
 
+function CheckoutPageFallback() {
+  return (
+    <div className="min-h-screen bg-surface-dim grid place-content-center">
+      <div className="text-center space-y-4">
+        <div className="size-10 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto" />
+        <p className="editorial-kicker text-[10px] animate-pulse">Loading checkout...</p>
+      </div>
+    </div>
+  )
+}
+
 export default function CheckoutPage() {
+  return (
+    <Suspense fallback={<CheckoutPageFallback />}>
+      <CheckoutPageContent />
+    </Suspense>
+  )
+}
+
+function CheckoutPageContent() {
   const { items, cartTotal, totalSavings, removePurchasedItems } = useCart()
   const { data: session, isPending } = useSession()
   const router = useRouter()
