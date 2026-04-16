@@ -3,12 +3,13 @@
 import React from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { X, Minus, Plus, ShoppingBag } from 'lucide-react'
+import { X, Minus, Plus, ShoppingBag, Trash2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useCart } from './CartContext'
+import { FALLBACK_IMAGE, resolveImageSrc } from '@/lib/image'
 
 export function CartSheet() {
-  const { items, isCartOpen, setIsCartOpen, updateQuantity, cartTotal, totalSavings } = useCart()
+  const { items, isCartOpen, setIsCartOpen, updateQuantity, removeFromCart, cartTotal, totalSavings } = useCart()
 
   if (!isCartOpen) return null
 
@@ -46,7 +47,7 @@ export function CartSheet() {
             items.map((item, idx) => (
               <div key={`${item.productId}-${idx}`} className="flex gap-4 p-4 border border-border bg-surface-container-low">
                 <div className="relative size-24 bg-surface-container-highest shrink-0">
-                  <Image src={item.image} alt={item.name} fill className="object-cover" />
+                  <Image src={resolveImageSrc(item.image, FALLBACK_IMAGE)} alt={item.name} fill className="object-cover" />
                 </div>
                 <div className="flex flex-col justify-between flex-1">
                   <div>
@@ -71,7 +72,16 @@ export function CartSheet() {
                         <Plus className="size-3" />
                       </button>
                     </div>
-                    <p className="font-serif font-black">₦{(item.price * item.quantity).toLocaleString("en-NG")}</p>
+                    <div className="flex items-center gap-3">
+                      <button
+                        onClick={() => removeFromCart(item.productId, item.size, item.color, item.yards)}
+                        className="text-muted-foreground hover:text-destructive transition-colors"
+                        aria-label={`Remove ${item.name} from cart`}
+                      >
+                        <Trash2 className="size-4" />
+                      </button>
+                      <p className="font-serif font-black">₦{(item.price * item.quantity).toLocaleString("en-NG")}</p>
+                    </div>
                   </div>
                 </div>
               </div>

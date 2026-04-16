@@ -9,11 +9,10 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { useCart } from "@/components/cart/CartContext";
+import { FALLBACK_IMAGE, resolveImageSrc } from "@/lib/image";
 
 export default function CartPage() {
   const { items, updateQuantity, removeFromCart, cartTotal } = useCart()
-
-  const shippingFee = 0 // Evaluated at checkout
 
   if (items.length === 0) {
     return (
@@ -50,7 +49,7 @@ export default function CartPage() {
             {items.map((item) => (
               <div key={`${item.productId}-${item.size}-${item.color}`} className="flex gap-5 border-b border-black/10 pb-8 last:border-b-0 last:pb-0">
                 <div className="relative h-32 w-24 shrink-0 bg-surface-container-highest sm:h-40 sm:w-32 overflow-hidden">
-                  <Image src={item.image} alt={item.name} fill className="object-cover" sizes="150px" />
+                  <Image src={resolveImageSrc(item.image, FALLBACK_IMAGE)} alt={item.name} fill className="object-cover" sizes="150px" />
                 </div>
                 <div className="flex flex-1 flex-col justify-between py-2">
                   <div className="flex justify-between items-start">

@@ -27,7 +27,7 @@ interface SanityVariantInput {
 interface ExistingVariantDocument {
   image?: {
     asset?: {
-      _ref?: string
+      _id?: string
     }
   }
 }
@@ -35,12 +35,12 @@ interface ExistingVariantDocument {
 interface ExistingProductDocument {
   image?: {
     asset?: {
-      _ref?: string
+      _id?: string
     }
   }
   gallery?: Array<{
     asset?: {
-      _ref?: string
+      _id?: string
     }
   }>
   variants?: ExistingVariantDocument[]
@@ -97,7 +97,7 @@ export async function PUT(request: Request, context: Params) {
     const normalizedVariants: SanityVariantInput[] =
       variants.length > 0
         ? variants.map((v, index) => {
-            const existingRef = existingProduct.variants?.[index]?.image?.asset?._ref
+            const existingRef = existingProduct.variants?.[index]?.image?.asset?._id
             const withImage: SanityVariantInput = {
               _type: 'object',
               size: v.size,
@@ -157,12 +157,12 @@ export async function PUT(request: Request, context: Params) {
           _ref: asset._id,
         },
       }
-    } else if (existingProduct.image?.asset?._ref) {
+    } else if (existingProduct.image?.asset?._id) {
       imageRef = {
         _type: 'image',
         asset: {
           _type: 'reference',
-          _ref: existingProduct.image.asset._ref,
+          _ref: existingProduct.image.asset._id,
         },
       }
     }
@@ -187,7 +187,7 @@ export async function PUT(request: Request, context: Params) {
       }
     } else {
       galleryRef = (existingProduct.gallery || [])
-        .map((item) => item.asset?._ref)
+        .map((item) => item.asset?._id)
         .filter((ref): ref is string => Boolean(ref))
         .map((ref) => ({
           _type: 'image',

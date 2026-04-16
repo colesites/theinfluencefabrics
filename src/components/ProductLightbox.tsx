@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { createPortal } from 'react-dom'
 import Image from 'next/image'
 import { X, ChevronLeft, ChevronRight } from 'lucide-react'
+import { FALLBACK_IMAGE, normalizeImageList } from '@/lib/image'
 
 interface ProductLightboxProps {
   images: string[]
@@ -15,6 +16,7 @@ interface ProductLightboxProps {
 export function ProductLightbox({ images, initialIndex = 0, isOpen, onClose }: ProductLightboxProps) {
   const [currentIndex, setCurrentIndex] = useState(initialIndex)
   const [mounted, setMounted] = useState(false)
+  const safeImages = normalizeImageList(images, FALLBACK_IMAGE)
 
   useEffect(() => {
     setMounted(true)
@@ -26,12 +28,12 @@ export function ProductLightbox({ images, initialIndex = 0, isOpen, onClose }: P
   }, [initialIndex])
 
   const nextImage = useCallback(() => {
-    setCurrentIndex((prev) => (prev + 1) % images.length)
-  }, [images.length])
+    setCurrentIndex((prev) => (prev + 1) % safeImages.length)
+  }, [safeImages.length])
 
   const prevImage = useCallback(() => {
-    setCurrentIndex((prev) => (prev - 1 + images.length) % images.length)
-  }, [images.length])
+    setCurrentIndex((prev) => (prev - 1 + safeImages.length) % safeImages.length)
+  }, [safeImages.length])
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -61,7 +63,7 @@ export function ProductLightbox({ images, initialIndex = 0, isOpen, onClose }: P
         <X className="size-8 stroke-[1.5]" />
       </button>
 
-      {images.length > 1 && (
+      {safeImages.length > 1 && (
         <>
           <button 
             onClick={prevImage}
@@ -81,7 +83,7 @@ export function ProductLightbox({ images, initialIndex = 0, isOpen, onClose }: P
       <div className="relative w-full h-full max-w-6xl max-h-[85vh] p-4 flex flex-col items-center justify-center">
         <div className="relative w-full h-full">
           <Image
-            src={images[currentIndex]}
+            src={safeImages[currentIndex] || safeImages[0]}
             alt={`Product view ${currentIndex + 1}`}
             fill
             className="object-contain"
@@ -90,7 +92,7 @@ export function ProductLightbox({ images, initialIndex = 0, isOpen, onClose }: P
           />
         </div>
         <div className="mt-8 text-white/40 text-[10px] uppercase tracking-[0.2em] font-medium">
-          {currentIndex + 1} / {images.length} — Archives Edition
+          {currentIndex + 1} / {safeImages.length} — Archives Edition
         </div>
       </div>
     </div>,

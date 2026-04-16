@@ -1,13 +1,14 @@
-import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ShieldCheck, Star, Truck } from "lucide-react";
 
 import { getProductById, getFeaturedProducts } from "@/lib/products";
 import { getTestimonialsByProductId } from "@/lib/testimonials";
+import { resolveImageSrc } from "@/lib/image";
 import ProductClient from "./ProductClient";
 import ProductGallery from "./ProductGallery";
 import ProductTestimonials from "./ProductTestimonials";
+import RelatedProducts from "./RelatedProducts";
 
 type ProductPageProps = {
   params: Promise<{ id: string }>;
@@ -46,6 +47,12 @@ export default async function ProductPage({ params }: ProductPageProps) {
           productName={product.name}
           mainImage={product.image || placeholderImage}
           gallery={product.gallery || []}
+          initialVariantImage={resolveImageSrc(product.variants?.[0]?.image, "") || null}
+          variantImages={
+            product.variants
+              ?.map((variant) => resolveImageSrc(variant.image, ""))
+              .filter((img) => img.length > 0) || []
+          }
         />
 
         <div className="bg-surface p-7 sm:p-10 lg:col-span-5 lg:p-14">
@@ -95,48 +102,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
 
       <section className="atelier-shell py-20 sm:py-24">
         <h2 className="text-center text-4xl font-black sm:text-5xl">Related Ankara Prints</h2>
-
-        <div className="mt-12 grid gap-5 md:grid-cols-3">
-          {relatedProducts.map((item) => {
-            const hasDiscount = item.originalPrice > item.price
-            const discountPercent = hasDiscount
-              ? Math.round(((item.originalPrice - item.price) / item.originalPrice) * 100)
-              : 0
-
-            return (
-            <article key={item._id} className="group relative overflow-hidden bg-surface-container-highest">
-              <Link href={`/product/${item._id}`}>
-                <div className="relative min-h-[280px]">
-                  <Image
-                    src={item.image || "https://lh3.googleusercontent.com/aida-public/AB6AXuBzwmnxsn94ZIDvFIG5UNKjamTF94T4cUNy_KZwEuI3L34Z3sAchuWNLyIopB0m2AjCPHIEfyCZsYKF4nFAQ_GaBVLmPtNcMpjCagbUXJXNk_wp--q4oV2aCMcUXO3FcFxVpWMkfxH5UFd0cxwUjI0INj-qX0_5xr3ayJ0c9V-4habZZKiZhn1_CJewx8g0vrjMI9QZSWaFpUnPPeH3TT2TQ86jRjGItt_REUsONsArwtGV5DKf4bH1MjLYDWbxhVDPmYfcqUsIaez7"}
-                    alt={item.name}
-                    fill
-                    className="object-cover grayscale transition-all duration-700 group-hover:grayscale-0"
-                    sizes="(max-width: 768px) 100vw, 33vw"
-                  />
-                  {hasDiscount ? (
-                    <span className="absolute right-4 top-4 bg-primary px-3 py-1 text-[10px] font-black uppercase tracking-[0.2em] text-white">
-                      -{discountPercent}%
-                    </span>
-                  ) : null}
-                  <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent p-6 text-white">
-                    <p className="text-[10px] uppercase tracking-[0.18em] text-white/70">
-                      {item.subtitle || item.collection}
-                    </p>
-                    <h3 className="mt-2 text-2xl font-black">{item.name}</h3>
-                    <div className="mt-2 flex flex-wrap items-baseline gap-2">
-                       <p className="font-serif text-lg font-black italic">₦{(item.price || 0).toLocaleString("en-NG")}</p>
-                       {item.salePrice && item.originalPrice && (
-                         <p className="text-sm text-white/60 line-through decoration-current">₦{(item.originalPrice || 0).toLocaleString("en-NG")}</p>
-                       )}
-                    </div>
-                  </div>
-                </div>
-              </Link>
-            </article>
-            )
-          })}
-        </div>
+        <RelatedProducts products={relatedProducts} />
       </section>
     </>
   );

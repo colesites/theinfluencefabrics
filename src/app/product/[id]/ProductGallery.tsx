@@ -3,22 +3,41 @@
 import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import { ProductLightbox } from '@/components/ProductLightbox'
+import { FALLBACK_IMAGE, normalizeImageList, resolveImageSrc } from '@/lib/image'
 
 interface ProductGalleryProps {
   productName: string
   mainImage: string
   gallery: string[]
+  initialVariantImage?: string | null
+  variantImages?: string[]
 }
 
-export default function ProductGallery({ productName, mainImage, gallery }: ProductGalleryProps) {
+export default function ProductGallery({
+  productName,
+  mainImage,
+  gallery,
+  initialVariantImage,
+  variantImages = [],
+}: ProductGalleryProps) {
   const [isOpen, setIsOpen] = useState(false)
+  const [activeImageIndex, setActiveImageIndex] = useState(0)
   const [photoIndex, setPhotoIndex] = useState(0)
-  const [variantImage, setVariantImage] = useState<string | null>(null)
+  const [variantImage, setVariantImage] = useState<string | null>(
+    resolveImageSrc(initialVariantImage || '', '') || null,
+  )
 
-  const baseImages = gallery.length > 0 ? gallery : [mainImage]
-  const displayImages = variantImage 
-    ? [variantImage, ...baseImages.filter(img => img !== variantImage)]
-    : baseImages
+  const baseImages = normalizeImageList(gallery, resolveImageSrc(mainImage, FALLBACK_IMAGE))
+  const normalizedVariantImages = normalizeImageList(variantImages, '')
+  const combinedImages = normalizeImageList(
+    [...normalizedVariantImages, ...baseImages],
+    resolveImageSrc(mainImage, FALLBACK_IMAGE),
+  )
+  const displayImages = variantImage
+    ? [variantImage, ...combinedImages.filter((img) => img !== variantImage)]
+    : combinedImages
+  const safeActiveImageIndex =
+    displayImages.length > 0 ? Math.min(activeImageIndex, displayImages.length - 1) : 0
 
   const openLightbox = (index: number) => {
     setPhotoIndex(index)
@@ -29,9 +48,10 @@ export default function ProductGallery({ productName, mainImage, gallery }: Prod
   useEffect(() => {
     const handleVariantChange = (e: Event) => {
       const customEvent = e as CustomEvent<{ image: string }>;
-      if (customEvent.detail?.image) {
-        setVariantImage(customEvent.detail.image)
-        setPhotoIndex(0)
+      const normalizedVariantImage = resolveImageSrc(customEvent.detail?.image, '')
+      if (normalizedVariantImage) {
+        setVariantImage(normalizedVariantImage)
+        setActiveImageIndex(0)
       }
     }
     window.addEventListener('variant-change', handleVariantChange)
@@ -42,60 +62,39 @@ export default function ProductGallery({ productName, mainImage, gallery }: Prod
     <div className="space-y-8 bg-surface-dim p-4 sm:p-8 lg:col-span-7 lg:p-12">
       <div 
         className="relative aspect-[4/5] overflow-hidden bg-surface-container-highest cursor-zoom-in"
-        onClick={() => openLightbox(0)}
+        onClick={() => openLightbox(safeActiveImageIndex)}
       >
         <Image
-          src={displayImages[0]}
+          src={displayImages[safeActiveImageIndex] || displayImages[0]}
           alt={productName}
           fill
           className="object-cover transition-transform duration-500 hover:scale-[1.02]"
           sizes="(max-width: 1024px) 100vw, 58vw"
           priority
-          key={displayImages[0]}
+          key={displayImages[safeActiveImageIndex] || displayImages[0]}
         />
       </div>
 
-      {displayImages.length > 2 && (
-        <div className="grid grid-cols-2 gap-6">
-          <div 
-            className="relative aspect-square overflow-hidden bg-surface-container-highest cursor-zoom-in"
-            onClick={() => openLightbox(1)}
-          >
-            <Image
-              src={displayImages[1]}
-              alt={`${productName} view 2`}
-              fill
-              className="object-cover transition-transform duration-500 hover:scale-[1.02]"
-              sizes="(max-width: 1024px) 50vw, 28vw"
-            />
-          </div>
-          <div 
-            className="relative aspect-square overflow-hidden bg-surface-container-highest cursor-zoom-in"
-            onClick={() => openLightbox(2)}
-          >
-            <Image
-              src={displayImages[2]}
-              alt={`${productName} view 3`}
-              fill
-              className="object-cover transition-transform duration-500 hover:scale-[1.02]"
-              sizes="(max-width: 1024px) 50vw, 28vw"
-            />
-          </div>
-        </div>
-      )}
-
-      {displayImages.length > 3 && (
-        <div 
-          className="relative aspect-[16/9] overflow-hidden bg-surface-container-highest cursor-zoom-in"
-          onClick={() => openLightbox(3)}
-        >
-          <Image
-            src={displayImages[3]}
-            alt={`${productName} view 4`}
-            fill
-            className="object-cover transition-transform duration-500 hover:scale-[1.02]"
-            sizes="(max-width: 1024px) 100vw, 58vw"
-          />
+      {displayImages.length > 1 && (
+        <div className="grid grid-cols-4 gap-3 sm:gap-4">
+          {displayImages.map((img, index) => (
+            <button
+              key={`${img}-${index}`}
+              type="button"
+              onClick={() => setActiveImageIndex(index)}
+              className={`relative aspect-square overflow-hidden border transition-colors ${
+                safeActiveImageIndex === index ? 'border-black' : 'border-black/10 hover:border-black/40'
+              }`}
+            >
+              <Image
+                src={img}
+                alt={`${productName} view ${index + 1}`}
+                fill
+                className="object-cover"
+                sizes="(max-width: 1024px) 25vw, 14vw"
+              />
+            </button>
+          ))}
         </div>
       )}
 

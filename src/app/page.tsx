@@ -3,8 +3,8 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import { getFeaturedProducts } from "@/lib/products";
+import HomeArchiveCards from "./HomeArchiveCards";
 
 export const revalidate = 0;
 
@@ -100,7 +100,7 @@ export default async function Home() {
       </section>
 
       <section className="bg-surface-container-low py-20 sm:py-28">
-        <div className="atelier-shell">
+        <div className="atelier-shell px-4 sm:px-6">
           <div className="mb-14 flex flex-wrap items-end justify-between gap-8">
             <div>
               <h2 className="text-5xl font-black sm:text-6xl">
@@ -116,76 +116,7 @@ export default async function Home() {
           </div>
 
           <div className="grid gap-8 md:grid-cols-2 xl:grid-cols-3">
-            {homeProducts.length === 0 ? (
-              <div className="md:col-span-2 xl:col-span-3 py-10 bg-transparent flex flex-col items-center justify-center">
-                <p className="text-muted-foreground">
-                  No featured products available in Sanity yet.
-                </p>
-              </div>
-            ) : (
-              homeProducts.map((product) => {
-                const hasDiscount = product.originalPrice > product.price
-                const discountPercent = hasDiscount
-                  ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
-                  : 0
-
-                return (
-                <Card key={product._id} className="bg-transparent">
-                  <Link
-                    href={`/product/${product._id}`}
-                    className="relative block aspect-[4/5] overflow-hidden bg-surface-container-highest"
-                  >
-                    <Image
-                      src={
-                        product.image ||
-                        "https://lh3.googleusercontent.com/aida-public/AB6AXuBzwmnxsn94ZIDvFIG5UNKjamTF94T4cUNy_KZwEuI3L34Z3sAchuWNLyIopB0m2AjCPHIEfyCZsYKF4nFAQ_GaBVLmPtNcMpjCagbUXJXNk_wp--q4oV2aCMcUXO3FcFxVpWMkfxH5UFd0cxwUjI0INj-qX0_5xr3ayJ0c9V-4habZZKiZhn1_CJewx8g0vrjMI9QZSWaFpUnPPeH3TT2TQ86jRjGItt_REUsONsArwtGV5DKf4bH1MjLYDWbxhVDPmYfcqUsIaez7"
-                      }
-                      alt={product.name}
-                      fill
-                      className="object-cover transition-transform duration-700 hover:scale-110"
-                      sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
-                    />
-                    {product.badge ? (
-                      <span className="absolute left-5 top-5 bg-black px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-white">
-                        {product.badge}
-                      </span>
-                    ) : null}
-                    {hasDiscount ? (
-                      <span className="absolute right-5 top-5 bg-primary px-3 py-1 text-[10px] font-black uppercase tracking-[0.2em] text-white">
-                        -{discountPercent}%
-                      </span>
-                    ) : null}
-                  </Link>
-                  <CardContent className="px-0 pb-0 pt-5">
-                    <h3 className="text-2xl font-black">
-                      <Link
-                        href={`/product/${product._id}`}
-                        className="hover:text-primary"
-                      >
-                        {product.name}
-                      </Link>
-                    </h3>
-                    <p className="mt-1 text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
-                      {product.subtitle || "Premium Ankara"}
-                    </p>
-                    <p className="mt-3 flex flex-wrap items-baseline gap-3">
-                      <span className="font-serif text-3xl font-black">
-                        ₦{(product.price || 0).toLocaleString("en-NG")}
-                      </span>
-                      {product.salePrice && product.originalPrice && (
-                        <span className="text-sm text-muted-foreground line-through decoration-current">
-                          ₦{(product.originalPrice || 0).toLocaleString("en-NG")}
-                        </span>
-                      )}
-                    </p>
-                    <Button asChild variant="outline" className="mt-6 w-full">
-                      <Link href={`/product/${product._id}`}>View Details</Link>
-                    </Button>
-                  </CardContent>
-                </Card>
-                )
-              })
-            )}
+            <HomeArchiveCards products={homeProducts} />
           </div>
         </div>
       </section>

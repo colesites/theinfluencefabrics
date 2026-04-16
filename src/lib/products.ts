@@ -37,9 +37,17 @@ export async function getProducts(): Promise<ProductRecord[]> {
     "image": image.asset->url,
     "gallery": gallery[].asset->url,
     description,
-    variants
+    "variants": variants[]{
+      _key,
+      size,
+      color,
+      colorValue,
+      yards,
+      quantity,
+      "image": image.asset->url
+    }
   }`
-  return await client.fetch(query, {}, { next: { revalidate: 0 } })
+  return await client.fetch(query, {}, { next: { revalidate: 0 }, cache: "no-store" })
 }
 
 export async function getPaginatedProducts(options: { 
@@ -69,7 +77,15 @@ export async function getPaginatedProducts(options: {
     "image": image.asset->url,
     "gallery": gallery[].asset->url,
     description,
-    variants
+    "variants": variants[]{
+      _key,
+      size,
+      color,
+      colorValue,
+      yards,
+      quantity,
+      "image": image.asset->url
+    }
   }`
 
   return await client.fetch(queryGroq, { category, color, searchTerm: `*${searchTerm || ''}*` }, { next: { revalidate: 0 } })
@@ -92,7 +108,7 @@ export async function getAvailableColors(): Promise<string[]> {
 }
 
 export async function getFeaturedProducts(): Promise<ProductRecord[]> {
-  const query = `*[_type == "product"] | order(_createdAt asc)[0...3] {
+  const query = `*[_type == "product"] | order(_createdAt desc)[0...3] {
     _id,
     name,
     subtitle,
@@ -103,7 +119,15 @@ export async function getFeaturedProducts(): Promise<ProductRecord[]> {
     "image": image.asset->url,
     "gallery": gallery[].asset->url,
     description,
-    variants
+    "variants": variants[]{
+      _key,
+      size,
+      color,
+      colorValue,
+      yards,
+      quantity,
+      "image": image.asset->url
+    }
   }`
   return await client.fetch(query, {}, { next: { revalidate: 0 } })
 }
@@ -120,7 +144,15 @@ export async function getProductById(id: string): Promise<ProductRecord | null> 
     "image": image.asset->url,
     "gallery": gallery[].asset->url,
     description,
-    variants
+    "variants": variants[]{
+      _key,
+      size,
+      color,
+      colorValue,
+      yards,
+      quantity,
+      "image": image.asset->url
+    }
   }`
   return await client.fetch(query, { id }, { next: { revalidate: 0 } })
 }

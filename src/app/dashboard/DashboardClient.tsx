@@ -439,7 +439,6 @@ export default function DashboardClient({
                 
                 <div className="grid grid-cols-2 gap-6">
                   <div>
-                    <label className="block text-sm font-semibold mb-2">Price (₦)</label>
                     <label className="block text-sm font-semibold mb-2">Original Price (₦)</label>
                     <input
                       name="originalPrice"
@@ -477,6 +476,18 @@ export default function DashboardClient({
                     onChange={handleChange}
                     className="w-full px-4 py-3 bg-transparent border border-border focus:outline-none focus:ring-2 focus:ring-ring"
                     placeholder="Summer 2024 (Optional)"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-semibold mb-2">Product Description</label>
+                  <textarea
+                    name="description"
+                    rows={4}
+                    value={formData.description}
+                    onChange={handleChange}
+                    className="w-full px-4 py-3 bg-transparent border border-border focus:outline-none focus:ring-2 focus:ring-ring resize-none"
+                    placeholder="Describe the fabric quality, style, and what buyers should know."
                   />
                 </div>
 

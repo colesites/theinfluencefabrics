@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { writeClient } from '@/sanity/lib/client'
 import { getAuthSession } from '@/lib/auth-session'
+import { decrementInventoryForOrderItems } from '@/lib/inventory'
 
 export const dynamic = 'force-dynamic'
 
@@ -43,6 +44,24 @@ export async function POST(request: Request) {
     const data = payload.data
     const metadata: PaystackMetadata = data.metadata || {}
     const cartItems: CartItemMetadata[] = JSON.parse(metadata.custom_fields?.find((f) => f.variable_name === 'cart_items')?.value || '[]')
+
+    const existingOrder = await writeClient.fetch<{ _id: string } | null>(
+      `*[_type == "order" && paymentReference == $reference][0]{ _id }`,
+      { reference },
+    )
+
+    if (existingOrder?._id) {
+      return NextResponse.json({ success: true, order: existingOrder })
+    }
+
+    await decrementInventoryForOrderItems(
+      cartItems.map((item) => ({
+        productId: item.id,
+        quantity: item.qty,
+        size: item.size,
+        color: item.color,
+      })),
+    )
 
     const newOrder = {
       _type: 'order',

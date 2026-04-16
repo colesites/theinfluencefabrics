@@ -9,7 +9,7 @@ import * as z from "zod"
 import dynamic from "next/dynamic"
 
 const PaystackButton = dynamic(() => import("react-paystack").then((mod) => mod.PaystackButton), { ssr: false })
-import { ChevronLeft, Lock } from "lucide-react"
+import { Check, ChevronLeft, Copy, Lock } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -39,6 +39,7 @@ export default function CheckoutPage() {
   const [shippingRates, setShippingRates] = useState<StoreSettings | null>(null)
   const [paymentMethod, setPaymentMethod] = useState<'paystack' | 'transfer'>('transfer')
   const [receiptFile, setReceiptFile] = useState<File | null>(null)
+  const [copiedField, setCopiedField] = useState<"bank" | "accountNo" | null>(null)
 
   const { register, watch, formState: { errors, isValid } } = useForm<CheckoutFormValues>({
     resolver: zodResolver(checkoutSchema),
@@ -163,6 +164,18 @@ export default function CheckoutPage() {
       alert(`Error submitting transfer: ${msg}`)
     } finally {
       setLoading(false)
+    }
+  }
+
+  const handleCopy = async (value: string, field: "bank" | "accountNo") => {
+    if (!value) return
+
+    try {
+      await navigator.clipboard.writeText(value)
+      setCopiedField(field)
+      window.setTimeout(() => setCopiedField(null), 1600)
+    } catch {
+      alert("Copy failed. Please copy manually.")
     }
   }
 
@@ -319,9 +332,47 @@ export default function CheckoutPage() {
                   {paymentMethod === 'transfer' && shippingRates && (
                     <div className="p-5 bg-white/5 border border-white/10 text-white/90 text-sm space-y-3">
                       <p className="text-[10px] uppercase font-black tracking-widest text-white/50 mb-4">Transfer Details</p>
-                      <p><strong>Bank:</strong> {shippingRates.bankName || 'N/A'}</p>
+                      <div className="flex items-center justify-between gap-3">
+                        <p><strong>Bank:</strong> {shippingRates.bankName || 'N/A'}</p>
+                        <button
+                          type="button"
+                          onClick={() => handleCopy(shippingRates.bankName || "", "bank")}
+                          className="inline-flex items-center gap-1 rounded border border-white/30 px-2 py-1 text-[10px] font-black uppercase tracking-widest text-white/90 hover:bg-white/10 transition-colors"
+                        >
+                          {copiedField === "bank" ? (
+                            <>
+                              <Check className="size-3" />
+                              Copied
+                            </>
+                          ) : (
+                            <>
+                              <Copy className="size-3" />
+                              Copy
+                            </>
+                          )}
+                        </button>
+                      </div>
                       <p><strong>Account Name:</strong> {shippingRates.accountName || 'N/A'}</p>
-                      <p><strong>Account No:</strong> {shippingRates.accountNumber || 'N/A'}</p>
+                      <div className="flex items-center justify-between gap-3">
+                        <p><strong>Account No:</strong> {shippingRates.accountNumber || 'N/A'}</p>
+                        <button
+                          type="button"
+                          onClick={() => handleCopy(shippingRates.accountNumber || "", "accountNo")}
+                          className="inline-flex items-center gap-1 rounded border border-white/30 px-2 py-1 text-[10px] font-black uppercase tracking-widest text-white/90 hover:bg-white/10 transition-colors"
+                        >
+                          {copiedField === "accountNo" ? (
+                            <>
+                              <Check className="size-3" />
+                              Copied
+                            </>
+                          ) : (
+                            <>
+                              <Copy className="size-3" />
+                              Copy
+                            </>
+                          )}
+                        </button>
+                      </div>
                       
                       <div className="pt-4 border-t border-white/10 mt-4">
                         <label className="block text-[10px] uppercase font-black tracking-widest text-white/50 mb-3">Upload Payment Receipt</label>
