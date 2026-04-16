@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react"
 import Link from "next/link"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
@@ -14,7 +14,7 @@ import { Check, ChevronLeft, Copy, Lock } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { useCart } from "@/components/cart/CartContext"
+import { CartItem, useCart } from "@/components/cart/CartContext"
 import { useSession } from "@/lib/auth-client"
 import { StoreSettings } from "@/lib/settings"
 
@@ -34,12 +34,14 @@ export default function CheckoutPage() {
   const { items, cartTotal, totalSavings, removePurchasedItems } = useCart()
   const { data: session, isPending } = useSession()
   const router = useRouter()
+  const searchParams = useSearchParams()
   const [isClient, setIsClient] = useState(false)
   const [loading, setLoading] = useState(false)
   const [shippingRates, setShippingRates] = useState<StoreSettings | null>(null)
   const [paymentMethod, setPaymentMethod] = useState<'paystack' | 'transfer'>('transfer')
   const [receiptFile, setReceiptFile] = useState<File | null>(null)
   const [copiedField, setCopiedField] = useState<"bank" | "accountNo" | null>(null)
+  const [buyNowItem, setBuyNowItem] = useState<CartItem | null>(null)
 
   const { register, watch, formState: { errors, isValid } } = useForm<CheckoutFormValues>({
     resolver: zodResolver(checkoutSchema),
@@ -53,6 +55,14 @@ export default function CheckoutPage() {
   })
 
   const selectedRegion = watch("region")
+  const isBuyNowMode = searchParams.get("mode") === "buy-now"
+  const checkoutItems = isBuyNowMode ? (buyNowItem ? [buyNowItem] : []) : items
+  const checkoutSubtotal = isBuyNowMode
+    ? checkoutItems.reduce((sum, item) => sum + item.price * item.quantity, 0)
+    : cartTotal
+  const checkoutSavings = isBuyNowMode
+    ? checkoutItems.reduce((sum, item) => sum + (item.originalPrice - item.price) * item.quantity, 0)
+    : totalSavings
 
   let shippingFee = 0;
   if (shippingRates) {
@@ -61,7 +71,7 @@ export default function CheckoutPage() {
     else if (selectedRegion === 'outside_ekiti') shippingFee = shippingRates.shippingOutsideEkiti;
   }
 
-  const total = cartTotal + shippingFee
+  const total = checkoutSubtotal + shippingFee
 
   useEffect(() => {
     setIsClient(true)
@@ -70,6 +80,17 @@ export default function CheckoutPage() {
         setShippingRates(data.settings)
       }
     })
+
+    const raw = sessionStorage.getItem('buy_now_item')
+    if (!raw) return
+    try {
+      const parsed = JSON.parse(raw) as CartItem
+      if (parsed?.productId) {
+        setBuyNowItem(parsed)
+      }
+    } catch {
+      setBuyNowItem(null)
+    }
   }, [])
 
   if (!isClient || isPending) {
@@ -81,10 +102,17 @@ export default function CheckoutPage() {
     </div>
   }
 
-  if (items.length === 0) {
+  if (checkoutItems.length === 0) {
     return (
       <div className="atelier-shell py-28 text-center animate-in fade-in duration-500">
-        <h1 className="text-4xl font-black mb-6">No items detected.</h1>
+        <h1 className="text-4xl font-black mb-6">
+          {isBuyNowMode ? "Buy now session expired." : "No items detected."}
+        </h1>
+        {isBuyNowMode && (
+          <p className="mb-6 text-sm text-muted-foreground">
+            Please return to the product page and tap Buy Now again.
+          </p>
+        )}
         <Button asChild variant="outline">
           <Link href="/collection">Return to Collection</Link>
         </Button>
@@ -118,7 +146,12 @@ export default function CheckoutPage() {
       if (!verifyRes.ok) throw new Error(verifyData.error || "Verification failed")
 
       // 2. Remove purchased items from cart and redirect
-      removePurchasedItems(items)
+      if (!isBuyNowMode) {
+        removePurchasedItems(checkoutItems)
+      } else {
+        sessionStorage.removeItem("buy_now_item")
+        setBuyNowItem(null)
+      }
       router.push(`/checkout/success/${reference.reference}`)
     } catch (err) {
       const msg = err instanceof Error ? err.message : "Unknown error"
@@ -144,7 +177,7 @@ export default function CheckoutPage() {
            phone: formValues.phone,
            address: formValues.address,
         },
-        items,
+        items: checkoutItems,
         totalPrice: total
       }
       formData.append('orderData', JSON.stringify(orderData))
@@ -157,7 +190,12 @@ export default function CheckoutPage() {
       const data = await res.json()
       if (!res.ok) throw new Error(data.error || "Transfer submission failed")
 
-      removePurchasedItems(items)
+      if (!isBuyNowMode) {
+        removePurchasedItems(checkoutItems)
+      } else {
+        sessionStorage.removeItem("buy_now_item")
+        setBuyNowItem(null)
+      }
       router.push(`/checkout/success/${data.order.orderNumber}`)
     } catch (err) {
       const msg = err instanceof Error ? err.message : "Unknown error"
@@ -189,7 +227,7 @@ export default function CheckoutPage() {
         {
           display_name: "Cart Items",
           variable_name: "cart_items",
-          value: JSON.stringify(items.map(i => ({ id: i.productId, qty: i.quantity, size: i.size, color: i.color })))
+          value: JSON.stringify(checkoutItems.map(i => ({ id: i.productId, qty: i.quantity, size: i.size, color: i.color, yards: i.yards })))
         }
       ]
     },
@@ -200,9 +238,9 @@ export default function CheckoutPage() {
   return (
     <div className="bg-surface-dim min-h-screen">
       <div className="atelier-shell py-12">
-        <Link href="/cart" className="flex items-center gap-2 text-[10px] uppercase tracking-widest text-muted-foreground hover:text-primary transition-colors mb-12">
+        <Link href={isBuyNowMode ? `/product/${buyNowItem?.productId || ""}` : "/cart"} className="flex items-center gap-2 text-[10px] uppercase tracking-widest text-muted-foreground hover:text-primary transition-colors mb-12">
           <ChevronLeft className="size-3" />
-          Back to Selection
+          {isBuyNowMode ? "Back to Product" : "Back to Selection"}
         </Link>
         
         <div className="grid lg:grid-cols-[1fr_450px] gap-12 items-start">
@@ -211,6 +249,12 @@ export default function CheckoutPage() {
               <h1 className="text-5xl font-black font-serif italic mb-4">Finalizing Order</h1>
               <p className="text-muted-foreground uppercase text-[10px] tracking-[0.2em]">Contact & Shipping Information</p>
             </div>
+
+            {isBuyNowMode && (
+              <div className="rounded border border-primary/20 bg-primary/5 px-4 py-3 text-xs uppercase tracking-[0.16em] text-primary">
+                Buy Now Mode: checking out only this selected item. Saved cart items are untouched.
+              </div>
+            )}
 
             <Card className="bg-background border-none shadow-sm p-8 sm:p-10">
               <form className="space-y-8">
@@ -290,8 +334,8 @@ export default function CheckoutPage() {
               
               <CardContent className="p-0 space-y-8">
                 <div className="space-y-4">
-                  {items.map(item => (
-                    <div key={item.productId} className="flex justify-between text-xs tracking-widest uppercase text-white/80">
+                  {checkoutItems.map(item => (
+                    <div key={`${item.productId}-${item.size || ''}-${item.color || ''}-${item.yards || ''}`} className="flex justify-between text-xs tracking-widest uppercase text-white/80">
                       <span>{item.name} x {item.quantity}</span>
                       <span className="font-black">₦{((item.price || 0) * item.quantity).toLocaleString("en-NG")}</span>
                     </div>
@@ -303,10 +347,10 @@ export default function CheckoutPage() {
                     <span>Shipping</span>
                     <span>{shippingFee > 0 ? `₦${shippingFee.toLocaleString()}` : "Pending Region"}</span>
                   </div>
-                  {totalSavings > 0 && (
+                  {checkoutSavings > 0 && (
                     <div className="flex justify-between text-white font-bold italic">
                       <span>Promo Discount</span>
-                      <span>- ₦{(totalSavings || 0).toLocaleString("en-NG")}</span>
+                      <span>- ₦{(checkoutSavings || 0).toLocaleString("en-NG")}</span>
                     </div>
                   )}
                   <div className="flex justify-between text-2xl font-black pt-4">

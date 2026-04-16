@@ -53,20 +53,20 @@ export function CartSheet() {
                   <div>
                     <h3 className="font-black text-sm">{item.name}</h3>
                     <p className="text-xs text-muted-foreground mt-1 capitalize">
-                      {item.size} {item.color ? `| ${item.color}` : ''}
+                      {item.size} {item.color ? `| ${item.color}` : ''} {item.yards ? `| ${item.yards} yds` : ''}
                     </p>
                   </div>
                   <div className="flex items-center justify-between mt-4">
                     <div className="flex items-center border border-border">
                       <button 
-                        onClick={() => updateQuantity(item.productId, item.quantity - 1, item.size, item.color)}
+                        onClick={() => updateQuantity(item.productId, item.quantity - 1, item.size, item.color, item.yards)}
                         className="p-2 hover:bg-black/5"
                       >
                         <Minus className="size-3" />
                       </button>
                       <span className="px-3 text-sm font-semibold">{item.quantity}</span>
                       <button 
-                        onClick={() => updateQuantity(item.productId, item.quantity + 1, item.size, item.color)}
+                        onClick={() => updateQuantity(item.productId, item.quantity + 1, item.size, item.color, item.yards)}
                         className="p-2 hover:bg-black/5"
                       >
                         <Plus className="size-3" />

@@ -54,7 +54,7 @@ export default function ProductClient({ product }: { product: ProductRecord }) {
   const handleBuyNow = () => {
     if (isOutOfStock) return
 
-    addToCart({
+    const buyNowItem = {
       productId: product._id,
       name: product.name,
       price: product.price,
@@ -65,8 +65,10 @@ export default function ProductClient({ product }: { product: ProductRecord }) {
       yards: selectedVariant?.yards,
       maxStock: selectedVariant?.quantity || 100,
       quantity: 1
-    }, { openCart: false })
-    router.push('/checkout')
+    }
+
+    sessionStorage.setItem('buy_now_item', JSON.stringify(buyNowItem))
+    router.push('/checkout?mode=buy-now')
   }
 
   return (
@@ -94,9 +96,16 @@ export default function ProductClient({ product }: { product: ProductRecord }) {
                         style={{ backgroundColor: v.colorValue }}
                       />
                     )}
-                    <span className="font-bold">{v.color || v.colorValue || 'Universal'} {v.size || ''}</span>
+                    <span className="font-bold">{v.color || v.colorValue || 'Universal'}</span>
+                    {v.size && (
+                      <span className="rounded border border-black/15 bg-black/[0.03] px-2 py-0.5 text-[10px] font-black uppercase tracking-wider">
+                        {v.size}
+                      </span>
+                    )}
                   </div>
-                  <span className="text-[10px] uppercase opacity-60 tracking-wider transition-opacity">{formatYards(v.yards)}</span>
+                  <span className="text-[10px] uppercase opacity-60 tracking-wider transition-opacity">
+                    {formatYards(v.yards)}
+                  </span>
                 </div>
                 {v.quantity <= 5 && v.quantity > 0 && (
                   <span className="mt-1 text-[9px] uppercase tracking-[0.16em] font-semibold text-black/70">

@@ -28,6 +28,8 @@ interface VariantForm {
   preview: string | null;
 }
 
+const SIZE_OPTIONS = ["XS", "S", "M", "L", "XL", "XXL", "One Size"] as const
+
 export default function DashboardClient({ 
   initialProducts, 
   initialExploreItems,
@@ -546,14 +548,23 @@ export default function DashboardClient({
                               className="w-full px-3 py-2 bg-transparent border border-border text-xs focus:outline-none"
                             />
                           </div>
-                          <input
-                            placeholder="Size"
+                          <select
                             value={v.size}
                             onChange={(e) => updateVariant(i, 'size', e.target.value)}
                             className="px-3 py-2 bg-transparent border border-border text-sm focus:outline-none"
-                          />
+                          >
+                            <option value="">Select Size</option>
+                            {SIZE_OPTIONS.map((size) => (
+                              <option key={size} value={size}>
+                                {size}
+                              </option>
+                            ))}
+                          </select>
                           <input
-                            placeholder="Yards"
+                            placeholder="Yards (e.g. 6)"
+                            type="number"
+                            min={1}
+                            step="0.5"
                             value={v.yards}
                             onChange={(e) => updateVariant(i, 'yards', e.target.value)}
                             className="px-3 py-2 bg-transparent border border-border text-sm focus:outline-none"

@@ -47,7 +47,7 @@ export default function CartPage() {
         <Card className="bg-surface-container-low border-none shadow-none">
           <CardContent className="space-y-8 p-0">
             {items.map((item) => (
-              <div key={`${item.productId}-${item.size}-${item.color}`} className="flex gap-5 border-b border-black/10 pb-8 last:border-b-0 last:pb-0">
+              <div key={`${item.productId}-${item.size}-${item.color}-${item.yards}`} className="flex gap-5 border-b border-black/10 pb-8 last:border-b-0 last:pb-0">
                 <div className="relative h-32 w-24 shrink-0 bg-surface-container-highest sm:h-40 sm:w-32 overflow-hidden">
                   <Image src={resolveImageSrc(item.image, FALLBACK_IMAGE)} alt={item.name} fill className="object-cover" sizes="150px" />
                 </div>
@@ -56,11 +56,11 @@ export default function CartPage() {
                     <div>
                       <h2 className="text-2xl font-black font-serif">{item.name}</h2>
                       <p className="mt-2 text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
-                        {item.size || 'Standard'} {item.color ? `/ ${item.color}` : ''}
+                        {item.size || 'Standard'} {item.color ? `/ ${item.color}` : ''} {item.yards ? `/ ${item.yards} yds` : ''}
                       </p>
                     </div>
                     <button 
-                      onClick={() => removeFromCart(item.productId, item.size, item.color)}
+                      onClick={() => removeFromCart(item.productId, item.size, item.color, item.yards)}
                       className="text-muted-foreground hover:text-destructive transition-colors"
                     >
                       <Trash2 className="size-4" />
@@ -70,14 +70,14 @@ export default function CartPage() {
                   <div className="flex items-center justify-between">
                     <div className="flex items-center border border-border bg-background">
                       <button 
-                         onClick={() => updateQuantity(item.productId, item.quantity - 1, item.size, item.color)}
+                         onClick={() => updateQuantity(item.productId, item.quantity - 1, item.size, item.color, item.yards)}
                          className="p-3 hover:bg-black/5"
                       >
                         <Minus className="size-3" />
                       </button>
                       <span className="px-4 text-sm font-black">{item.quantity}</span>
                       <button 
-                        onClick={() => updateQuantity(item.productId, item.quantity + 1, item.size, item.color)}
+                        onClick={() => updateQuantity(item.productId, item.quantity + 1, item.size, item.color, item.yards)}
                         className="p-3 hover:bg-black/5"
                       >
                         <Plus className="size-3" />
