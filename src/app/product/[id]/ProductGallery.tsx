@@ -27,11 +27,12 @@ export default function ProductGallery({
     resolveImageSrc(initialVariantImage || '', '') || null,
   )
 
-  const baseImages = normalizeImageList(gallery, resolveImageSrc(mainImage, FALLBACK_IMAGE))
+  const normalizedMainImage = resolveImageSrc(mainImage, FALLBACK_IMAGE)
+  const baseImages = normalizeImageList([normalizedMainImage, ...(gallery || [])], normalizedMainImage)
   const normalizedVariantImages = normalizeImageList(variantImages, '')
   const combinedImages = normalizeImageList(
     [...normalizedVariantImages, ...baseImages],
-    resolveImageSrc(mainImage, FALLBACK_IMAGE),
+    normalizedMainImage,
   )
   const displayImages = variantImage
     ? [variantImage, ...combinedImages.filter((img) => img !== variantImage)]

@@ -41,6 +41,7 @@ interface ExistingProductDocument {
   gallery?: Array<{
     asset?: {
       _id?: string
+      url?: string
     }
   }>
   variants?: ExistingVariantDocument[]
@@ -74,7 +75,7 @@ export async function PUT(request: Request, context: Params) {
     const existingProduct = await writeClient.fetch<ExistingProductDocument>(
       `*[_type == "product" && _id == $id][0]{
         image{asset->{_id}},
-        gallery[]{asset->{_id}},
+        gallery[]{asset->{_id,url}},
         variants[]{image{asset->{_id}}}
       }`,
       { id },
@@ -169,34 +170,58 @@ export async function PUT(request: Request, context: Params) {
 
     const galleryFiles = formData.getAll('gallery') as File[]
     const validGalleryFiles = galleryFiles.filter((file) => file.size > 0)
-    let galleryRef: SanityImageReference[] | undefined
-    if (validGalleryFiles.length > 0) {
-      galleryRef = []
-      for (const file of validGalleryFiles) {
-        const buffer = Buffer.from(await file.arrayBuffer())
-        const asset = await writeClient.assets.upload('image', buffer, {
-          filename: file.name,
-        })
-        galleryRef.push({
-          _type: 'image',
-          asset: {
-            _type: 'reference',
-            _ref: asset._id,
-          },
-        })
+    const retainGalleryRaw = formData.get('retainGallery') as string | null
+    let retainedGalleryUrls: string[] | null = null
+    if (retainGalleryRaw) {
+      try {
+        const parsed = JSON.parse(retainGalleryRaw)
+        if (Array.isArray(parsed)) {
+          retainedGalleryUrls = parsed.filter((value): value is string => typeof value === 'string')
+        }
+      } catch {
+        retainedGalleryUrls = null
       }
-    } else {
-      galleryRef = (existingProduct.gallery || [])
-        .map((item) => item.asset?._id)
-        .filter((ref): ref is string => Boolean(ref))
-        .map((ref) => ({
-          _type: 'image',
-          asset: {
-            _type: 'reference',
-            _ref: ref,
-          },
-        }))
     }
+
+    const existingGalleryRefs: SanityImageReference[] = []
+    for (const item of existingProduct.gallery || []) {
+      const id = item.asset?._id
+      if (!id) continue
+      if (retainedGalleryUrls) {
+        const url = item.asset?.url
+        if (!url || !retainedGalleryUrls.includes(url)) continue
+      }
+      existingGalleryRefs.push({
+        _type: 'image',
+        asset: {
+          _type: 'reference',
+          _ref: id,
+        },
+      })
+    }
+
+    const uploadedGalleryRefs: SanityImageReference[] = []
+    for (const file of validGalleryFiles) {
+      const buffer = Buffer.from(await file.arrayBuffer())
+      const asset = await writeClient.assets.upload('image', buffer, {
+        filename: file.name,
+      })
+      uploadedGalleryRefs.push({
+        _type: 'image',
+        asset: {
+          _type: 'reference',
+          _ref: asset._id,
+        },
+      })
+    }
+
+    const seenGalleryRefs = new Set<string>()
+    const galleryRef: SanityImageReference[] = [...existingGalleryRefs, ...uploadedGalleryRefs].filter((item) => {
+      const ref = item.asset._ref
+      if (seenGalleryRefs.has(ref)) return false
+      seenGalleryRefs.add(ref)
+      return true
+    })
 
     const patchPayload = {
       name,

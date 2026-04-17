@@ -52,7 +52,8 @@ export default function DashboardClient({
     originalPrice: '',
   })
   const [mainImage, setMainImage] = useState<File | null>(null)
-  const [galleryImages, setGalleryImages] = useState<FileList | null>(null)
+  const [existingGalleryImages, setExistingGalleryImages] = useState<string[]>([])
+  const [galleryImages, setGalleryImages] = useState<File[]>([])
   const [mainImagePreview, setMainImagePreview] = useState<string | null>(null)
   const [variants, setVariants] = useState<VariantForm[]>([])
   const [editingProductId, setEditingProductId] = useState<string | null>(null)
@@ -139,7 +140,8 @@ export default function DashboardClient({
     setFormData({ name: '', price: '', quantity: '', collection: '', description: '', originalPrice: '' })
     setMainImage(null)
     setMainImagePreview(null)
-    setGalleryImages(null)
+    setExistingGalleryImages([])
+    setGalleryImages([])
     setVariants([])
     setEditingProductId(null)
   }
@@ -157,7 +159,8 @@ export default function DashboardClient({
       originalPrice: String(product.originalPrice || product.price || 0),
     })
     setMainImage(null)
-    setGalleryImages(null)
+    setExistingGalleryImages(product.gallery || [])
+    setGalleryImages([])
     setMainImagePreview(product.image || null)
     setVariants(
       (product.variants || []).map((variant) => ({
@@ -190,12 +193,11 @@ export default function DashboardClient({
       if (mainImage) {
         data.append('image', mainImage)
       }
-      
-      if (galleryImages) {
-        Array.from(galleryImages).forEach((file) => {
-          data.append('gallery', file)
-        })
-      }
+      data.append('retainGallery', JSON.stringify(existingGalleryImages))
+
+      galleryImages.forEach((file) => {
+        data.append('gallery', file)
+      })
 
       data.append('variants', JSON.stringify(variants.map(v => ({
         size: v.size,
@@ -631,11 +633,36 @@ export default function DashboardClient({
                   <div>
                     <label className="block text-sm font-semibold mb-2">Gallery Images</label>
                     <div className="flex flex-col gap-4">
-                      {galleryImages && galleryImages.length > 0 && (
+                      {existingGalleryImages.length > 0 && (
                         <div className="flex flex-wrap gap-2">
-                          {Array.from(galleryImages).map((file, i) => (
+                          {existingGalleryImages.map((url, i) => (
+                            <div key={`${url}-${i}`} className="size-12 relative overflow-hidden border border-border">
+                              <Image src={url} alt="Gallery" fill className="object-cover" />
+                              <button
+                                type="button"
+                                onClick={() => setExistingGalleryImages((prev) => prev.filter((_, index) => index !== i))}
+                                className="absolute right-0 top-0 rounded-bl bg-black/70 px-1 text-[10px] text-white"
+                                aria-label={`Remove existing gallery image ${i + 1}`}
+                              >
+                                ×
+                              </button>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                      {galleryImages.length > 0 && (
+                        <div className="flex flex-wrap gap-2">
+                          {galleryImages.map((file, i) => (
                             <div key={i} className="size-12 relative overflow-hidden border border-border">
                               <Image src={URL.createObjectURL(file)} alt="Gallery" fill className="object-cover" />
+                              <button
+                                type="button"
+                                onClick={() => setGalleryImages((prev) => prev.filter((_, index) => index !== i))}
+                                className="absolute right-0 top-0 rounded-bl bg-black/70 px-1 text-[10px] text-white"
+                                aria-label={`Remove new gallery image ${i + 1}`}
+                              >
+                                ×
+                              </button>
                             </div>
                           ))}
                         </div>
@@ -644,7 +671,12 @@ export default function DashboardClient({
                         type="file"
                         multiple
                         accept="image/*"
-                        onChange={(e) => setGalleryImages(e.target.files)}
+                        onChange={(e) => {
+                          const nextFiles = Array.from(e.target.files || [])
+                          if (nextFiles.length === 0) return
+                          setGalleryImages((prev) => [...prev, ...nextFiles])
+                          e.currentTarget.value = ''
+                        }}
                         className="w-full text-xs text-muted-foreground file:mr-4 file:py-2 file:px-4 file:border-0 file:bg-secondary file:text-white hover:file:bg-secondary/90"
                       />
                     </div>
