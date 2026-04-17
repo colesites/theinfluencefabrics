@@ -939,27 +939,21 @@ export default function DashboardClient({
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold mb-2">Rest of Ekiti State (₦)</label>
+                  <label className="block text-sm font-semibold mb-2">Rest of Ekiti State</label>
                   <input
-                    name="shippingEkitiState"
-                    type="number"
-                    min="0"
-                    required
-                    value={settingsForm.shippingEkitiState}
-                    onChange={handleSettingsChange}
-                    className="w-full px-4 py-3 bg-transparent border border-border focus:outline-none focus:ring-2 focus:ring-ring"
+                    type="text"
+                    value="Shipping fee determined at park"
+                    disabled
+                    className="w-full px-4 py-3 bg-surface-container-low border border-border text-muted-foreground"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold mb-2">Outside Ekiti State (₦)</label>
+                  <label className="block text-sm font-semibold mb-2">Outside Ekiti State</label>
                   <input
-                    name="shippingOutsideEkiti"
-                    type="number"
-                    min="0"
-                    required
-                    value={settingsForm.shippingOutsideEkiti}
-                    onChange={handleSettingsChange}
-                    className="w-full px-4 py-3 bg-transparent border border-border focus:outline-none focus:ring-2 focus:ring-ring"
+                    type="text"
+                    value="Shipping fee determined at park"
+                    disabled
+                    className="w-full px-4 py-3 bg-surface-container-low border border-border text-muted-foreground"
                   />
                 </div>
 

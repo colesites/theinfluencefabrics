@@ -2,8 +2,13 @@ import { NextResponse } from 'next/server'
 import { writeClient } from '@/sanity/lib/client'
 import { getOwnerSession } from '@/lib/session'
 import { decrementInventoryForOrderItems } from '@/lib/inventory'
+import { sendCustomerOrderStatusEmail } from '@/lib/email'
 
 export const dynamic = 'force-dynamic'
+
+function isInventoryCommittedStatus(status: string | undefined) {
+  return ['approved', 'shipped', 'delivered'].includes(status || '')
+}
 
 export async function PATCH(
   request: Request,
@@ -29,7 +34,15 @@ export async function PATCH(
 
     const currentOrder = await writeClient.fetch<{
       _id: string
+      orderNumber?: string
       status?: string
+      customerUserId?: string
+      paymentMethod?: string
+      totalPrice?: number
+      customer?: {
+        name?: string
+        email?: string
+      }
       items?: Array<{
         productId?: string
         quantity?: number
@@ -39,7 +52,15 @@ export async function PATCH(
     } | null>(
       `*[_type == "order" && _id == $id][0]{
         _id,
+        orderNumber,
         status,
+        customerUserId,
+        paymentMethod,
+        totalPrice,
+        customer{
+          name,
+          email
+        },
         items[]{
           productId,
           quantity,
@@ -54,9 +75,9 @@ export async function PATCH(
       return NextResponse.json({ success: false, error: 'Order not found' }, { status: 404 })
     }
 
-    const wasPaid = currentOrder.status === 'paid'
-    const isNowPaid = status === 'paid'
-    if (!wasPaid && isNowPaid) {
+    const wasInventoryCommitted = isInventoryCommittedStatus(currentOrder.status)
+    const isInventoryCommitted = isInventoryCommittedStatus(status)
+    if (!wasInventoryCommitted && isInventoryCommitted) {
       await decrementInventoryForOrderItems(
         (currentOrder.items || []).map((item) => ({
           productId: item.productId || '',
@@ -71,6 +92,32 @@ export async function PATCH(
       .patch(id)
       .set({ status })
       .commit()
+
+    const statusChanged = currentOrder.status !== status
+    const shouldEmailCustomer =
+      statusChanged &&
+      Boolean(currentOrder.customerUserId) &&
+      Boolean(currentOrder.customer?.email) &&
+      (
+        status === 'approved' ||
+        status === 'shipped' ||
+        status === 'delivered'
+      )
+
+    if (shouldEmailCustomer) {
+      try {
+        await sendCustomerOrderStatusEmail({
+          orderNumber: currentOrder.orderNumber || id,
+          email: currentOrder.customer?.email || '',
+          name: currentOrder.customer?.name,
+          status,
+          paymentMethod: currentOrder.paymentMethod,
+          totalPrice: currentOrder.totalPrice,
+        })
+      } catch (emailError) {
+        console.error('Customer order status email error:', emailError)
+      }
+    }
 
     return NextResponse.json({ success: true, order: result })
   } catch (error) {

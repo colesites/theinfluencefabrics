@@ -24,8 +24,8 @@ export async function getStoreSettings(): Promise<StoreSettings> {
   // Return sensible defaults if the settings haven't been created in Sanity yet.
   return settings || {
     shippingAdoEkiti: 2000,
-    shippingEkitiState: 4000,
-    shippingOutsideEkiti: 8000,
+    shippingEkitiState: 0,
+    shippingOutsideEkiti: 0,
     bankName: '',
     accountName: '',
     accountNumber: '',

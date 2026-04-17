@@ -25,16 +25,14 @@ export async function POST(request: Request) {
 
     const { 
       shippingAdoEkiti, 
-      shippingEkitiState, 
-      shippingOutsideEkiti,
       bankName,
       accountName,
       accountNumber
     } = await request.json()
 
     // Validate inputs
-    if (typeof shippingAdoEkiti !== 'number' || typeof shippingEkitiState !== 'number' || typeof shippingOutsideEkiti !== 'number') {
-      return NextResponse.json({ success: false, error: 'Invalid payload, expected numbers for shipping' }, { status: 400 })
+    if (typeof shippingAdoEkiti !== 'number') {
+      return NextResponse.json({ success: false, error: 'Invalid payload, expected number for Ado-Ekiti shipping' }, { status: 400 })
     }
 
     // Use createOrReplace to ensure we always write to the exact same singleton document
@@ -42,8 +40,8 @@ export async function POST(request: Request) {
       _id: SETTINGS_ID,
       _type: 'storeSettings',
       shippingAdoEkiti,
-      shippingEkitiState,
-      shippingOutsideEkiti,
+      shippingEkitiState: 0,
+      shippingOutsideEkiti: 0,
       bankName: bankName || '',
       accountName: accountName || '',
       accountNumber: accountNumber || '',

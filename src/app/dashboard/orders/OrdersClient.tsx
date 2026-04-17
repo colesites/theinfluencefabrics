@@ -7,6 +7,12 @@ import { Button } from '@/components/ui/button'
 import type { OrderRecord } from '@/lib/orders'
 import { X, ExternalLink } from 'lucide-react'
 
+function getStatusBadgeVariant(status: string) {
+  if (status === 'approved' || status === 'paid') return 'default'
+  if (status === 'pending') return 'secondary'
+  return 'outline'
+}
+
 // Using HTML native dialog approach or absolute overlay for the modal
 export default function OrdersClient({ initialOrders }: { initialOrders: OrderRecord[] }) {
   const [orders, setOrders] = useState<OrderRecord[]>(initialOrders)
@@ -31,7 +37,7 @@ export default function OrdersClient({ initialOrders }: { initialOrders: OrderRe
       } else {
         alert("Failed to update: " + data.error)
       }
-    } catch (err) {
+    } catch {
       alert("Network err.")
     } finally {
       setIsUpdating(false)
@@ -54,7 +60,7 @@ export default function OrdersClient({ initialOrders }: { initialOrders: OrderRe
           <div className="flex-1 p-8 sm:p-12 space-y-8">
             <header>
               <div className="flex gap-3 mb-2 items-center">
-                 <Badge variant={selectedOrder.status === 'paid' ? 'default' : selectedOrder.status === 'pending' ? 'secondary' : 'outline'} className="uppercase text-[9px] tracking-widest px-2 py-0.5">
+                 <Badge variant={getStatusBadgeVariant(selectedOrder.status)} className="uppercase text-[9px] tracking-widest px-2 py-0.5">
                     {selectedOrder.status}
                   </Badge>
                   <p className="text-[10px] uppercase font-black tracking-widest bg-primary/10 text-primary px-2 py-0.5 rounded">
@@ -114,7 +120,7 @@ export default function OrdersClient({ initialOrders }: { initialOrders: OrderRe
                       disabled={isUpdating}
                     >
                       <option value="pending">Pending</option>
-                      <option value="paid">Paid</option>
+                      <option value="approved">Approved</option>
                       <option value="shipped">Shipped</option>
                       <option value="delivered">Delivered</option>
                       <option value="cancelled">Cancelled</option>
@@ -142,7 +148,7 @@ export default function OrdersClient({ initialOrders }: { initialOrders: OrderRe
                 </a>
               </div>
               <p className="text-[10px] mt-4 text-center leading-relaxed text-muted-foreground">
-                Please verify the amount matches the total above before marking as <strong className="text-black">Paid</strong>.
+                Please verify the amount matches the total above before marking as <strong className="text-black">Approved</strong>.
               </p>
             </div>
           )}
@@ -197,7 +203,7 @@ export default function OrdersClient({ initialOrders }: { initialOrders: OrderRe
                     )}
                   </td>
                   <td className="px-6 py-5">
-                    <Badge variant={order.status === 'paid' ? 'default' : order.status === 'pending' ? 'secondary' : 'outline'} className="uppercase text-[9px] tracking-widest px-2 py-0.5">
+                    <Badge variant={getStatusBadgeVariant(order.status)} className="uppercase text-[9px] tracking-widest px-2 py-0.5">
                       {order.status}
                     </Badge>
                   </td>

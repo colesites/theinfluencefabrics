@@ -1,3 +1,6 @@
+"use client";
+
+import { FormEvent, useState } from "react";
 import Link from "next/link";
 import { ArrowRight, Globe, Mail } from "lucide-react";
 
@@ -5,6 +8,37 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
 const Footer = () => {
+  const [email, setEmail] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const [feedback, setFeedback] = useState<{ type: "success" | "error"; text: string } | null>(null);
+
+  const handleNewsletterSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setSubmitting(true);
+    setFeedback(null);
+
+    try {
+      const res = await fetch("/api/newsletter", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+      const payload = await res.json();
+
+      if (!res.ok) {
+        setFeedback({ type: "error", text: payload.error || "Unable to subscribe right now." });
+        return;
+      }
+
+      setFeedback({ type: "success", text: "Subscribed successfully." });
+      setEmail("");
+    } catch {
+      setFeedback({ type: "error", text: "Network error. Please try again." });
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
   return (
     <footer className="mt-24 bg-surface-container px-4 py-16 sm:px-8">
       <div className="atelier-shell">
@@ -37,7 +71,7 @@ const Footer = () => {
             </div>
           </div>
 
-          <form className="space-y-4" action="#" method="post">
+          <form className="space-y-4" onSubmit={handleNewsletterSubmit}>
             <p className="editorial-kicker text-black/70">Newsletter</p>
             <label htmlFor="newsletter" className="sr-only">
               Enter email
@@ -48,15 +82,30 @@ const Footer = () => {
                 type="email"
                 placeholder="Enter email"
                 className="text-xs"
+                value={email}
+                onChange={(event) => setEmail(event.target.value)}
+                required
               />
               <Button
                 size="icon-sm"
                 className="shrink-0"
                 aria-label="Submit email"
+                disabled={submitting}
               >
                 <ArrowRight className="size-4" />
               </Button>
             </div>
+            {feedback ? (
+              <p
+                className={
+                  feedback.type === "success"
+                    ? "text-[10px] font-semibold uppercase tracking-[0.12em] text-primary"
+                    : "text-[10px] font-semibold uppercase tracking-[0.12em] text-destructive"
+                }
+              >
+                {feedback.text}
+              </p>
+            ) : null}
           </form>
         </div>
 

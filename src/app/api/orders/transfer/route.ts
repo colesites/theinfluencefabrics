@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { writeClient } from '@/sanity/lib/client'
 import { getAuthSession } from '@/lib/auth-session'
+import { sendAdminOrderNotificationEmail, sendCustomerOrderReceivedEmail } from '@/lib/email'
 
 export const dynamic = 'force-dynamic'
 
@@ -29,7 +30,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: false, error: 'A transfer receipt image is required' }, { status: 400 })
     }
 
-    const { customer, items, totalPrice } = JSON.parse(orderDataString)
+    const { customer, items, totalPrice, region } = JSON.parse(orderDataString)
 
     // Upload receipt image to Sanity
     const buffer = Buffer.from(await receiptImage.arrayBuffer())
@@ -75,6 +76,43 @@ export async function POST(request: Request) {
     }
 
     const result = await writeClient.create(newOrder)
+
+    try {
+      await sendAdminOrderNotificationEmail({
+        orderNumber,
+        paymentMethod: 'transfer',
+        status: 'pending',
+        totalPrice,
+        customer: {
+          name: customer.name,
+          email: customer.email,
+          phone: customer.phone,
+          address: customer.address,
+        },
+        items: items.map((item: TransferCartItem) => ({
+          name: item.name,
+          quantity: item.quantity,
+          price: item.price,
+          size: item.size,
+          color: item.color,
+        })),
+      })
+    } catch (emailError) {
+      console.error('Transfer admin email error:', emailError)
+    }
+
+    try {
+      await sendCustomerOrderReceivedEmail({
+        orderNumber,
+        email: customer.email,
+        name: customer.name,
+        paymentMethod: 'transfer',
+        totalPrice,
+        shippingToBeDeterminedAtPark: region === 'ekiti_state' || region === 'outside_ekiti',
+      })
+    } catch (emailError) {
+      console.error('Transfer customer email error:', emailError)
+    }
 
     return NextResponse.json({ success: true, order: result })
   } catch (error) {

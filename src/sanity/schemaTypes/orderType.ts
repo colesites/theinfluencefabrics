@@ -58,7 +58,7 @@ export const orderType = {
       options: {
         list: [
           { title: 'Pending', value: 'pending' },
-          { title: 'Paid', value: 'paid' },
+          { title: 'Approved', value: 'approved' },
           { title: 'Shipped', value: 'shipped' },
           { title: 'Delivered', value: 'delivered' },
           { title: 'Cancelled', value: 'cancelled' },

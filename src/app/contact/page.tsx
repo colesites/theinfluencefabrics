@@ -1,3 +1,6 @@
+"use client";
+
+import { FormEvent, useState } from "react";
 import Image from "next/image";
 import { FaWhatsapp } from "react-icons/fa";
 
@@ -6,6 +9,50 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 
 export default function ContactPage() {
+  const [form, setForm] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    subject: "",
+    message: "",
+  });
+  const [submitting, setSubmitting] = useState(false);
+  const [feedback, setFeedback] = useState<{ type: "success" | "error"; text: string } | null>(null);
+
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setSubmitting(true);
+    setFeedback(null);
+
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+
+      const payload = await res.json();
+
+      if (!res.ok) {
+        setFeedback({ type: "error", text: payload.error || "Unable to send inquiry right now." });
+        return;
+      }
+
+      setFeedback({ type: "success", text: "Inquiry sent. We will get back to you shortly." });
+      setForm({
+        firstName: "",
+        lastName: "",
+        email: "",
+        subject: "",
+        message: "",
+      });
+    } catch {
+      setFeedback({ type: "error", text: "Network error. Please try again." });
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
   return (
     <section className="atelier-shell py-14 sm:py-20">
       <div className="mb-12 max-w-3xl">
@@ -22,74 +69,121 @@ export default function ContactPage() {
       <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_420px]">
         <Card className="bg-surface-container-low">
           <CardContent className="space-y-8 p-8 sm:p-12">
-            <div className="grid gap-8 sm:grid-cols-2">
+            <form className="space-y-8" onSubmit={handleSubmit}>
+              <div className="grid gap-8 sm:grid-cols-2">
+                <div>
+                  <label
+                    htmlFor="first-name"
+                    className="editorial-kicker block text-black/70"
+                  >
+                    First Name
+                  </label>
+                  <Input
+                    id="first-name"
+                    placeholder="Amara"
+                    className="mt-2"
+                    value={form.firstName}
+                    onChange={(event) =>
+                      setForm((prev) => ({ ...prev, firstName: event.target.value }))
+                    }
+                    required
+                  />
+                </div>
+                <div>
+                  <label
+                    htmlFor="last-name"
+                    className="editorial-kicker block text-black/70"
+                  >
+                    Last Name
+                  </label>
+                  <Input
+                    id="last-name"
+                    placeholder="Okonkwo"
+                    className="mt-2"
+                    value={form.lastName}
+                    onChange={(event) =>
+                      setForm((prev) => ({ ...prev, lastName: event.target.value }))
+                    }
+                    required
+                  />
+                </div>
+              </div>
+
               <div>
                 <label
-                  htmlFor="first-name"
+                  htmlFor="email"
                   className="editorial-kicker block text-black/70"
                 >
-                  First Name
+                  Email
                 </label>
-                <Input id="first-name" placeholder="Amara" className="mt-2" />
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="hello@influencefabrics.com"
+                  className="mt-2"
+                  value={form.email}
+                  onChange={(event) =>
+                    setForm((prev) => ({ ...prev, email: event.target.value }))
+                  }
+                  required
+                />
               </div>
+
               <div>
                 <label
-                  htmlFor="last-name"
+                  htmlFor="subject"
                   className="editorial-kicker block text-black/70"
                 >
-                  Last Name
+                  Subject
                 </label>
-                <Input id="last-name" placeholder="Okonkwo" className="mt-2" />
+                <Input
+                  id="subject"
+                  placeholder="Ankara bundle request"
+                  className="mt-2"
+                  value={form.subject}
+                  onChange={(event) =>
+                    setForm((prev) => ({ ...prev, subject: event.target.value }))
+                  }
+                  required
+                />
               </div>
-            </div>
 
-            <div>
-              <label
-                htmlFor="email"
-                className="editorial-kicker block text-black/70"
-              >
-                Email
-              </label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="hello@influencefabrics.com"
-                className="mt-2"
-              />
-            </div>
+              <div>
+                <label
+                  htmlFor="message"
+                  className="editorial-kicker block text-black/70"
+                >
+                  Message
+                </label>
+                <textarea
+                  id="message"
+                  rows={6}
+                  className="mt-2 w-full border-x-0 border-t-0 border-b-2 border-black bg-transparent px-0 py-2 text-sm leading-relaxed outline-none focus:border-primary"
+                  placeholder="Tell us what you need..."
+                  value={form.message}
+                  onChange={(event) =>
+                    setForm((prev) => ({ ...prev, message: event.target.value }))
+                  }
+                  required
+                />
+              </div>
 
-            <div>
-              <label
-                htmlFor="subject"
-                className="editorial-kicker block text-black/70"
-              >
-                Subject
-              </label>
-              <Input
-                id="subject"
-                placeholder="Ankara bundle request"
-                className="mt-2"
-              />
-            </div>
+              {feedback ? (
+                <p
+                  className={
+                    feedback.type === "success"
+                      ? "text-xs font-semibold text-primary"
+                      : "text-xs font-semibold text-destructive"
+                  }
+                >
+                  {feedback.text}
+                </p>
+              ) : null}
 
-            <div>
-              <label
-                htmlFor="message"
-                className="editorial-kicker block text-black/70"
-              >
-                Message
-              </label>
-              <textarea
-                id="message"
-                rows={6}
-                className="mt-2 w-full border-x-0 border-t-0 border-b-2 border-black bg-transparent px-0 py-2 text-sm leading-relaxed outline-none focus:border-primary"
-                placeholder="Tell us what you need..."
-              />
-            </div>
-
-            <Button size="lg" className="w-full sm:w-fit">
-              Send Inquiry
-            </Button>
+              <Button size="lg" className="w-full sm:w-fit" disabled={submitting}>
+                {submitting ? "Sending..." : "Send Inquiry"}
+              </Button>
+            </form>
           </CardContent>
         </Card>
 

@@ -86,9 +86,8 @@ function CheckoutPageContent() {
   let shippingFee = 0;
   if (shippingRates) {
     if (selectedRegion === 'ado_ekiti') shippingFee = shippingRates.shippingAdoEkiti;
-    else if (selectedRegion === 'ekiti_state') shippingFee = shippingRates.shippingEkitiState;
-    else if (selectedRegion === 'outside_ekiti') shippingFee = shippingRates.shippingOutsideEkiti;
   }
+  const shippingToBeDeterminedAtPark = selectedRegion === 'ekiti_state' || selectedRegion === 'outside_ekiti'
 
   const total = checkoutSubtotal + shippingFee
 
@@ -196,6 +195,7 @@ function CheckoutPageContent() {
            phone: formValues.phone,
            address: formValues.address,
         },
+        region: formValues.region,
         items: checkoutItems,
         totalPrice: total
       }
@@ -247,6 +247,11 @@ function CheckoutPageContent() {
           display_name: "Cart Items",
           variable_name: "cart_items",
           value: JSON.stringify(checkoutItems.map(i => ({ id: i.productId, qty: i.quantity, size: i.size, color: i.color, yards: i.yards })))
+        },
+        {
+          display_name: "Delivery Region",
+          variable_name: "delivery_region",
+          value: selectedRegion || ""
         }
       ]
     },
@@ -329,12 +334,17 @@ function CheckoutPageContent() {
                       {shippingRates && (
                         <>
                           <option value="ado_ekiti">Within Ado-Ekiti (₦{shippingRates.shippingAdoEkiti.toLocaleString()})</option>
-                          <option value="ekiti_state">Within Ekiti State (₦{shippingRates.shippingEkitiState.toLocaleString()})</option>
-                          <option value="outside_ekiti">Outside Ekiti (₦{shippingRates.shippingOutsideEkiti.toLocaleString()})</option>
+                          <option value="ekiti_state">Within Ekiti State (Shipping fee determined at park)</option>
+                          <option value="outside_ekiti">Outside Ekiti (Shipping fee determined at park)</option>
                         </>
                       )}
                     </select>
                     {errors.region && <p className="text-[10px] text-destructive font-bold uppercase tracking-widest">{errors.region.message}</p>}
+                    {shippingToBeDeterminedAtPark && (
+                      <p className="text-[10px] font-bold uppercase tracking-widest text-primary">
+                        Shipping will be determined at park and confirmed after order review.
+                      </p>
+                    )}
                   </div>
                 </div>
               </form>
@@ -364,7 +374,15 @@ function CheckoutPageContent() {
                 <div className="pt-6 border-t border-white/20 space-y-4 text-sm uppercase tracking-widest text-white">
                   <div className="flex justify-between opacity-70">
                     <span>Shipping</span>
-                    <span>{shippingFee > 0 ? `₦${shippingFee.toLocaleString()}` : "Pending Region"}</span>
+                    <span>
+                      {selectedRegion
+                        ? shippingToBeDeterminedAtPark
+                          ? "To Be Determined At Park"
+                          : shippingFee > 0
+                            ? `₦${shippingFee.toLocaleString()}`
+                            : "₦0"
+                        : "Pending Region"}
+                    </span>
                   </div>
                   {checkoutSavings > 0 && (
                     <div className="flex justify-between text-white font-bold italic">
@@ -379,7 +397,7 @@ function CheckoutPageContent() {
                 </div>
 
                 <div className="pt-6 space-y-4">
-                  <div className="flex gap-4 p-1 bg-white/10 rounded">
+                <div className="flex gap-4 p-1 bg-white/10 rounded">
                      <button
                         type="button" 
                         disabled
@@ -390,7 +408,13 @@ function CheckoutPageContent() {
                         onClick={() => setPaymentMethod('transfer')}
                         className={`flex-1 py-3 text-xs tracking-widest uppercase font-black transition-colors ${paymentMethod === 'transfer' ? 'bg-white text-primary rounded' : 'text-white/60 hover:text-white'}`}
                      >Transfer</button>
-                  </div>
+                 </div>
+
+                  {shippingToBeDeterminedAtPark && (
+                    <p className="text-[10px] uppercase tracking-widest text-white/70 leading-relaxed">
+                      Outside Ado-Ekiti: you are paying for items now. Shipping cost will be determined at park during confirmation.
+                    </p>
+                  )}
 
                   {paymentMethod === 'transfer' && shippingRates && (
                     <div className="p-5 bg-white/5 border border-white/10 text-white/90 text-sm space-y-3">
