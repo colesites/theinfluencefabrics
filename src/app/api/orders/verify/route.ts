@@ -15,6 +15,9 @@ interface PaystackMetadata {
 
 interface CartItemMetadata {
   id: string;
+  name?: string;
+  image?: string;
+  price?: number;
   qty: number;
   size?: string;
   color?: string;
@@ -82,8 +85,9 @@ export async function POST(request: Request) {
       items: cartItems.map((item) => ({
         _key: crypto.randomUUID(),
         productId: item.id,
-        name: 'Item ' + item.id,
-        price: 0,
+        name: item.name || 'Item ' + item.id,
+        image: item.image,
+        price: item.price || 0,
         quantity: item.qty,
         size: item.size,
         color: item.color,
@@ -96,42 +100,46 @@ export async function POST(request: Request) {
 
     const result = await writeClient.create(newOrder)
 
-    try {
-      await sendAdminOrderNotificationEmail({
-        orderNumber: reference,
-        paymentMethod: 'paystack',
-        status: 'approved',
-        totalPrice: data.amount / 100,
-        customer: {
-          name: `${data.customer.first_name || ''} ${data.customer.last_name || ''}`.trim() || 'Customer',
-          email: data.customer.email,
-          phone: data.customer.phone || '',
-          address: 'Pending manual update (from Paystack customer data)',
-        },
-        items: cartItems.map((item) => ({
-          name: 'Item ' + item.id,
-          quantity: item.qty,
-          price: 0,
-          size: item.size,
-          color: item.color,
-        })),
-      })
-    } catch (emailError) {
-      console.error('Paystack admin email error:', emailError)
-    }
+    // Fire-and-forget: send emails in the background so the user isn't blocked
+    const customerName = `${data.customer.first_name || ''} ${data.customer.last_name || ''}`.trim() || 'Customer'
+    const emailItems = cartItems.map((item) => ({
+      name: item.name || 'Item ' + item.id,
+      quantity: item.qty,
+      price: item.price || 0,
+      size: item.size,
+      color: item.color,
+      image: item.image,
+    }))
 
-    try {
-      await sendCustomerOrderReceivedEmail({
-        orderNumber: reference,
+    sendAdminOrderNotificationEmail({
+      orderNumber: reference,
+      paymentMethod: 'paystack',
+      status: 'approved',
+      totalPrice: data.amount / 100,
+      customer: {
+        name: customerName,
         email: data.customer.email,
-        name: `${data.customer.first_name || ''} ${data.customer.last_name || ''}`.trim() || 'Customer',
-        paymentMethod: 'paystack',
-        totalPrice: data.amount / 100,
-        shippingToBeDeterminedAtPark: region === 'ekiti_state' || region === 'outside_ekiti',
-      })
-    } catch (emailError) {
-      console.error('Paystack customer email error:', emailError)
-    }
+        phone: data.customer.phone || '',
+        address: 'Pending manual update (from Paystack customer data)',
+      },
+      items: emailItems,
+    }).catch(e => console.error('Paystack admin email error:', e))
+
+    sendCustomerOrderReceivedEmail({
+      orderNumber: reference,
+      email: data.customer.email,
+      name: customerName,
+      paymentMethod: 'paystack',
+      totalPrice: data.amount / 100,
+      shippingToBeDeterminedAtPark: region === 'ekiti_state' || region === 'outside_ekiti',
+      items: emailItems,
+      customer: {
+        name: customerName,
+        email: data.customer.email,
+        phone: data.customer.phone || '',
+        address: 'Pending manual update (from Paystack customer data)',
+      },
+    }).catch(e => console.error('Paystack customer email error:', e))
 
     return NextResponse.json({ success: true, order: result })
   } catch (error) {

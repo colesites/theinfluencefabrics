@@ -57,7 +57,7 @@ function CheckoutPageContent() {
   const [isClient, setIsClient] = useState(false)
   const [loading, setLoading] = useState(false)
   const [shippingRates, setShippingRates] = useState<StoreSettings | null>(null)
-  const [paymentMethod, setPaymentMethod] = useState<'paystack' | 'transfer'>('transfer')
+  const [paymentMethod, setPaymentMethod] = useState<'paystack' | 'transfer'>('paystack')
   const [receiptFile, setReceiptFile] = useState<File | null>(null)
   const [copiedField, setCopiedField] = useState<"bank" | "accountNo" | null>(null)
   const [buyNowItem, setBuyNowItem] = useState<CartItem | null>(null)
@@ -246,7 +246,7 @@ function CheckoutPageContent() {
         {
           display_name: "Cart Items",
           variable_name: "cart_items",
-          value: JSON.stringify(checkoutItems.map(i => ({ id: i.productId, qty: i.quantity, size: i.size, color: i.color, yards: i.yards })))
+          value: JSON.stringify(checkoutItems.map(i => ({ id: i.productId, name: i.name, image: i.image, price: i.price, qty: i.quantity, size: i.size, color: i.color, yards: i.yards })))
         },
         {
           display_name: "Delivery Region",
@@ -260,17 +260,23 @@ function CheckoutPageContent() {
   }
 
   return (
-    <div className="bg-surface-dim min-h-screen">
-      <div className="atelier-shell py-12">
+    <div className="bg-surface-dim min-h-screen relative">
+      {loading && (
+        <div className="fixed inset-0 z-[9999] bg-black/70 backdrop-blur-sm flex flex-col items-center justify-center gap-6">
+          <div className="size-12 border-4 border-white border-t-transparent rounded-full animate-spin" />
+          <p className="text-white text-xs uppercase tracking-[0.25em] font-black animate-pulse">Processing your order...</p>
+        </div>
+      )}
+      <div className="atelier-shell py-8 lg:py-16">
         <Link href={isBuyNowMode ? `/product/${buyNowItem?.productId || ""}` : "/cart"} className="flex items-center gap-2 text-[10px] uppercase tracking-widest text-muted-foreground hover:text-primary transition-colors mb-12">
           <ChevronLeft className="size-3" />
           {isBuyNowMode ? "Back to Product" : "Back to Selection"}
         </Link>
         
-        <div className="grid lg:grid-cols-[1fr_450px] gap-12 items-start">
+        <div className="grid lg:grid-cols-[1fr_450px] gap-8 lg:gap-12 items-start">
           <div className="space-y-10">
             <div>
-              <h1 className="text-5xl font-black font-serif italic mb-4">Finalizing Order</h1>
+              <h1 className="text-2xl sm:text-3xl md:text-5xl font-black font-serif italic mb-4">Finalizing Order</h1>
               <p className="text-muted-foreground uppercase text-[10px] tracking-[0.2em]">Contact & Shipping Information</p>
             </div>
 
@@ -280,9 +286,9 @@ function CheckoutPageContent() {
               </div>
             )}
 
-            <Card className="bg-background border-none shadow-sm p-8 sm:p-10">
+            <Card className="bg-background border-none shadow-sm p-5 sm:p-8 lg:p-10">
               <form className="space-y-8">
-                <div className="grid sm:grid-cols-2 gap-8">
+                <div className="grid sm:grid-cols-2 gap-4 sm:gap-8">
                   <div className="space-y-3">
                     <label className="text-[11px] font-black uppercase tracking-widest">Full Name</label>
                     <Input 
@@ -313,7 +319,7 @@ function CheckoutPageContent() {
                   {errors.phone && <p className="text-[10px] text-destructive font-bold uppercase tracking-widest">{errors.phone.message}</p>}
                 </div>
 
-                <div className="grid sm:grid-cols-2 gap-8">
+                <div className="grid sm:grid-cols-2 gap-4 sm:gap-8">
                   <div className="space-y-3">
                     <label className="text-[11px] font-black uppercase tracking-widest">Shipping Archive Address</label>
                     <Input 
@@ -351,8 +357,8 @@ function CheckoutPageContent() {
             </Card>
           </div>
 
-          <aside className="sticky top-28">
-            <Card className="bg-primary text-primary-strong border-none shadow-2xl p-8 sm:p-10 overflow-hidden relative">
+          <aside className="lg:sticky lg:top-28">
+            <Card className="bg-primary text-primary-strong border-none shadow-2xl p-5 sm:p-8 lg:p-10 overflow-hidden relative">
               <div className="absolute top-0 right-0 p-4 opacity-10">
                 <Lock className="size-24 -mr-8 -mt-8" />
               </div>
@@ -399,10 +405,10 @@ function CheckoutPageContent() {
                 <div className="pt-6 space-y-4">
                 <div className="flex gap-4 p-1 bg-white/10 rounded">
                      <button
-                        type="button" 
-                        disabled
-                        className="flex-1 py-3 text-xs tracking-widest uppercase font-black transition-colors text-white/20 cursor-not-allowed"
-                     >Paystack (Coming Soon)</button>
+                        type="button"
+                        onClick={() => setPaymentMethod('paystack')}
+                        className={`flex-1 py-3 text-xs tracking-widest uppercase font-black transition-colors ${paymentMethod === 'paystack' ? 'bg-white text-primary rounded' : 'text-white/60 hover:text-white'}`}
+                     >Paystack</button>
                      <button
                         type="button"
                         onClick={() => setPaymentMethod('transfer')}

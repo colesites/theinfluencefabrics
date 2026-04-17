@@ -77,42 +77,45 @@ export async function POST(request: Request) {
 
     const result = await writeClient.create(newOrder)
 
-    try {
-      await sendAdminOrderNotificationEmail({
-        orderNumber,
-        paymentMethod: 'transfer',
-        status: 'pending',
-        totalPrice,
-        customer: {
-          name: customer.name,
-          email: customer.email,
-          phone: customer.phone,
-          address: customer.address,
-        },
-        items: items.map((item: TransferCartItem) => ({
-          name: item.name,
-          quantity: item.quantity,
-          price: item.price,
-          size: item.size,
-          color: item.color,
-        })),
-      })
-    } catch (emailError) {
-      console.error('Transfer admin email error:', emailError)
-    }
+    // Fire-and-forget: send emails in the background so the user isn't blocked
+    const emailItems = items.map((item: TransferCartItem & { image?: string }) => ({
+      name: item.name,
+      quantity: item.quantity,
+      price: item.price,
+      size: item.size,
+      color: item.color,
+      image: item.image,
+    }))
 
-    try {
-      await sendCustomerOrderReceivedEmail({
-        orderNumber,
-        email: customer.email,
+    sendAdminOrderNotificationEmail({
+      orderNumber,
+      paymentMethod: 'transfer',
+      status: 'pending',
+      totalPrice,
+      customer: {
         name: customer.name,
-        paymentMethod: 'transfer',
-        totalPrice,
-        shippingToBeDeterminedAtPark: region === 'ekiti_state' || region === 'outside_ekiti',
-      })
-    } catch (emailError) {
-      console.error('Transfer customer email error:', emailError)
-    }
+        email: customer.email,
+        phone: customer.phone,
+        address: customer.address,
+      },
+      items: emailItems,
+    }).catch(e => console.error('Transfer admin email error:', e))
+
+    sendCustomerOrderReceivedEmail({
+      orderNumber,
+      email: customer.email,
+      name: customer.name,
+      paymentMethod: 'transfer',
+      totalPrice,
+      shippingToBeDeterminedAtPark: region === 'ekiti_state' || region === 'outside_ekiti',
+      items: emailItems,
+      customer: {
+        name: customer.name,
+        email: customer.email,
+        phone: customer.phone,
+        address: customer.address,
+      },
+    }).catch(e => console.error('Transfer customer email error:', e))
 
     return NextResponse.json({ success: true, order: result })
   } catch (error) {

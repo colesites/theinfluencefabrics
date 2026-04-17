@@ -108,7 +108,7 @@ export async function getAvailableColors(): Promise<string[]> {
 }
 
 export async function getFeaturedProducts(): Promise<ProductRecord[]> {
-  const query = `*[_type == "product"] | order(_createdAt desc)[0...3] {
+  const query = `*[_type == "product"] | order(_createdAt desc)[0...6] {
     _id,
     name,
     subtitle,

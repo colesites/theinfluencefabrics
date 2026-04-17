@@ -51,37 +51,8 @@ export default async function Home() {
       </section>
 
       <section className="atelier-shell py-20 sm:py-28">
-        <div className="grid gap-4 md:grid-cols-12 md:grid-rows-2">
-          <article className="relative overflow-hidden bg-surface-container md:col-span-8 md:row-span-2">
-            <Image
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuCrlpODtcy4wZ5AH9XgV8l5FlgzKGJuVHAwzqK7JyoDJmkgF_20qrNl3AXvl0wCXLDloWM6RSlG_SllVDcQio5Q6pKlhTVG4f3w_M3J07HnfbgQYXC1_PimILS0xen-mTyCwFqoFE8zhX1f8jgocJsoGQpeIDXRVDda1xSazGxQUQCpvmdpsJQ0t-0VQ5fesUGOgm-DVdTiCtA4lxg5QHL4x9ngUow5tbOO11Dm3ykhmSeIa6d9kYB0Fp5V5zPOqbQecffXPG0yeR9q"
-              alt="Ankara textiles"
-              fill
-              className="object-cover transition-transform duration-700 hover:scale-105"
-              sizes="(max-width: 1024px) 100vw, 66vw"
-            />
-            <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/65 to-transparent p-10 text-white">
-              <h2 className="text-4xl font-black">Ankara Textiles</h2>
-              <p className="mt-2 text-xs uppercase tracking-[0.2em] text-white/80">
-                Shop Signature Prints
-              </p>
-            </div>
-          </article>
-
-          <article className="relative overflow-hidden bg-surface-container-high md:col-span-4">
-            <Image
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuDEIIqzPrOVbUuEyJiqFkk7C-1Is6A0V-IBywt31XQerVJVhNoQz45TJ8sJzVcW-LjknUc5U2fEdy0Xp_OYgdXJIYmRH2-DZ29x91Jg0M_RtAn9iD432mOjbRVwUePmJgqzvRfPNsPwJWU0YLphBVTBfQS3iGzRwtF-SF1SqgAAUjwkHL3fUjUoU6Gf_5DF1SCMWTPTXM2oOqnErnfTOyyBwZhz3LXsMGsCAujokiGo1h1tNzt18VrAOYe1SHAX_C_pRV3z2jypBiVN"
-              alt="Ankara weave details"
-              fill
-              className="object-cover"
-              sizes="(max-width: 1024px) 100vw, 33vw"
-            />
-            <div className="absolute inset-0 grid place-content-center bg-black/30">
-              <h3 className="text-3xl font-black text-white">Ankara Weaves</h3>
-            </div>
-          </article>
-
-          <article className="flex flex-col justify-end bg-primary p-8 text-primary-foreground md:col-span-4">
+        <div className="grid gap-4 md:grid-cols-1">
+          <article className="flex flex-col justify-end bg-primary p-8 text-primary-foreground min-h-[400px]">
             <p className="editorial-kicker text-white/80">Custom Cut</p>
             <h3 className="mt-3 text-3xl font-black">Ankara By Yard</h3>
             <p className="mt-3 max-w-xs text-sm text-white/85">
