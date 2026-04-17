@@ -9,9 +9,26 @@ import { signOut, useSession } from "@/lib/auth-client";
 import { getUserOrders, type OrderRecord } from "@/lib/orders";
 import { Clock, Package } from "lucide-react";
 
+function getGreetingName(name: string | null | undefined, email: string) {
+  const toTitleCase = (value: string) =>
+    value ? value.charAt(0).toUpperCase() + value.slice(1) : value;
+  const normalizedName = (name || "").trim().replace(/\s+/g, " ");
+  const firstToken = normalizedName.split(" ")[0] || "";
+
+  if (firstToken.length >= 2) return firstToken;
+
+  const emailLocalPart = email.split("@")[0] || "";
+  const fallback = emailLocalPart
+    .split(/[._-]+/)
+    .filter(Boolean)[0];
+
+  return toTitleCase(fallback) || "there";
+}
+
 function SignedInState({ email, name }: { email: string; name?: string | null }) {
   const [orders, setOrders] = useState<OrderRecord[]>([]);
   const [loadingOrders, setLoadingOrders] = useState(true);
+  const greetingName = getGreetingName(name, email);
 
   useEffect(() => {
     let mounted = true;
@@ -36,7 +53,7 @@ function SignedInState({ email, name }: { email: string; name?: string | null })
       <header className="mb-14 border-b border-black/10 pb-12">
         <p className="editorial-kicker text-primary">Archive Profile</p>
         <h1 className="mt-4 text-5xl font-black italic font-serif">
-          Welcome back, {(name || "there").split(" ")[0]}.
+          Welcome back, {greetingName}.
         </h1>
         <div className="mt-8 flex flex-wrap items-center gap-6">
           <div className="text-xs normal-case tracking-widest text-muted-foreground">
