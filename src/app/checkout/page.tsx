@@ -363,24 +363,24 @@ function CheckoutPageContent() {
                 <Lock className="size-24 -mr-8 -mt-8" />
               </div>
               
-              <CardHeader className="p-0 mb-8 border-b border-white/20 pb-6">
-                <CardTitle className="text-3xl font-black font-serif italic text-white">Archives Total</CardTitle>
+              <CardHeader className="p-0 mb-6 sm:mb-8 border-b border-white/20 pb-4 sm:pb-6">
+                <CardTitle className="text-2xl sm:text-3xl font-black font-serif italic text-white">Archives Total</CardTitle>
               </CardHeader>
               
               <CardContent className="p-0 space-y-8">
                 <div className="space-y-4">
                   {checkoutItems.map(item => (
-                    <div key={`${item.productId}-${item.size || ''}-${item.color || ''}-${item.yards || ''}`} className="flex justify-between text-xs tracking-widest uppercase text-white/80">
-                      <span>{item.name} x {item.quantity}</span>
-                      <span className="font-black">₦{((item.price || 0) * item.quantity).toLocaleString("en-NG")}</span>
+                    <div key={`${item.productId}-${item.size || ''}-${item.color || ''}-${item.yards || ''}`} className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 sm:gap-0 text-[11px] sm:text-xs tracking-wider sm:tracking-widest uppercase text-white/80">
+                      <span className="line-clamp-2">{item.name} x {item.quantity}</span>
+                      <span className="font-black text-right sm:text-left">₦{((item.price || 0) * item.quantity).toLocaleString("en-NG")}</span>
                     </div>
                   ))}
                 </div>
                 
-                <div className="pt-6 border-t border-white/20 space-y-4 text-sm uppercase tracking-widest text-white">
-                  <div className="flex justify-between opacity-70">
+                <div className="pt-4 sm:pt-6 border-t border-white/20 space-y-4 text-[11px] sm:text-sm uppercase tracking-wider sm:tracking-widest text-white">
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 opacity-70">
                     <span>Shipping</span>
-                    <span>
+                    <span className="text-right sm:text-left">
                       {selectedRegion
                         ? shippingToBeDeterminedAtPark
                           ? "To Be Determined At Park"
@@ -391,14 +391,14 @@ function CheckoutPageContent() {
                     </span>
                   </div>
                   {checkoutSavings > 0 && (
-                    <div className="flex justify-between text-white font-bold italic">
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 text-white font-bold italic">
                       <span>Promo Discount</span>
-                      <span>- ₦{(checkoutSavings || 0).toLocaleString("en-NG")}</span>
+                      <span className="text-right sm:text-left">- ₦{(checkoutSavings || 0).toLocaleString("en-NG")}</span>
                     </div>
                   )}
-                  <div className="flex justify-between text-2xl font-black pt-4">
+                  <div className="flex flex-col min-[400px]:flex-row min-[400px]:items-center min-[400px]:justify-between gap-2 text-xl sm:text-2xl font-black pt-4">
                     <span>Grand Total</span>
-                    <span className="font-serif italic font-black">₦{(total || 0).toLocaleString()}</span>
+                    <span className="font-serif italic font-black text-right min-[400px]:text-left">₦{(total || 0).toLocaleString()}</span>
                   </div>
                 </div>
 
@@ -423,46 +423,36 @@ function CheckoutPageContent() {
                   )}
 
                   {paymentMethod === 'transfer' && shippingRates && (
-                    <div className="p-5 bg-white/5 border border-white/10 text-white/90 text-sm space-y-3">
-                      <p className="text-[10px] uppercase font-black tracking-widest text-white/50 mb-4">Transfer Details</p>
-                      <div className="flex items-center justify-between gap-3">
-                        <p><strong>Bank:</strong> {shippingRates.bankName || 'N/A'}</p>
+                    <div className="p-4 sm:p-5 bg-white/5 border border-white/10 text-white/90 text-sm space-y-4">
+                      <p className="text-[10px] uppercase font-black tracking-widest text-white/50 mb-2">Transfer Details</p>
+                      <div className="flex flex-wrap items-center justify-between gap-2 pb-2 border-b border-white/5">
+                        <p className="text-xs break-words max-w-[65%]"><strong>Bank:</strong><br className="sm:hidden"/> {shippingRates.bankName || 'N/A'}</p>
                         <button
                           type="button"
                           onClick={() => handleCopy(shippingRates.bankName || "", "bank")}
-                          className="inline-flex items-center gap-1 rounded border border-white/30 px-2 py-1 text-[10px] font-black uppercase tracking-widest text-white/90 hover:bg-white/10 transition-colors"
+                          className="inline-flex shrink-0 items-center justify-center gap-1 rounded border border-white/30 px-2 py-1 text-[10px] font-black uppercase tracking-widest text-white/90 hover:bg-white/10 transition-colors"
                         >
                           {copiedField === "bank" ? (
-                            <>
-                              <Check className="size-3" />
-                              Copied
-                            </>
+                            <><Check className="size-3" />Copied</>
                           ) : (
-                            <>
-                              <Copy className="size-3" />
-                              Copy
-                            </>
+                            <><Copy className="size-3" />Copy</>
                           )}
                         </button>
                       </div>
-                      <p><strong>Account Name:</strong> {shippingRates.accountName || 'N/A'}</p>
-                      <div className="flex items-center justify-between gap-3">
-                        <p><strong>Account No:</strong> {shippingRates.accountNumber || 'N/A'}</p>
+                      <div className="pb-2 border-b border-white/5">
+                        <p className="text-xs break-words"><strong>Account Name:</strong><br className="sm:hidden"/> {shippingRates.accountName || 'N/A'}</p>
+                      </div>
+                      <div className="flex flex-wrap items-center justify-between gap-2 pb-1">
+                        <p className="text-xs break-words max-w-[65%]"><strong>Account No:</strong><br className="sm:hidden"/> {shippingRates.accountNumber || 'N/A'}</p>
                         <button
                           type="button"
                           onClick={() => handleCopy(shippingRates.accountNumber || "", "accountNo")}
-                          className="inline-flex items-center gap-1 rounded border border-white/30 px-2 py-1 text-[10px] font-black uppercase tracking-widest text-white/90 hover:bg-white/10 transition-colors"
+                          className="inline-flex shrink-0 items-center justify-center gap-1 rounded border border-white/30 px-2 py-1 text-[10px] font-black uppercase tracking-widest text-white/90 hover:bg-white/10 transition-colors"
                         >
                           {copiedField === "accountNo" ? (
-                            <>
-                              <Check className="size-3" />
-                              Copied
-                            </>
+                            <><Check className="size-3" />Copied</>
                           ) : (
-                            <>
-                              <Copy className="size-3" />
-                              Copy
-                            </>
+                            <><Copy className="size-3" />Copy</>
                           )}
                         </button>
                       </div>

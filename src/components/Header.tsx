@@ -150,8 +150,8 @@ const Header = () => {
         </div>
       </nav>
 
-      <div className="atelier-shell border-t border-black/10 pb-3 lg:hidden">
-        <ul className="flex w-full items-center justify-between pt-3 font-serif text-[9px] min-[375px]:text-[10px] uppercase tracking-widest min-[375px]:tracking-[0.18em]">
+      <div className="atelier-shell border-t border-black/10 pb-3 lg:hidden overflow-x-auto overflow-y-hidden [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+        <ul className="flex w-full items-center justify-between gap-5 pt-3 font-serif text-[9px] min-[375px]:text-[10px] uppercase tracking-widest min-[375px]:tracking-[0.18em] min-w-max px-1">
           {primaryLinks.map((link) => (
             <li key={link.name}>
               <Link
