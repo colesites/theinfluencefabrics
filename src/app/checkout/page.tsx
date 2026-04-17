@@ -273,8 +273,8 @@ function CheckoutPageContent() {
           {isBuyNowMode ? "Back to Product" : "Back to Selection"}
         </Link>
         
-        <div className="grid lg:grid-cols-[1fr_450px] gap-8 lg:gap-12 items-start">
-          <div className="space-y-10">
+        <div className="grid lg:grid-cols-[1fr_450px] gap-8 lg:gap-12 items-start w-full max-w-[480px] mx-auto lg:max-w-none">
+          <div className="space-y-8 sm:space-y-10">
             <div>
               <h1 className="text-2xl sm:text-3xl md:text-5xl font-black font-serif italic mb-4">Finalizing Order</h1>
               <p className="text-muted-foreground uppercase text-[10px] tracking-[0.2em]">Contact & Shipping Information</p>
@@ -286,7 +286,7 @@ function CheckoutPageContent() {
               </div>
             )}
 
-            <Card className="bg-background border-none shadow-sm p-5 sm:p-8 lg:p-10">
+            <Card className="bg-background border-none shadow-sm p-4 sm:p-8 lg:p-10">
               <form className="space-y-8">
                 <div className="grid sm:grid-cols-2 gap-4 sm:gap-8">
                   <div className="space-y-3">
@@ -294,7 +294,7 @@ function CheckoutPageContent() {
                     <Input 
                       {...register("name")}
                       placeholder="e.g. Adeoke Johnson" 
-                      className="h-12 bg-surface-container-low border-transparent focus:bg-background transition-all"
+                      className="h-10 sm:h-12 text-sm bg-surface-container-low border-transparent focus:bg-background transition-all"
                     />
                     {errors.name && <p className="text-[10px] text-destructive font-bold uppercase tracking-widest">{errors.name.message}</p>}
                   </div>
@@ -303,7 +303,7 @@ function CheckoutPageContent() {
                     <Input 
                       {...register("email")}
                       placeholder="adeoke@example.com"
-                      className="h-12 bg-surface-container-low border-transparent focus:bg-background transition-all"
+                      className="h-10 sm:h-12 text-sm bg-surface-container-low border-transparent focus:bg-background transition-all"
                     />
                     {errors.email && <p className="text-[10px] text-destructive font-bold uppercase tracking-widest">{errors.email.message}</p>}
                   </div>
@@ -314,7 +314,7 @@ function CheckoutPageContent() {
                   <Input 
                     {...register("phone")}
                     placeholder="+234 ..."
-                    className="h-12 bg-surface-container-low border-transparent focus:bg-background transition-all"
+                    className="h-10 sm:h-12 text-sm bg-surface-container-low border-transparent focus:bg-background transition-all"
                   />
                   {errors.phone && <p className="text-[10px] text-destructive font-bold uppercase tracking-widest">{errors.phone.message}</p>}
                 </div>
@@ -325,16 +325,16 @@ function CheckoutPageContent() {
                     <Input 
                       {...register("address")}
                       placeholder="Provide full logistics coordinates"
-                      className="h-12 bg-surface-container-low border-transparent focus:bg-background transition-all"
+                      className="h-10 sm:h-12 text-sm bg-surface-container-low border-transparent focus:bg-background transition-all"
                     />
                     {errors.address && <p className="text-[10px] text-destructive font-bold uppercase tracking-widest">{errors.address.message}</p>}
                   </div>
 
-                  <div className="space-y-3">
+                  <div className="space-y-2 sm:space-y-3">
                     <label className="text-[11px] font-black uppercase tracking-widest">Delivery Region</label>
                     <select 
                       {...register("region")}
-                      className="w-full h-12 px-3 text-sm bg-surface-container-low border-transparent focus:bg-background transition-all outline-none"
+                      className="w-full h-10 sm:h-12 px-3 text-sm bg-surface-container-low border-transparent focus:bg-background transition-all outline-none"
                     >
                       <option value="">Select your region...</option>
                       {shippingRates && (
@@ -358,7 +358,7 @@ function CheckoutPageContent() {
           </div>
 
           <aside className="lg:sticky lg:top-28">
-            <Card className="bg-primary text-primary-strong border-none shadow-2xl p-5 sm:p-8 lg:p-10 overflow-hidden relative">
+            <Card className="bg-primary text-primary-strong border-none shadow-2xl p-4 sm:p-8 lg:p-10 overflow-hidden relative">
               <div className="absolute top-0 right-0 p-4 opacity-10">
                 <Lock className="size-24 -mr-8 -mt-8" />
               </div>
