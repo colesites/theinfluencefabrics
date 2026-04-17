@@ -46,6 +46,11 @@ const resendApiKey = process.env.RESEND_API_KEY;
 const fromEmail = process.env.RESEND_FROM_EMAIL || "Influence Fabrics <onboarding@resend.dev>";
 const adminEmail = process.env.ADMIN_NOTIFICATION_EMAIL;
 const appUrl = process.env.BETTER_AUTH_URL || process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+const newsletterGeneralSegmentId =
+  process.env.RESEND_NEWSLETTER_SEGMENT_ID ||
+  process.env.RESEND_GENERAL_SEGMENT_ID ||
+  process.env.RESEND_NEWSLETTER_AUDIENCE_ID ||
+  process.env.RESEND_GENERAL_AUDIENCE_ID;
 
 const resend = resendApiKey ? new Resend(resendApiKey) : null;
 
@@ -59,6 +64,17 @@ function formatCurrency(value: number) {
     currency: "NGN",
     maximumFractionDigits: 0,
   }).format(value);
+}
+
+function toDisplayName(name?: string) {
+  const trimmed = name?.trim();
+  if (!trimmed) return "Customer";
+  if (/^(hello|hi|hey)$/i.test(trimmed)) return "Customer";
+  return trimmed
+    .split(/\s+/)
+    .filter(Boolean)
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1).toLowerCase())
+    .join(" ");
 }
 
 function getStatusHeadline(status: string) {
@@ -135,17 +151,45 @@ export async function sendContactInquiryEmail(payload: {
 }
 
 export async function sendNewsletterSubscriptionEmail(payload: { email: string }) {
-  if (!adminEmail) throw new Error("ADMIN_NOTIFICATION_EMAIL is missing.");
+  if (!resend) throw new Error("RESEND_API_KEY is missing.");
+  if (!newsletterGeneralSegmentId) {
+    throw new Error(
+      "Newsletter segment/audience ID is missing. Set RESEND_NEWSLETTER_SEGMENT_ID (or RESEND_GENERAL_SEGMENT_ID / RESEND_NEWSLETTER_AUDIENCE_ID / RESEND_GENERAL_AUDIENCE_ID).",
+    );
+  }
 
-  return sendEmail({
-    to: adminEmail,
-    subject: "New Newsletter Subscription",
-    text: `A new newsletter signup was received: ${payload.email}`,
-    html: `
-      <h2>New Newsletter Subscription</h2>
-      <p><strong>Email:</strong> ${payload.email}</p>
-    `,
+  const contactResult = await resend.contacts.create({
+    email: payload.email,
+    segments: [{ id: newsletterGeneralSegmentId }],
   });
+
+  if (contactResult.error) {
+    const message = contactResult.error.message || "Failed to create newsletter contact";
+    const duplicate = contactResult.error.statusCode === 409 || /already exists|already subscribed/i.test(message);
+    if (!duplicate) {
+      throw new Error(message);
+    }
+  }
+
+  if (!adminEmail) {
+    return { success: true };
+  }
+
+  try {
+    await sendEmail({
+      to: adminEmail,
+      subject: "New Newsletter Subscription",
+      text: `A new newsletter signup was received: ${payload.email}`,
+      html: `
+        <h2>New Newsletter Subscription</h2>
+        <p><strong>Email:</strong> ${payload.email}</p>
+      `,
+    });
+  } catch (error) {
+    console.error("Newsletter admin notification error:", error);
+  }
+
+  return { success: true };
 }
 
 export async function sendAdminOrderNotificationEmail(payload: AdminOrderNotificationPayload) {
@@ -198,7 +242,7 @@ export async function sendAdminOrderNotificationEmail(payload: AdminOrderNotific
 export async function sendCustomerOrderStatusEmail(payload: CustomerOrderStatusPayload) {
   const normalized = normalizeStatus(payload.status);
   const subject = `Order Update: ${payload.orderNumber} (${normalized})`;
-  const greeting = payload.name?.trim() || "Customer";
+  const greeting = toDisplayName(payload.name);
   const accountUrl = `${appUrl}/account`;
   const headline = getStatusHeadline(payload.status);
   const detailMessage = getStatusMessage(payload.status, payload.paymentMethod);
@@ -246,7 +290,7 @@ export async function sendCustomerOrderStatusEmail(payload: CustomerOrderStatusP
 }
 
 export async function sendCustomerOrderReceivedEmail(payload: CustomerOrderReceivedPayload) {
-  const greeting = payload.name?.trim() || "Customer";
+  const greeting = toDisplayName(payload.name);
   const subject = `Order Received: ${payload.orderNumber}`;
   const accountUrl = `${appUrl}/account`;
   const paymentMethodLabel = payload.paymentMethod === "transfer" ? "Bank transfer" : "Paystack";
