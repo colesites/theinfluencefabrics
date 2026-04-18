@@ -6,6 +6,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import {
   Pagination as PaginationRoot,
   PaginationContent,
+  PaginationEllipsis,
   PaginationItem,
   PaginationLink,
   PaginationNext,
@@ -101,6 +102,27 @@ export default async function CollectionPage({
       : "/collection";
   };
 
+  const getPaginationPages = () => {
+    const pages: (number | "ellipsis")[] = [];
+    if (totalPages <= 5) {
+      for (let i = 1; i <= totalPages; i++) pages.push(i);
+    } else {
+      pages.push(1);
+      if (currentPage > 3) pages.push("ellipsis");
+
+      const start = Math.max(2, currentPage - 1);
+      const end = Math.min(totalPages - 1, currentPage + 1);
+
+      for (let i = start; i <= end; i++) {
+        if (!pages.includes(i)) pages.push(i);
+      }
+
+      if (currentPage < totalPages - 2) pages.push("ellipsis");
+      if (!pages.includes(totalPages)) pages.push(totalPages);
+    }
+    return pages;
+  };
+
   return (
     <section className="atelier-shell py-12 sm:py-16">
       <header className="mb-14 sm:mb-20">
@@ -174,7 +196,7 @@ export default async function CollectionPage({
                 </Link>
               )}
             </div>
-            <div className="mt-5 flex flex-wrap gap-3">
+            <div className="mt-5 flex flex-wrap gap-2 sm:gap-3 max-w-[calc(100vw-2rem)] sm:max-w-none">
               {availableColors.map((swatch) => (
                 <Link
                   key={swatch}
@@ -264,7 +286,7 @@ export default async function CollectionPage({
                 <CardContent className="px-0 pb-0 pt-7">
                   <div className="flex items-start justify-between gap-4">
                     <div>
-                      <h3 className="text-3xl font-black">
+                      <h3 className="line-clamp-2 text-xl font-black uppercase leading-tight sm:text-2xl lg:text-3xl">
                         <Link
                           href={`/product/${product._id}`}
                           className="hover:text-primary"
@@ -277,7 +299,7 @@ export default async function CollectionPage({
                       </p>
                     </div>
                     <div className="flex flex-col items-end">
-                      <span className="font-serif text-3xl font-black">
+                      <span className="font-serif text-xl font-black sm:text-2xl lg:text-3xl">
                         ₦{(product.price || 0).toLocaleString("en-NG")}
                       </span>
                       {product.salePrice && product.originalPrice && (
@@ -306,14 +328,18 @@ export default async function CollectionPage({
                     }
                   />
                 </PaginationItem>
-                {Array.from({ length: totalPages }).map((_, i) => (
+                {getPaginationPages().map((page, i) => (
                   <PaginationItem key={i}>
-                    <PaginationLink
-                      href={getUrl({ page: i + 1 })}
-                      isActive={currentPage === i + 1}
-                    >
-                      {String(i + 1).padStart(2, "0")}
-                    </PaginationLink>
+                    {page === "ellipsis" ? (
+                      <PaginationEllipsis />
+                    ) : (
+                      <PaginationLink
+                        href={getUrl({ page: page })}
+                        isActive={currentPage === page}
+                      >
+                        {String(page).padStart(2, "0")}
+                      </PaginationLink>
+                    )}
                   </PaginationItem>
                 ))}
                 <PaginationItem>
