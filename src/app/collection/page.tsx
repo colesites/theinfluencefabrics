@@ -284,9 +284,9 @@ export default async function CollectionPage({
                   ) : null}
                 </Link>
                 <CardContent className="px-0 pb-0 pt-7">
-                  <div className="flex items-start justify-between gap-4">
+                  <div className="flex flex-col gap-3 min-[420px]:flex-row min-[420px]:items-start min-[420px]:justify-between">
                     <div>
-                      <h3 className="line-clamp-2 text-xl font-black uppercase leading-tight sm:text-2xl lg:text-3xl">
+                      <h3 className="line-clamp-2 text-lg font-black uppercase leading-[1.1] min-[420px]:text-xl sm:text-2xl lg:text-3xl">
                         <Link
                           href={`/product/${product._id}`}
                           className="hover:text-primary"
@@ -298,8 +298,8 @@ export default async function CollectionPage({
                         {product.collection}
                       </p>
                     </div>
-                    <div className="flex flex-col items-end">
-                      <span className="font-serif text-xl font-black sm:text-2xl lg:text-3xl">
+                    <div className="flex flex-col items-start min-[420px]:items-end shrink-0">
+                      <span className="font-serif text-lg font-black min-[420px]:text-xl sm:text-2xl lg:text-3xl">
                         ₦{(product.price || 0).toLocaleString("en-NG")}
                       </span>
                       {product.salePrice && product.originalPrice && (
