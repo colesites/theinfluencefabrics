@@ -12,13 +12,9 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-import {
-  getPaginatedProducts,
-  getTotalProductCount,
-  getAvailableColors,
-  getProducts,
-} from "@/lib/products";
+import { getPaginatedProducts, getTotalProductCount, getAvailableColors, getProducts } from "@/lib/products";
 import { Search, X } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 export const revalidate = 0;
 
@@ -316,7 +312,7 @@ export default async function CollectionPage({
           </div>
 
           {totalPages > 1 && (
-            <PaginationRoot className="mt-32">
+            <PaginationRoot className="mt-20 sm:mt-32">
               <PaginationContent>
                 <PaginationItem>
                   <PaginationPrevious
@@ -329,7 +325,13 @@ export default async function CollectionPage({
                   />
                 </PaginationItem>
                 {getPaginationPages().map((page, i) => (
-                  <PaginationItem key={i}>
+                  <PaginationItem 
+                    key={i} 
+                    className={cn(
+                      page !== currentPage && "hidden sm:block",
+                      page === "ellipsis" && "hidden md:block"
+                    )}
+                  >
                     {page === "ellipsis" ? (
                       <PaginationEllipsis />
                     ) : (
